@@ -2,7 +2,7 @@ import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
-const PotentialPromotion = () => {
+const PotentialCartPromotion = () => {
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
@@ -17,19 +17,22 @@ const PotentialPromotion = () => {
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.post(
-                "http://localhost:8080/bankservice/getrate",
+                "http://localhost:8080/promotion/suggest-promotion",
                 {
-                    totalQuantity: quantityShoppingCart,
-                    totalPrice: shoppingCarts.reduce(
-                        (res, curentPro, index) => {
-                            return (
-                                res +
-                                curentPro.product.price * curentPro.quantity
-                            )
-                        },
-                        0
-                    ),
-                    products: productPayload,
+                    product: {},
+                    cart: {
+                        totalQuantity: quantityShoppingCart,
+                        totalPrice: shoppingCarts.reduce(
+                            (res, curentPro, index) => {
+                                return (
+                                    res +
+                                    curentPro.product.price * curentPro.quantity
+                                )
+                            },
+                            0
+                        ),
+                        products: productPayload,
+                    },
                 }
             )
 
@@ -50,4 +53,4 @@ const PotentialPromotion = () => {
     )
 }
 
-export default PotentialPromotion
+export default PotentialCartPromotion

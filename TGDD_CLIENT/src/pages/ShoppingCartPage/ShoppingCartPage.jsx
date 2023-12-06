@@ -1,4 +1,3 @@
-import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import { Button, CircularProgress } from "@mui/material"
 import { useFormik } from "formik"
@@ -16,6 +15,7 @@ import {
 } from "../../redux/sagas/types/main"
 import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
+import ProductCart from "./ProductCart"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
@@ -27,34 +27,47 @@ function ShoppingCartPage(props) {
 
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {}
-        obj.id = cart.idProduct
+        obj.productId = cart.idProduct
         obj.quantity = cart.quantity
         return obj
     })
 
     useEffect(() => {
         const getKMTN = async () => {
+            // let body = {
+            //     product: {},
+            //     cart: {
+            //         totalQuantity: quantityShoppingCart,
+            //         totalPrice: shoppingCarts.reduce(
+            //             (res, curentPro, index) => {
+            //                 return (
+            //                     res +
+            //                     curentPro.product.price * curentPro.quantity
+            //                 )
+            //             },
+            //             0
+            //         ),
+            //         products: productPayload,
+            //     },
+            // }
+            let body = {
+                totalQuantity: quantityShoppingCart,
+                totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
+                    return res + curentPro.product.price * curentPro.quantity
+                }, 0),
+                listCartItems: productPayload,
+            }
             const response = await axios.post(
-                "http://localhost:8080/bankservice/getrate",
-                {
-                    totalQuantity: quantityShoppingCart,
-                    totalPrice: shoppingCarts.reduce(
-                        (res, curentPro, index) => {
-                            return (
-                                res +
-                                curentPro.product.price * curentPro.quantity
-                            )
-                        },
-                        0
-                    ),
-                    products: productPayload,
-                }
+                "http://localhost:8080/promotion/suggest-promotion",
+                body
             )
 
             setCartPromotion(response.data.cartPromotion)
             setItemPromotion(response.data.itemPromotion)
         }
-        getKMTN()
+        if (shoppingCarts.length > 0) {
+            getKMTN()
+        }
     }, [shoppingCarts])
 
     console.log("itemPromotion:: -> ", itemPromotion)
@@ -127,144 +140,15 @@ function ShoppingCartPage(props) {
                     {/* Products */}
                     <div className="rounded-md shadow-xl">
                         {shoppingCarts?.map((item, index) => (
-                            <div className="border-b-[1px] border-gray-300">
-                                <div
-                                    key={index}
-                                    className="flex flex-col items-center md:flex-row py-4 px-4 justify-between "
-                                >
-                                    {/* Info  */}
-                                    <div className="flex flex-col md:flex-row gap-2">
-                                        <div className="flex flex-col items-center justify-center">
-                                            <img
-                                                className="w-[80px] h-[80px] object-contain"
-                                                src={item?.product?.images[0]}
-                                                alt=""
-                                            />
-                                            <CancelPresentationRoundedIcon
-                                                onClick={() => {
-                                                    if (
-                                                        window.confirm(
-                                                            "Bạn chắc chắn muốn xóa sản phẩm khỏi giõ hàng?"
-                                                        )
-                                                    ) {
-                                                        dispatch({
-                                                            type: DELETE_CART_SAGA,
-                                                            data: {
-                                                                idUser: user._id,
-                                                                idCart: item._id,
-                                                            },
-                                                        })
-                                                    }
-                                                }}
-                                                className="cursor-pointer text-red-500 pt-2"
-                                            />
-                                        </div>
-                                        <div className="">
-                                            <h1 className="font-semibold text-struncate text-center md:text-left">
-                                                {item?.product?.name}
-                                            </h1>
-                                            <p className="my-2 text-sm text-minLink text-center md:text-left">
-                                                2 khuyến mãi
-                                            </p>
-                                            <p className="text-sm capitalize text-minLink text-center md:text-left">
-                                                màu:{" "}
-                                                {
-                                                    item?.product?.images[0]
-                                                        ?.colorName
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                    {/* Action  */}
-                                    <div className="flex flex-col">
-                                        <p className="text-red-600">
-                                            {item?.product?.price.toLocaleString(
-                                                "en-US",
-                                                {
-                                                    currency: "USD",
-                                                }
-                                            )}
-                                            đ
-                                        </p>
-                                        <p className="line-through text-sm my-1 text-gray-400">
-                                            {(
-                                                item?.product?.price * 1.8
-                                            ).toLocaleString("en-US", {
-                                                currency: "USD",
-                                            })}
-                                            đ
-                                        </p>
-                                        <div className="flex">
-                                            <button
-                                                onClick={async () => {
-                                                    if (item.quantity > 1) {
-                                                        dispatch({
-                                                            type: EDIT_CART_SAGA,
-                                                            data: {
-                                                                idUser: user._id,
-                                                                idCart: item._id,
-                                                                quantity:
-                                                                    item.quantity -
-                                                                    1,
-                                                            },
-                                                        })
-                                                    }
-                                                }}
-                                                className={`border-[1px] ${
-                                                    item.quantity === 1
-                                                        ? "bg-gray-100"
-                                                        : ""
-                                                }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
-                                            >
-                                                -
-                                            </button>
-                                            <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
-                                                {item?.quantity}
-                                            </button>
-
-                                            <button
-                                                onClick={async () => {
-                                                    dispatch({
-                                                        type: EDIT_CART_SAGA,
-                                                        data: {
-                                                            idUser: user._id,
-                                                            idCart: item._id,
-                                                            quantity:
-                                                                item.quantity +
-                                                                1,
-                                                        },
-                                                    })
-                                                }}
-                                                className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    {/* <PotentialCartPromotion /> */}
-                                    {itemPromotion.map((p) => {
-                                        if (item.idProduct === p.productId) {
-                                            return (
-                                                <div
-                                                    key={JSON.stringify(p)}
-                                                    className="font-normal text-blue-500 text-sm"
-                                                >
-                                                    {`Mua thêm ${
-                                                        p.soLuongMuaThem
-                                                    } sản phẩm để được giảm ${p.value.toLocaleString(
-                                                        "en-US",
-                                                        {
-                                                            currency: "USD",
-                                                        }
-                                                    )}`}
-                                                </div>
-                                            )
-                                        }
-                                    })}
-                                </div>
-                            </div>
+                            <ProductCart
+                                item={item}
+                                itemPromotion={itemPromotion.filter(
+                                    (pro) =>
+                                        pro.promotionItems[0].productId ===
+                                        item.idProduct
+                                )}
+                                key={index}
+                            />
                         ))}
                     </div>
 
@@ -278,19 +162,30 @@ function ShoppingCartPage(props) {
                         />
                     </div>
                     <div>
-                        {/* <PotentialCartPromotion /> */}
-                        {cartPromotion.slice(0, 3).map((p) => (
-                            <div key={JSON.stringify(p)}>
-                                {`Mua thêm ${
-                                    p.tienmuathem
-                                } để được giảm ${p.value.toLocaleString(
-                                    "en-US",
-                                    {
-                                        currency: "USD",
-                                    }
-                                )}`}
-                            </div>
-                        ))}
+                        <ul>
+                            {/* <PotentialCartPromotion /> */}
+                            {cartPromotion.slice(0, 3).map((p, index) => (
+                                <li key={JSON.stringify(p)} className="p-2">
+                                    <span className="bg-minLink p-1 rounded-sm text-[12px] text-white">
+                                        {index + 1}
+                                    </span>
+                                    <span className="text-[12px] sm:text-[14px] ml-2">
+                                        {`Mua thêm ${p.tienmuathem.toLocaleString(
+                                            "en-US",
+                                            {
+                                                currency: "USD",
+                                            }
+                                        )} sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                                            "en-US",
+                                            {
+                                                currency: "USD",
+                                            }
+                                        )}`}
+                                        đ
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
 
                     {/* Total money */}

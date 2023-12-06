@@ -86,7 +86,7 @@ function ContentLeft(props) {
                 <div className="w-[100%] my-2">
                     {images ? (
                         value ? (
-                            <SliderAdvProduct images={value} />
+                            <SliderAdvProduct images={images} />
                         ) : (
                             <VideoItem
                                 idVideo={idVideo}
