@@ -65,7 +65,7 @@ function Header(props) {
                     </div>
 
                     {user?.admin && (
-                        <Link to={"/admin/user"} className="col-span-2 ">
+                        <Link to={"/admin/user"} className="col-span-2">
                             <div className="py-2 bg-red-500 md:py-0 md:px-2 text-center rounded-md font-semibold">
                                 <AccountCircleIcon
                                     style={{ fontSize: "1rem", color: "#fff" }}

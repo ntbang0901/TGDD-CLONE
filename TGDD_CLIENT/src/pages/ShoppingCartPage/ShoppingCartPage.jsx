@@ -1,5 +1,6 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import { Button, CircularProgress } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { useFormik } from "formik"
 import { Collapse } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
@@ -30,6 +31,10 @@ function ShoppingCartPage(props) {
         obj.productId = cart.idProduct
         obj.quantity = cart.quantity
         return obj
+    })
+
+    const ButtonStyles = styled(Button) ({
+        borderRadius: '24px',
     })
 
     useEffect(() => {
@@ -134,11 +139,11 @@ function ShoppingCartPage(props) {
                                 <span>Mua thêm sản phẩm khác</span>
                             </div>
                         </Link>
-                        <span className="text-sm">Giõ hàng của bạn</span>
+                        <span className="text-sm">Giỏ hàng của bạn</span>
                     </div>
 
                     {/* Products */}
-                    <div className="rounded-md shadow-xl">
+                    <div className="rounded-xl shadow-xl">
                         {shoppingCarts?.map((item, index) => (
                             <ProductCart
                                 item={item}
@@ -162,11 +167,11 @@ function ShoppingCartPage(props) {
                         />
                     </div>
                     <div>
-                        <ul>
+                        <ul className="rounded-xl bg-[#ffd500ae]">
                             {/* <PotentialCartPromotion /> */}
                             {cartPromotion.slice(0, 3).map((p, index) => (
                                 <li key={JSON.stringify(p)} className="p-2">
-                                    <span className="bg-minLink p-1 rounded-sm text-[12px] text-white">
+                                    <span className="p-1 rounded-sm text-[12px] text-black">
                                         {index + 1}
                                     </span>
                                     <span className="text-[12px] sm:text-[14px] ml-2">
@@ -204,14 +209,14 @@ function ShoppingCartPage(props) {
 
                     {/* Buy action */}
                     <div className="mt-4">
-                        <Button
+                        <ButtonStyles
                             onClick={handleSubmit}
                             style={{ width: "100%" }}
                             variant="contained"
                             color="error"
                         >
                             Đặt hàng
-                        </Button>
+                        </ButtonStyles>
                     </div>
                 </div>
             ) : (

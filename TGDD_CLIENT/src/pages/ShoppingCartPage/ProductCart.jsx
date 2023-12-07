@@ -3,12 +3,26 @@ import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentatio
 import { DELETE_CART_SAGA, EDIT_CART_SAGA } from "../../redux/sagas/types/main"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "@mui/material"
+import { styled } from '@mui/material/styles';
 
 const ProductCart = ({ item, itemPromotion }) => {
     const dispatch = useDispatch()
 
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
+
+    const ButtonStyles = styled(Button) ({
+        backgroundColor: "#6DB9EF",
+        margin: '5px',
+        color: '#333',
+        borderRadius: '24px',
+        padding: '0 5 0',
+        fontSize: '12px',
+        "&:hover": {
+            backgroundColor: '#6DB9EF',
+            color: '#fff',
+        }
+    })
 
     console.log(item)
 
@@ -110,13 +124,13 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </div>
                 </div>
             </div>
-            <div className={``}>
-                <ul
+            <div className={`mx-10 rounded-xl mb-5 border-solid border-2`}>
+                {<ul
                     className={` ${
                         !open && itemPromotion.length > 3
-                            ? "h-[115px] overflow-hidden"
+                            ? "h-[130px] overflow-hidden"
                             : ""
-                    } transition duration-150 ease-out `}
+                    } transition duration-150 ease-out p-[5px] `}
                 >
                     {itemPromotion.map((p, index) => (
                         <li className="p-2">
@@ -136,11 +150,11 @@ const ProductCart = ({ item, itemPromotion }) => {
                             </span>
                         </li>
                     ))}
-                </ul>
+                </ul>}
                 {itemPromotion.length > 3 && (
-                    <Button onClick={() => setOpen(!open)}>
+                    <ButtonStyles onClick={() => setOpen(!open)}>
                         {open ? "Thu gọn" : "Xem thêm"}
-                    </Button>
+                    </ButtonStyles>
                 )}
             </div>
         </div>
