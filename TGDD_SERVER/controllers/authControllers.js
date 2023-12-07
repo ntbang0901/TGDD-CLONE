@@ -55,7 +55,7 @@ const authControllers = {
                 _id: user._id,
                 admin: user.admin,
             },
-            "NTBANG",
+            process.env.ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "10d",
             }
