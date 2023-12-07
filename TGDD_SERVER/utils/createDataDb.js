@@ -297,4 +297,4 @@ const createProduct = async () => {
     }
 }
 
-createProduct()
+module.exports = {createProduct}
