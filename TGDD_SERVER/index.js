@@ -29,6 +29,10 @@ app.use(express.json())
 const { connectMongoDB } = require("./utils/connectDB")
 connectMongoDB()
 
+// Create data
+// const { createProduct } = require("./utils/createDataDb")
+// createProduct()
+
 // ROUTES
 const authRouter = require("./routes/auth")
 const userRouter = require("./routes/user")
