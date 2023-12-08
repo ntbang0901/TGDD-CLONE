@@ -1,6 +1,10 @@
 import React, { useState } from "react"
 import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
-import { DELETE_CART_SAGA, EDIT_CART_SAGA } from "../../redux/sagas/types/main"
+import {
+    ADD_TO_CART_SAGA,
+    DELETE_CART_SAGA,
+    EDIT_CART_SAGA,
+} from "../../redux/sagas/types/main"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "@mui/material"
 
@@ -10,7 +14,7 @@ const ProductCart = ({ item, itemPromotion }) => {
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
 
-    console.log(item)
+    console.log("itemPromotion:: -> ", itemPromotion)
 
     return (
         <div className="border-b-[1px] border-gray-300">
@@ -20,7 +24,9 @@ const ProductCart = ({ item, itemPromotion }) => {
                     <div className="flex flex-col items-center justify-center">
                         <img
                             className="w-[80px] h-[80px] object-contain"
-                            src={item?.product?.images[0]}
+                            src={
+                                "https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/407813107_883731056762644_3963513014645724510_n.jpg?stp=dst-jpg_s600x600&_nc_cat=100&ccb=1-7&_nc_sid=3635dc&_nc_ohc=K3MbGfgohoEAX8r-Ovq&_nc_ht=scontent.fhan4-3.fna&oh=00_AfCbEnh32jSXoW5xWMX9POb9RrnzCfl4sqW3k6yACPiy5A&oe=6576C360"
+                            }
                             alt=""
                         />
                         <CancelPresentationRoundedIcon
@@ -34,7 +40,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         type: DELETE_CART_SAGA,
                                         data: {
                                             idUser: user._id,
-                                            idCart: item._id,
+                                            productId: item.product.productId,
+                                            idCart: item.cartId,
                                         },
                                     })
                                 }
@@ -50,7 +57,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                             2 khuyến mãi
                         </p>
                         <p className="text-sm capitalize text-minLink text-center md:text-left">
-                            màu: {item?.product?.images[0]?.colorName}
+                            màu: {"Blue"}
                         </p>
                     </div>
                 </div>
@@ -73,10 +80,11 @@ const ProductCart = ({ item, itemPromotion }) => {
                             onClick={async () => {
                                 if (item.quantity > 1) {
                                     dispatch({
-                                        type: EDIT_CART_SAGA,
+                                        type: ADD_TO_CART_SAGA,
                                         data: {
                                             idUser: user._id,
-                                            idCart: item._id,
+                                            productId: item.product.productId,
+                                            idCart: item.cartId,
                                             quantity: item.quantity - 1,
                                         },
                                     })
@@ -95,10 +103,11 @@ const ProductCart = ({ item, itemPromotion }) => {
                         <button
                             onClick={async () => {
                                 dispatch({
-                                    type: EDIT_CART_SAGA,
+                                    type: ADD_TO_CART_SAGA,
                                     data: {
                                         idUser: user._id,
-                                        idCart: item._id,
+                                        productId: item.product.productId,
+                                        idCart: item.cartId,
                                         quantity: item.quantity + 1,
                                     },
                                 })
@@ -132,7 +141,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         currency: "USD",
                                     }
                                 )}`}{" "}
-                                đồng
+                                {p.discountType === "percentage" ? "%" : "đ"}
                             </span>
                         </li>
                     ))}
