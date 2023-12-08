@@ -46,9 +46,10 @@ export class ProductServices extends BaseService {
 
     deleteCartApi = (data) => {
         console.log(data)
-        return axios.delete(
-            `http://localhost:8080/cart/delete/${data.productId}`
-        )
+        return axios.post(`http://localhost:8080/cart/delete`, {
+            userId: data.idUser,
+            productId: data.productId,
+        })
     }
 
     deleteAllCartApi = (idUser) => {
