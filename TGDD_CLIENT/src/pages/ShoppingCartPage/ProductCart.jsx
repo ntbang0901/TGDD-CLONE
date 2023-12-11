@@ -271,7 +271,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </div>
                 </div>
             </div>
-            <div className={``}>
+            {/* <div className={``}>
                 <ul
                     className={` ${
                         !open && itemPromotion.length > 3
