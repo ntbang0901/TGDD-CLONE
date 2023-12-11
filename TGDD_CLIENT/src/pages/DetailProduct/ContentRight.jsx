@@ -23,7 +23,7 @@ import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import Cart from "./Other/Cart";
 import { useNavigate } from "react-router-dom";
 function ContentRight(props) {
-  const { productDetail, category, isLogin, user, itemPromotion } = props;
+  const { productDetail, category, isLogin, user, itemPromotion, productPayload } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -38,6 +38,7 @@ function ContentRight(props) {
 
   function calculateProductInCart() {
     setStep({ stepsItems: itemPromotion, currentStep: 3 });
+    //setStep({ stepsItems: ["test 1", "test 2", "test 3"], currentStep: 3 });
   }
 
   const renderStaticItem1 = () => {
@@ -96,6 +97,8 @@ function ContentRight(props) {
         </div>
 
         {/*progress bar*/}
+        {console.log("productPayload -->")}
+        {console.log(productPayload)}
         {itemPromotion.length !== 0 ? (
           <div className="max-w-screen-xl mx-auto px-4 md:px-8 my-auto rounded-sm border-[1px] min-w-fit">
             <div className="pt-2">
