@@ -1,3 +1,4 @@
+import React from "react"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import { Button, CircularProgress } from "@mui/material"
 import { styled } from "@mui/material/styles"
@@ -130,7 +131,7 @@ function ShoppingCartPage(props) {
 
     return (
         <div className="flex bg-[#eee] items-center justify-center p-4">
-            {!loadingShoppingCart ? (
+            {/* {!loadingShoppingCart ? ( */}
                 <div className=" rounded-sm bg-white w-[80%] si:w-[60%] sm:w-[55%] py-4 px-4">
                     <div className="flex flex-col md:flex-row mb-2 justify-between items-center gap-2 md:gap-4">
                         <Link to="/">
@@ -180,13 +181,12 @@ function ShoppingCartPage(props) {
                                             {
                                                 currency: "USD",
                                             }
-                                        )} sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                                        )}đ để được giảm ${p.discountValue.toLocaleString(
                                             "en-US",
                                             {
                                                 currency: "USD",
                                             }
-                                        )}`}
-                                        đ
+                                        )}đ`}
                                     </span>
                                 </li>
                             ))}
@@ -219,13 +219,13 @@ function ShoppingCartPage(props) {
                         </ButtonStyles>
                     </div>
                 </div>
-            ) : (
+            {/* ) : (
                 <div className="flex items-center flex-col">
                     <CircularProgress />
 
                     <p>Loading....</p>
                 </div>
-            )}
+            )} */}
         </div>
     )
 }

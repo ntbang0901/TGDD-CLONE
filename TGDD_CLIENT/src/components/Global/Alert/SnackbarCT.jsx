@@ -28,7 +28,7 @@ export default function SnackbarCT() {
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={statusAlert.open}
-        autoHideDuration={800}
+        autoHideDuration={statusAlert.time || 800}
         onClose={handleClose}
       >
         <Alert

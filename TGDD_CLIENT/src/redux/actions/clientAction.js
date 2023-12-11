@@ -187,9 +187,9 @@ export function* deleteComment(action) {
 
 /* CART */
 export function* getCart(action) {
-  yield put({
-    type: SHOW_LOADING_SHOPPING_CART,
-  });
+  // yield put({
+  //   type: SHOW_LOADING_SHOPPING_CART,
+  // });
   try {
     const { data } = yield call(() =>
       productServices.getCartApi(action.idUser)
@@ -204,13 +204,13 @@ export function* getCart(action) {
     console.log(error.response?.data);
     yield call(() => showMess(error.response?.data.message, false));
   }
-  yield put({
-    type: HIDE_LOADING_SHOPPING_CART,
-  });
+  // yield put({
+  //   type: HIDE_LOADING_SHOPPING_CART,
+  // });
 }
 
 export function* addToCart(action) {
-  yield call(() => handleLoading(true));
+  // yield call(() => handleLoading(true));
   try {
     const { data } = yield call(() =>
       productServices.addToCartApi(action.data)
@@ -230,7 +230,7 @@ export function* addToCart(action) {
 }
 
 export function* editCart(action) {
-  yield call(() => handleLoading(true));
+  // yield call(() => handleLoading(true));
   try {
     const { data } = yield call(() => productServices.editCartApi(action.data));
     yield put({
@@ -242,7 +242,7 @@ export function* editCart(action) {
     console.log(error.response?.data);
     yield call(() => showMess(error.response?.data.message, false));
   }
-  yield call(() => handleLoading(false));
+  // yield call(() => handleLoading(false));
 }
 
 export function* deleteCart(action) {

@@ -25,15 +25,15 @@ function ShoppingCart(props) {
       }}
       className="md:bg-[rgba(255,172,10,.6)] py-2 md:py-0 md:px-2  text-center rounded-md font-semibold "
     >
-      {!loadingShoppingCart ? (
+      {/* {!loadingShoppingCart ? ( */}
         <Badge badgeContent={quantityShoppingCart} color="error">
           <ShoppingCartIcon style={{ fontSize: "1rem" }} />
         </Badge>
-      ) : (
+      {/* ) : (
         <CircularProgress
           style={{ width: "20px", height: "20px", marginTop: 4 }}
         />
-      )}
+      )} */}
 
       <span className="text-struncate md:mt-0 ">Giỏ hàng</span>
     </div>

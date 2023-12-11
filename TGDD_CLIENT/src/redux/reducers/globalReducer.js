@@ -138,6 +138,7 @@ const globalReducer = (state = initialState, action) => {
         ...state,
         statusAlert: {
           open: true,
+          time: action?.time,
           mess: action.mess,
           success: action.success,
         },
