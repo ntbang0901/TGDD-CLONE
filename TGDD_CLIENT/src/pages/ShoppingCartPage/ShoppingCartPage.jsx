@@ -24,22 +24,15 @@ function ShoppingCartPage(props) {
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
         useSelector((state) => state.global)
 
-    const [promotionList, setPromotionList] = useState({
-        cart: [],
-        item: [],
-    })
+    const [cartPromotion, setCartPromotion] = useState([])
+    const [itemPromotion, setItemPromotion] = useState([])
 
     const productPayload = shoppingCarts.map((cart) => {
-        const obj = {
-            quantity: cart.quantity,
-            product: {
-                productId: cart.product.productId,
-            },
-        }
-
+        const obj = {}
+        obj.productId = cart.idProduct
+        obj.quantity = cart.quantity
         return obj
     })
-    console.log("promotionlist:: -> ", promotionList)
 
     const ButtonStyles = styled(Button) ({
         borderRadius: '24px',
@@ -74,17 +67,16 @@ function ShoppingCartPage(props) {
                 "http://localhost:8080/promotion/suggest-promotion",
                 body
             )
-            const data = {
-                cart: response.data.cartPromotion,
-                item: response.data.itemPromotion,
-            }
 
-            setPromotionList(data)
+            setCartPromotion(response.data.cartPromotion)
+            setItemPromotion(response.data.itemPromotion)
         }
         if (shoppingCarts.length > 0) {
             getKMTN()
         }
     }, [shoppingCarts])
+
+    console.log("itemPromotion:: -> ", itemPromotion)
 
     useEffect(() => {
         if (user._id) {
@@ -156,10 +148,10 @@ function ShoppingCartPage(props) {
                         {shoppingCarts?.map((item, index) => (
                             <ProductCart
                                 item={item}
-                                itemPromotion={promotionList.item.filter(
+                                itemPromotion={itemPromotion.filter(
                                     (pro) =>
                                         pro.promotionItems[0].productId ===
-                                        item.product.productId
+                                        item.idProduct
                                 )}
                                 key={index}
                             />
@@ -178,7 +170,7 @@ function ShoppingCartPage(props) {
                     <div>
                         <ul className="rounded-xl bg-[#ffd500ae]">
                             {/* <PotentialCartPromotion /> */}
-                            {promotionList.cart.slice(0, 3).map((p, index) => (
+                            {cartPromotion.slice(0, 3).map((p, index) => (
                                 <li key={JSON.stringify(p)} className="p-2">
                                     <span className="p-1 rounded-sm text-[12px] text-black">
                                         {index + 1}
@@ -195,9 +187,7 @@ function ShoppingCartPage(props) {
                                                 currency: "USD",
                                             }
                                         )}`}
-                                        {p.discountType === "percentage"
-                                            ? "%"
-                                            : "d"}
+                                        đ
                                     </span>
                                 </li>
                             ))}
