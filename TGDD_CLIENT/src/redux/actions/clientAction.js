@@ -192,16 +192,16 @@ export function* deleteComment(action) {
 
 /* CART */
 export function* getCart(action) {
-    yield put({
-        type: SHOW_LOADING_SHOPPING_CART,
-    })
+    // yield put({
+      //   type: SHOW_LOADING_SHOPPING_CART,
+    // })
     try {
         const { data } = yield call(() =>
             productServices.getCartApi(action.idUser)
         )
         console.log("DATA::", data)
         let total = 0
-        data.listCartItems.map((item) => {
+        data?.listCartItems.map((item) => {
             total += item.quantity
         })
         yield put({
@@ -212,22 +212,22 @@ export function* getCart(action) {
     } catch (error) {
         console.log(error)
         console.log(error.response?.data)
-        yield call(() => showMess(error.response?.data.message, false))
+        yield call(() => showMess(error.response?.data?.message, false))
     }
-    yield put({
-        type: HIDE_LOADING_SHOPPING_CART,
-    })
+    // yield put({
+      //   type: HIDE_LOADING_SHOPPING_CART,
+    // })
 }
 
 export function* addToCart(action) {
-    yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         console.log("action:: ", action.data)
         const { data } = yield call(() =>
             productServices.addToCartApi(action.data)
         )
 
-        yield call(() => showMess("Thêm vào giõ hàng thành công", true))
+        yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
@@ -241,7 +241,7 @@ export function* addToCart(action) {
 }
 
 export function* editCart(action) {
-    yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         console.log("action::", action.data)
         const { data } = yield call(() =>
@@ -256,7 +256,7 @@ export function* editCart(action) {
         console.log(error.response?.data)
         yield call(() => showMess(error.response?.data.message, false))
     }
-    yield call(() => handleLoading(false))
+    // yield call(() => handleLoading(false))
 }
 
 export function* deleteCart(action) {

@@ -1,5 +1,7 @@
+import React from "react"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import { Button, CircularProgress } from "@mui/material"
+import { styled } from "@mui/material/styles"
 import { useFormik } from "formik"
 import { Collapse } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
@@ -38,6 +40,10 @@ function ShoppingCartPage(props) {
         return obj
     })
     console.log("promotionlist:: -> ", promotionList)
+
+    const ButtonStyles = styled(Button) ({
+        borderRadius: '24px',
+    })
 
     useEffect(() => {
         const getKMTN = async () => {
@@ -133,7 +139,7 @@ function ShoppingCartPage(props) {
 
     return (
         <div className="flex bg-[#eee] items-center justify-center p-4">
-            {!loadingShoppingCart ? (
+            {/* {!loadingShoppingCart ? ( */}
                 <div className=" rounded-sm bg-white w-[80%] si:w-[60%] sm:w-[55%] py-4 px-4">
                     <div className="flex flex-col md:flex-row mb-2 justify-between items-center gap-2 md:gap-4">
                         <Link to="/">
@@ -142,11 +148,11 @@ function ShoppingCartPage(props) {
                                 <span>Mua thêm sản phẩm khác</span>
                             </div>
                         </Link>
-                        <span className="text-sm">Giõ hàng của bạn</span>
+                        <span className="text-sm">Giỏ hàng của bạn</span>
                     </div>
 
                     {/* Products */}
-                    <div className="rounded-md shadow-xl">
+                    <div className="rounded-xl shadow-xl">
                         {shoppingCarts?.map((item, index) => (
                             <ProductCart
                                 item={item}
@@ -170,11 +176,11 @@ function ShoppingCartPage(props) {
                         />
                     </div>
                     <div>
-                        <ul>
+                        <ul className="rounded-xl bg-[#ffd500ae]">
                             {/* <PotentialCartPromotion /> */}
                             {promotionList.cart.slice(0, 3).map((p, index) => (
                                 <li key={JSON.stringify(p)} className="p-2">
-                                    <span className="bg-minLink p-1 rounded-sm text-[12px] text-white">
+                                    <span className="p-1 rounded-sm text-[12px] text-black">
                                         {index + 1}
                                     </span>
                                     <span className="text-[12px] sm:text-[14px] ml-2">
@@ -183,7 +189,7 @@ function ShoppingCartPage(props) {
                                             {
                                                 currency: "USD",
                                             }
-                                        )} sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                                        )}đ để được giảm ${p.discountValue.toLocaleString(
                                             "en-US",
                                             {
                                                 currency: "USD",
@@ -214,23 +220,23 @@ function ShoppingCartPage(props) {
 
                     {/* Buy action */}
                     <div className="mt-4">
-                        <Button
+                        <ButtonStyles
                             onClick={handleSubmit}
                             style={{ width: "100%" }}
                             variant="contained"
                             color="error"
                         >
                             Đặt hàng
-                        </Button>
+                        </ButtonStyles>
                     </div>
                 </div>
-            ) : (
+            {/* ) : (
                 <div className="flex items-center flex-col">
                     <CircularProgress />
 
                     <p>Loading....</p>
                 </div>
-            )}
+            )} */}
         </div>
     )
 }
