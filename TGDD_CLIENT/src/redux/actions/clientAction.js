@@ -201,7 +201,7 @@ export function* getCart(action) {
         )
         console.log("DATA::", data)
         let total = 0
-        data.listCartItems.map((item) => {
+        data?.listCartItems.map((item) => {
             total += item.quantity
         })
         yield put({
@@ -212,7 +212,7 @@ export function* getCart(action) {
     } catch (error) {
         console.log(error)
         console.log(error.response?.data)
-        yield call(() => showMess(error.response?.data.message, false))
+        yield call(() => showMess(error.response?.data?.message, false))
     }
     // yield put({
       //   type: HIDE_LOADING_SHOPPING_CART,
@@ -227,7 +227,7 @@ export function* addToCart(action) {
             productServices.addToCartApi(action.data)
         )
 
-        yield call(() => showMess("Thêm vào giõ hàng thành công", true))
+        yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
