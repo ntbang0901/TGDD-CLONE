@@ -55,7 +55,7 @@ const authControllers = {
                 _id: user._id,
                 admin: user.admin,
             },
-            "NTBANG",
+            process.env.ACCESS_TOKEN_SECRET,
             {
                 expiresIn: "10d",
             }
@@ -127,6 +127,7 @@ const authControllers = {
                 },
             })
         } catch (error) {
+            console.log(error)
             return res.status(500).json({
                 message: "Lỗi server!",
                 success: false,

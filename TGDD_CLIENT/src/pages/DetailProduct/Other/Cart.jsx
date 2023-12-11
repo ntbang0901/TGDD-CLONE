@@ -2,6 +2,7 @@ import { Button, createTheme, ThemeProvider } from "@mui/material"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
+import axios from "axios"
 const theme = createTheme({
     palette: {
         primary: {
@@ -17,6 +18,16 @@ function Cart(props) {
     const [indexColor, setIndexColor] = useState(0)
     const [quantity, setQuantity] = useState(1)
     const dispatch = useDispatch()
+
+    const addCart = (data) => {
+        console.log(data)
+        axios.post("http://localhost:8080/cart/add", {
+            userId: data.idUser,
+            productId: productDetail.productId,
+            quantity: data.quantity,
+        })
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <div className="w-[375px]">
@@ -115,15 +126,17 @@ function Cart(props) {
                         }
 
                         if (quantity > 0) {
+                            const data = {
+                                productId: productDetail.productId,
+                                idUser: user._id,
+                                idColor: images[0].colorValue,
+                                product,
+                                quantity,
+                            }
+                            // addCart(data)
                             dispatch({
                                 type: ADD_TO_CART_SAGA,
-                                data: {
-                                    idProduct: productDetail._id,
-                                    idUser: user._id,
-                                    idColor: images[0].colorValue,
-                                    product,
-                                    quantity,
-                                },
+                                data,
                             })
                         } else {
                             alert("Số lượng sản phẩm phải lớn hơn 0")

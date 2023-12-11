@@ -30,12 +30,7 @@ function DetailProduct(props) {
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.get(
-                "http://localhost:8080/promotion/product-suggest-promotion",
-                {
-                    params: {
-                        productId: productDetail.productId,
-                    },
-                }
+                `http://localhost:8080/promotion/product-suggest-promotion/${productDetail.productId}`
             )
 
             setItemPromotion(response.data.productPromotion)

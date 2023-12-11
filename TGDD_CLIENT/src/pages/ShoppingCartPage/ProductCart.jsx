@@ -175,7 +175,9 @@ const ProductCart = ({ item, itemPromotion }) => {
           <div className="flex flex-col items-center justify-center">
             <img
               className="w-[80px] h-[80px] object-contain"
-              src={item?.product?.images[0]}
+              src={
+                                "https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/407813107_883731056762644_3963513014645724510_n.jpg?stp=dst-jpg_s600x600&_nc_cat=100&ccb=1-7&_nc_sid=3635dc&_nc_ohc=K3MbGfgohoEAX8r-Ovq&_nc_ht=scontent.fhan4-3.fna&oh=00_AfCbEnh32jSXoW5xWMX9POb9RrnzCfl4sqW3k6yACPiy5A&oe=6576C360"
+                            }
               alt=""
             />
             <CancelPresentationRoundedIcon
@@ -189,7 +191,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                     type: DELETE_CART_SAGA,
                     data: {
                       idUser: user._id,
-                      idCart: item._id,
+                                        productId: item.product.productId,
+                      idCart: item.cartId,
                     },
                   });
                 }
@@ -205,7 +208,7 @@ const ProductCart = ({ item, itemPromotion }) => {
               2 khuyến mãi
             </p>
             <p className="text-sm capitalize text-minLink text-center md:text-left">
-              màu: {item?.product?.images[0]?.colorName}
+              màu: {"Blue"}
             </p>
           </div>
         </div>
@@ -228,10 +231,11 @@ const ProductCart = ({ item, itemPromotion }) => {
               onClick={async () => {
                 if (item.quantity > 1) {
                   dispatch({
-                    type: EDIT_CART_SAGA,
+                    type: ADD_TO_CART_SAGA,
                     data: {
                       idUser: user._id,
-                      idCart: item._id,
+                                            productId: item.product.productId,
+                      idCart: item.cartId,
                       quantity: item.quantity - 1,
                     },
                   });
@@ -247,28 +251,27 @@ const ProductCart = ({ item, itemPromotion }) => {
               {item?.quantity}
             </button>
 
-            <button
-              onClick={async () => {
-                let data = {
-                  idUser: user._id,
-                  idCart: item._id,
-                  quantity: item.quantity + 1,
-                };
-                checkPromotion(data?.quantity, 0);
-                dispatch({
-                  type: EDIT_CART_SAGA,
-                  data,
-                });
-              }}
-              className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
-            >
-              +
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* <div className={`mx-10 rounded-xl mb-5 border-solid ${itemPromotion[0]?.soLuongMuaThem ? 'border-2' : ''}`}>
-                {itemPromotion[0]?.soLuongMuaThem ? 
+                        <button
+                            onClick={async () => {
+
+                                dispatch({
+                                    type: ADD_TO_CART_SAGA,
+                                    data: {
+                                        idUser: user._id,
+                                        productId: item.product.productId,
+                                        idCart: item.cartId,
+                                        quantity: item.quantity + 1,
+                                    },
+                                })
+                            }}
+                            className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div className={``}>
                 <ul
                     className={` ${
                         !open && itemPromotion.length > 3
@@ -290,7 +293,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         currency: "USD",
                                     }
                                 )}`}{" "}
-                                đồng
+                                {p.discountType === "percentage" ? "%" : "đ"}
                             </span>
                         </li>
                     ))}
