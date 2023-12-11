@@ -1,14 +1,12 @@
-import React from "react"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import { Button, CircularProgress } from "@mui/material"
+import { Button, CircularProgress, Collapse } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import axios from "axios"
 import { useFormik } from "formik"
-import { Collapse } from "@mui/material"
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
-import axios from "axios"
 import {
     ADD_HISTORY_SAGA,
     DELETE_CART_SAGA,
@@ -39,7 +37,6 @@ function ShoppingCartPage(props) {
 
         return obj
     })
-    console.log("promotionlist:: -> ", promotionList)
 
     const ButtonStyles = styled(Button) ({
         borderRadius: '24px',

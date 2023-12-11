@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const MONGO_URL = "mongodb://0.0.0.0:27017/TGDD"
+const MONGO_URL = "mongodb://root:example@localhost:27017/?authSource=admin&readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
 
 const connectMongoDB = async () => {
     try {

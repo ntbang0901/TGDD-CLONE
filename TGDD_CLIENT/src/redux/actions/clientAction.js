@@ -1,7 +1,7 @@
 import { call, put } from "redux-saga/effects"
+import { productServices } from "../../services/ProductServices"
 import { commentServices } from "../../services/commentServices"
 import { pageServices } from "../../services/pageServices"
-import { productServices } from "../../services/ProductServices"
 import {
     HIDE_LOADING_HISTORY,
     HIDE_LOADING_SHOPPING_CART,
@@ -220,7 +220,7 @@ export function* getCart(action) {
 }
 
 export function* addToCart(action) {
-    // yield call(() => handleLoading(true))
+    yield call(() => handleLoading(true))
     try {
         console.log("action:: ", action.data)
         const { data } = yield call(() =>
