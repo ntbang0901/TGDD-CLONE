@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded";
 import {
   ADD_TO_CART_SAGA,
@@ -13,23 +13,8 @@ import ProgressBar from "./../../components/ProgressBar/ProgressBar";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Typography from "@mui/material/Typography";
-import { Button } from "@mui/material";
-// const ButtonStyles = styled(Button) ({
-//     backgroundColor: "#6DB9EF",
-//     margin: '5px',
-//     color: '#333',
-//     borderRadius: '24px',
-//     padding: '0 5 0',
-//     fontSize: '12px',
-//     "&:hover": {
-//         backgroundColor: '#6DB9EF',
-//         color: '#fff',
-//     }
-// })
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -40,17 +25,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-// const ProgressCustom = styled(LinearProgress) ({
-//     width: '100%',
-//     height: 20,
-//     borderRadius: '0.75rem 0.75rem 0 0 ',
-// })
-
 const ProductCart = ({ item, itemPromotion }) => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.user);
   const [open, setOpen] = useState(false);
+
+  const [notify, setNotify] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -65,17 +46,16 @@ const ProductCart = ({ item, itemPromotion }) => {
     console.log("quantity :: ", quantity);
 
     if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
-      dispatch({
-        type: SHOW_ALERT,
-        time: 1500,
-        success: true,
-        mess: `Yay! Bạn đã tiết kiệm được ${itemPromotion[index]?.discountValue.toLocaleString(
-          "en-US",
-          {
-            currency: "USD",
-          }
-        )}đ`,
-      });
+      setNotify(
+        `Yay! Bạn đã tiết kiệm được ${itemPromotion[
+          index
+        ]?.discountValue.toLocaleString("en-US", {
+          currency: "USD",
+        })}đ`
+      );
+      setTimeout(()=> {
+        setNotify('')
+      }, 1500)
     }
   };
 
@@ -84,20 +64,26 @@ const ProductCart = ({ item, itemPromotion }) => {
       {itemPromotion[0]?.soLuongMuaThem ? (
         <>
           <ProgressBar
-            text={`Mua thêm ${
-              itemPromotion[0]?.soLuongMuaThem
-            } sản phẩm để tiết kiệm ${itemPromotion[0]?.discountValue.toLocaleString(
-              "en-US",
-              {
-                currency: "USD",
-              }
-            )} đồng`}
+            text={
+              notify === '' ?
+                `Mua thêm ${
+                    itemPromotion[0]?.soLuongMuaThem
+                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
+                    "en-US",
+                    {
+                      currency: "USD",
+                    }
+                  )} ${
+                    itemPromotion[0]?.discountType === "percentage" ? "%" : "đ"
+                  } `
+            : notify}
             item={
               itemPromotion[0]?.promotionItems[0]?.quantity -
               itemPromotion[0]?.soLuongMuaThem
             }
             itemQuantity={itemPromotion[0]?.promotionItems[0]?.quantity}
             onClick={handleClickOpen}
+            notify={notify}
           />
           <BootstrapDialog
             onClose={handleClose}
@@ -122,39 +108,37 @@ const ProductCart = ({ item, itemPromotion }) => {
               <CloseIcon />
             </IconButton>
             <DialogContent dividers>
-              {itemPromotion[0]?.soLuongMuaThem ? (
-                <ul
-                // className={` ${
-                //     !open && itemPromotion.length > 3
-                //         ? "h-[130px] overflow-hidden"
-                //         : ""
-                // } transition duration-150 ease-out p-[5px] `}
-                >
+              
+                <ul>
                   {itemPromotion.map((p, index) => (
-                    <li className="p-2 hover:cursor-pointer flex justify-between items-center">
-                      <span className="text-[12px] sm:text-[14px]">
+                    <li
+                      className="p-2 hover:cursor-pointer flex justify-between items-center"
+                      key={index}
+                    >
+                      <span className="text-[12px] sm:text-[14px] ml-2">
                         {`Mua thêm ${
-                          p.soLuongMuaThem
-                        } sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                          p?.soLuongMuaThem
+                        } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
                           "en-US",
                           {
                             currency: "USD",
                           }
                         )}`}{" "}
-                        đồng
+                        {p?.discountType === "percentage" ? "%" : "đồng"}
                       </span>
                       <button
                         className="hover:bg-[#ccc] p-2 rounded-md"
                         onClick={async () => {
-                            let data = {
-                                idUser: user._id,
-                                idCart: item._id,
-                                quantity: p?.promotionItems[0].quantity,
-                              }
-                              checkPromotion(data?.quantity, index)
+                          let data = {
+                            idUser: user._id,
+                            idCart: item._id,
+                            productId: item?.product.productId,
+                            quantity: p?.promotionItems[0].quantity,
+                          };
+                          checkPromotion(data?.quantity, index);
                           dispatch({
-                            type: EDIT_CART_SAGA,
-                            data
+                            type: ADD_TO_CART_SAGA,
+                            data,
                           });
                           handleClose();
                         }}
@@ -164,7 +148,6 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </li>
                   ))}
                 </ul>
-              ) : null}
             </DialogContent>
           </BootstrapDialog>
         </>
@@ -176,8 +159,8 @@ const ProductCart = ({ item, itemPromotion }) => {
             <img
               className="w-[80px] h-[80px] object-contain"
               src={
-                                "https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/407813107_883731056762644_3963513014645724510_n.jpg?stp=dst-jpg_s600x600&_nc_cat=100&ccb=1-7&_nc_sid=3635dc&_nc_ohc=K3MbGfgohoEAX8r-Ovq&_nc_ht=scontent.fhan4-3.fna&oh=00_AfCbEnh32jSXoW5xWMX9POb9RrnzCfl4sqW3k6yACPiy5A&oe=6576C360"
-                            }
+                "https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/407813107_883731056762644_3963513014645724510_n.jpg?stp=dst-jpg_s600x600&_nc_cat=100&ccb=1-7&_nc_sid=3635dc&_nc_ohc=K3MbGfgohoEAX8r-Ovq&_nc_ht=scontent.fhan4-3.fna&oh=00_AfCbEnh32jSXoW5xWMX9POb9RrnzCfl4sqW3k6yACPiy5A&oe=6576C360"
+              }
               alt=""
             />
             <CancelPresentationRoundedIcon
@@ -191,7 +174,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                     type: DELETE_CART_SAGA,
                     data: {
                       idUser: user._id,
-                                        productId: item.product.productId,
+                      productId: item.product.productId,
                       idCart: item.cartId,
                     },
                   });
@@ -230,14 +213,15 @@ const ProductCart = ({ item, itemPromotion }) => {
             <button
               onClick={async () => {
                 if (item.quantity > 1) {
+                  let data = {
+                    idUser: user._id,
+                    productId: item.product.productId,
+                    idCart: item.cartId,
+                    quantity: item.quantity - 1,
+                  };
                   dispatch({
                     type: ADD_TO_CART_SAGA,
-                    data: {
-                      idUser: user._id,
-                                            productId: item.product.productId,
-                      idCart: item.cartId,
-                      quantity: item.quantity - 1,
-                    },
+                    data,
                   });
                 }
               }}
@@ -251,27 +235,28 @@ const ProductCart = ({ item, itemPromotion }) => {
               {item?.quantity}
             </button>
 
-                        <button
-                            onClick={async () => {
-
-                                dispatch({
-                                    type: ADD_TO_CART_SAGA,
-                                    data: {
-                                        idUser: user._id,
-                                        productId: item.product.productId,
-                                        idCart: item.cartId,
-                                        quantity: item.quantity + 1,
-                                    },
-                                })
-                            }}
-                            className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
-                        >
-                            +
-                        </button>
-                    </div>
-                </div>
-            </div>
-            {/* <div className={``}>
+            <button
+              onClick={async () => {
+                let data = {
+                  idUser: user._id,
+                  productId: item.product.productId,
+                  idCart: item.cartId,
+                  quantity: item.quantity + 1,
+                };
+                checkPromotion(data?.quantity, 0);
+                dispatch({
+                  type: ADD_TO_CART_SAGA,
+                  data,
+                });
+              }}
+              className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
+            >
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* <div className={``}>
                 <ul
                     className={` ${
                         !open && itemPromotion.length > 3
