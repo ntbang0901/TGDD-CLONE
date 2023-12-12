@@ -7,6 +7,7 @@ import ContentLeft from "./ContentLeft"
 import ContentRight from "./ContentRight"
 import Title from "./Title"
 import axios from "axios"
+import { DOMAIN2 } from "../../utils/Settings/global"
 const theme = createTheme({
     palette: {
         primary: {
@@ -30,7 +31,7 @@ function DetailProduct(props) {
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.get(
-                `http://localhost:8080/promotion/product-suggest-promotion/${productDetail.productId}`
+                `${DOMAIN2}/promotion/product-suggest-promotion/${productDetail.productId}`
             )
 
             setItemPromotion(response.data.productPromotion)

@@ -18,6 +18,7 @@ import {
 import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
 import ProductCart from "./ProductCart"
+import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
@@ -41,8 +42,8 @@ function ShoppingCartPage(props) {
     })
     console.log("promotionlist:: -> ", promotionList)
 
-    const ButtonStyles = styled(Button) ({
-        borderRadius: '24px',
+    const ButtonStyles = styled(Button)({
+        borderRadius: "24px",
     })
 
     useEffect(() => {
@@ -55,7 +56,7 @@ function ShoppingCartPage(props) {
                 listCartItems: productPayload,
             }
             const response = await axios.post(
-                "http://localhost:8080/promotion/suggest-promotion",
+                `${DOMAIN2}/promotion/suggest-promotion`,
                 body
             )
             const data = {
@@ -124,97 +125,97 @@ function ShoppingCartPage(props) {
     return (
         <div className="flex bg-[#eee] items-center justify-center p-4">
             {/* {!loadingShoppingCart ? ( */}
-                <div className=" rounded-sm bg-white w-[80%] si:w-[60%] sm:w-[55%] py-4 px-4">
-                    <div className="flex flex-col md:flex-row mb-2 justify-between items-center gap-2 md:gap-4">
-                        <Link to="/">
-                            <div className="text-minLink hover:opacity-70 cursor-pointer text-struncate">
-                                <ChevronLeftIcon />
-                                <span>Mua thêm sản phẩm khác</span>
-                            </div>
-                        </Link>
-                        <span className="text-sm">Giỏ hàng của bạn</span>
-                    </div>
-
-                    {/* Products */}
-                    <div className="rounded-xl shadow-xl">
-                        {shoppingCarts?.map((item, index) => (
-                            <ProductCart
-                                item={item}
-                                itemPromotion={promotionList.item.filter(
-                                    (pro) =>
-                                        pro.promotionItems[0].productId ===
-                                        item.product.productId
-                                )}
-                                key={index}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Info */}
-                    <div className="">
-                        <Info
-                            touched={touched}
-                            handleChange={handleChange}
-                            setFieldValue={setFieldValue}
-                            errors={errors}
-                        />
-                    </div>
-                    <div>
-                        <p>Ưu đãi cho giỏ hàng</p>
-                        <ul className="rounded-xl bg-[#ffd500ae] mt-2">
-                            {/* <PotentialCartPromotion /> */}
-                            {promotionList.cart.slice(0, 3).map((p, index) => (
-                                <li key={JSON.stringify(p)} className="p-2">
-                                    <span className="p-1 rounded-sm text-[12px] text-black">
-                                        {index + 1}
-                                    </span>
-                                    <span className="text-[12px] sm:text-[14px] ml-2">
-                                        {`Mua thêm ${p.tienmuathem.toLocaleString(
-                                            "en-US",
-                                            {
-                                                currency: "USD",
-                                            }
-                                        )}đ để được giảm ${p.discountValue.toLocaleString(
-                                            "en-US",
-                                            {
-                                                currency: "USD",
-                                            }
-                                        )}`}
-                                        {p.discountType === "percentage"
-                                            ? "%"
-                                            : " đồng"}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Total money */}
-                    <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
-                        <h1 className="font-semibold">
-                            Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
-                        </h1>
-
-                        <span className="text-base text-red-600 font-semibold">
-                            {getTotalPrice.toLocaleString("en-US", {
-                                currency: "USD",
-                            })}
-                            đ
-                        </span>
-                    </div>
-
-                    {/* Buy action */}
-                    <div className="mt-4">
-                        <ButtonStyles
-                            onClick={handleSubmit}
-                            style={{ width: "100%" }}
-                            variant="contained"
-                            color="error"
-                        >
-                            Đặt hàng
-                        </ButtonStyles>
-                    </div>
+            <div className=" rounded-sm bg-white w-[80%] si:w-[60%] sm:w-[55%] py-4 px-4">
+                <div className="flex flex-col md:flex-row mb-2 justify-between items-center gap-2 md:gap-4">
+                    <Link to="/">
+                        <div className="text-minLink hover:opacity-70 cursor-pointer text-struncate">
+                            <ChevronLeftIcon />
+                            <span>Mua thêm sản phẩm khác</span>
+                        </div>
+                    </Link>
+                    <span className="text-sm">Giỏ hàng của bạn</span>
                 </div>
+
+                {/* Products */}
+                <div className="rounded-xl shadow-xl">
+                    {shoppingCarts?.map((item, index) => (
+                        <ProductCart
+                            item={item}
+                            itemPromotion={promotionList.item.filter(
+                                (pro) =>
+                                    pro.promotionItems[0].productId ===
+                                    item.product.productId
+                            )}
+                            key={index}
+                        />
+                    ))}
+                </div>
+
+                {/* Info */}
+                <div className="">
+                    <Info
+                        touched={touched}
+                        handleChange={handleChange}
+                        setFieldValue={setFieldValue}
+                        errors={errors}
+                    />
+                </div>
+                <div>
+                    <p>Ưu đãi cho giỏ hàng</p>
+                    <ul className="rounded-xl bg-[#ffd500ae] mt-2">
+                        {/* <PotentialCartPromotion /> */}
+                        {promotionList.cart.slice(0, 3).map((p, index) => (
+                            <li key={JSON.stringify(p)} className="p-2">
+                                <span className="p-1 rounded-sm text-[12px] text-black">
+                                    {index + 1}
+                                </span>
+                                <span className="text-[12px] sm:text-[14px] ml-2">
+                                    {`Mua thêm ${p.tienmuathem.toLocaleString(
+                                        "en-US",
+                                        {
+                                            currency: "USD",
+                                        }
+                                    )}đ để được giảm ${p.discountValue.toLocaleString(
+                                        "en-US",
+                                        {
+                                            currency: "USD",
+                                        }
+                                    )}`}
+                                    {p.discountType === "percentage"
+                                        ? "%"
+                                        : " đồng"}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Total money */}
+                <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
+                    <h1 className="font-semibold">
+                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
+                    </h1>
+
+                    <span className="text-base text-red-600 font-semibold">
+                        {getTotalPrice.toLocaleString("en-US", {
+                            currency: "USD",
+                        })}
+                        đ
+                    </span>
+                </div>
+
+                {/* Buy action */}
+                <div className="mt-4">
+                    <ButtonStyles
+                        onClick={handleSubmit}
+                        style={{ width: "100%" }}
+                        variant="contained"
+                        color="error"
+                    >
+                        Đặt hàng
+                    </ButtonStyles>
+                </div>
+            </div>
             {/* ) : (
                 <div className="flex items-center flex-col">
                     <CircularProgress />
