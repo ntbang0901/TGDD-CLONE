@@ -86,7 +86,7 @@ function DetailProduct(props) {
         <ThemeProvider theme={theme}>
             <div className="px-4 sm:px-12 py-4">
                 <Title
-                    name={productDetail?.name}
+                    name={productDetail?.productName}
                     brand={productDetail?.brand}
                     category={productDetail.category}
                 />
@@ -98,8 +98,8 @@ function DetailProduct(props) {
                             category={location.pathname.split("/")[1]}
                             id={productDetail?._id}
                             idVideo={productDetail?.idVideo}
-                            images={productDetail?.images}
-                            name={productDetail?.name}
+                            images={productDetail?.photo}
+                            name={productDetail?.productName}
                             description={productDetail?.description}
                         />
                     </div>

@@ -3,8 +3,11 @@ import LocalAirportOutlinedIcon from "@mui/icons-material/LocalAirportOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import { Button } from "@mui/material";
 import _ from "lodash";
-import { memo, useState, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import SimpleSkeleton from "../../components/Skeleton/SimpleSkeleton";
+import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import {
   dataKeyAcessory,
   dataKeyLaptop,
@@ -18,10 +21,7 @@ import {
   selectStorageSmartPhone,
   selectStorageTablet,
 } from "../../utils/Settings/data";
-import { useDispatch } from "react-redux";
-import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import Cart from "./Other/Cart";
-import { useNavigate } from "react-router-dom";
 function ContentRight(props) {
 
   const {
@@ -77,7 +77,7 @@ function ContentRight(props) {
                             phẩm
                         </p>
                     </div>
-                    <div className={``}>
+                    <div>
                         <ul
                             className={` ${
                                 !open && itemPromotion.length > 3
@@ -365,7 +365,7 @@ function ContentRight(props) {
           </div>
           {/* Colors */}
           <div className="grid grid-cols-2  sm:grid-cols-3 lg:grid-cols-4 my-2  gap-2">
-            {renderColor(productDetail?.images)}
+            {renderColor(productDetail?.photo)}
           </div>
         </>
       ) : (
