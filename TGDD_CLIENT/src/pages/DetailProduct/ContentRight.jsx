@@ -23,6 +23,7 @@ import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import Cart from "./Other/Cart";
 import { useNavigate } from "react-router-dom";
 function ContentRight(props) {
+
   const {
     productDetail,
     category,
@@ -40,6 +41,56 @@ function ContentRight(props) {
     currentStep: 0,
   });
   const [progressValue, setProgressValue] = useState();
+  const renderStaticItem1 = () => {
+        return !_.isEmpty(productDetail) ? (
+            <>
+                <div className="my-2 rounded-sm border-[1px]">
+                    <div className="bg-gray-200 px-2 py-2">
+                        <h1 className="font-semibold sm:text-left text-center text-base">
+                            Khuyến mãi sắp đạt được
+                        </h1>
+                        <p className="text-[12px] sm:text-[14px] sm:text-left text-center">
+                            Giá và khuyến mãi dự kiến áp dụng đến khi hết sản
+                            phẩm
+                        </p>
+                    </div>
+                    <div className={``}>
+                        <ul
+                            className={` ${
+                                !open && itemPromotion.length > 3
+                                    ? "h-[115px] overflow-hidden"
+                                    : ""
+                            } transition duration-150 ease-out `}
+                        >
+                            {itemPromotion.map((p, index) => (
+                                <li className="p-2">
+                                    <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
+                                        HOT
+                                    </span>
+                                    <span className="text-[12px] sm:text-[14px] ml-2">
+                                        {`Mua thêm ${
+                                            p.soLuongMuaThem
+                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                                            "en-US",
+                                            {
+                                                currency: "USD",
+                                            }
+                                        )}${
+                                            itemPromotion[0]?.discountType ===
+                                            "percentage"
+                                                ? "%"
+                                                : " đồng"
+                                        }`}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                        {itemPromotion.length > 3 && (
+                            <Button onClick={() => setOpen(!open)}>
+                                {open ? "Thu gọn" : "Xem thêm"}
+                            </Button>
+                        )}
+                    </div>
 
   useEffect(() => {
     calculateProductInCart();
@@ -62,52 +113,6 @@ function ContentRight(props) {
     }
     setStep({ stepsItems: itemPromotion, currentStep: 2 });
   }
-
-  const renderStaticItem1 = () => {
-    return !_.isEmpty(productDetail) ? (
-      <>
-        <div className="my-2 rounded-sm border-[1px]">
-          <div className="bg-gray-200 px-2 py-2">
-            <h1 className="font-semibold sm:text-left text-center text-base">
-              Khuyến mãi sắp đạt được
-            </h1>
-            <p className="text-[12px] sm:text-[14px] sm:text-left text-center">
-              Giá và khuyến mãi dự kiến áp dụng đến khi hết sản phẩm
-            </p>
-          </div>
-          <div className={``}>
-            <ul
-              className={` ${
-                !open && itemPromotion.length > 3
-                  ? "h-[115px] overflow-hidden"
-                  : ""
-              } transition duration-150 ease-out `}
-            >
-              {itemPromotion.map((p, index) => (
-                <li className="p-2">
-                  <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
-                    HOT
-                  </span>
-                  <span className="text-[12px] sm:text-[14px] ml-2">
-                    {`Mua thêm ${
-                      p.soLuongMuaThem
-                    } sản phẩm để được giảm ${p.discountValue.toLocaleString(
-                      "en-US",
-                      {
-                        currency: "USD",
-                      }
-                    )}`}{" "}
-                    đồng
-                  </span>
-                </li>
-              ))}
-            </ul>
-            {itemPromotion.length > 3 && (
-              <Button onClick={() => setOpen(!open)}>
-                {open ? "Thu gọn" : "Xem thêm"}
-              </Button>
-            )}
-          </div>
 
           <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
             <p className="text-[12px] sm:text-[14px]">
@@ -376,9 +381,9 @@ function ContentRight(props) {
                             {productDetail?.price.toLocaleString("en-US", {
                                 currency: "USD",
                             })}
-                            đ*
+                            đ
                         </span>
-                        <span className="text-gray-400 line-through mx-2">
+                        {/* <span className="text-gray-400 line-through mx-2">
                             {(productDetail?.price * 1.2).toLocaleString(
                                 "en-US",
                                 {
@@ -386,8 +391,8 @@ function ContentRight(props) {
                                 }
                             )}
                             đ
-                        </span>
-                        <span className="text-red-600">8%</span>
+                        </span> */}
+                        {/* <span className="text-red-600">8%</span> */}
                         <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
                             Trả góp 0%
                         </span>

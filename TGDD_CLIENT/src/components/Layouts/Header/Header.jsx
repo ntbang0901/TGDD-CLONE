@@ -145,7 +145,7 @@ function Header(props) {
                 </div>
             </nav>
 
-            <div className="px-8 py-3 navbar bg-[#ffd400] cursor-pointer">
+            {/* <div className="px-8 py-3 navbar bg-[#ffd400] cursor-pointer">
                 <div className="container m-auto  grid-cols-6 gap-4 grid lg:grid-cols-10 lg:gap-0">
                     <Link to={"/smartphone"}>
                         <div className="col-span-1 text-center font-semibold flex flex-col  items-center md:block">
@@ -273,7 +273,7 @@ function Header(props) {
                         </span>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
