@@ -46,7 +46,7 @@ function DetailProduct(props) {
     useEffect(() => {
         const arrPathName = location.pathname.split("/")
         if (arrPathName[1]) {
-            const category = arrPathName[1]
+            const _id = arrPathName[1]
             dispatch({
                 type: GET_DETAIL_PRODUCT_SAGA,
                 _id,
@@ -81,7 +81,7 @@ function DetailProduct(props) {
       });
       
       console.log("selectedProduct-->", selectedProduct);
-      
+
     return (
         <ThemeProvider theme={theme}>
             <div className="px-4 sm:px-12 py-4">

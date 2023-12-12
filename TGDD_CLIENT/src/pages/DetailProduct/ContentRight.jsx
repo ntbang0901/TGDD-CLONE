@@ -144,9 +144,10 @@ function ContentRight(props) {
                 {itemPromotion.map((item, idx) => (
                   <span
                     key={idx}
-                    className={`absolute left-[${
+                    style={{"--left_for_step": `${
                       (idx + 1) * (100 / itemPromotion.length)
-                    }%] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
+                    }`}}
+                    className={`absolute left-[var(--left_for_step)%] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
                   ></span>
                 ))}
               </span>
