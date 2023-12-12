@@ -40,7 +40,30 @@ function ContentRight(props) {
     stepsItems: [{}],
     currentStep: 0,
   });
+  const [milestone, setMilestone] = useState();
   const [progressValue, setProgressValue] = useState();
+  useEffect(() => {
+    calculateProductInCart();
+  }, [selectedProduct, itemPromotion]);
+
+  function calculateProductInCart() {
+    console.log("itemPromotion: ", itemPromotion.length);
+    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
+      const { quantity } = selectedProduct;
+      const maxValue =
+        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
+      const valueSet = (quantity / maxValue) * 100;
+      if (valueSet >= 97) {
+        setProgressValue(97);
+        setStep({ stepsItems: itemPromotion, currentStep: 4 });
+        return;
+      } else {
+        setProgressValue(valueSet);
+      }
+    }
+    setStep({ stepsItems: itemPromotion, currentStep: 2 });
+  }
+
   const renderStaticItem1 = () => {
         return !_.isEmpty(productDetail) ? (
             <>
@@ -92,28 +115,6 @@ function ContentRight(props) {
                         )}
                     </div>
 
-  useEffect(() => {
-    calculateProductInCart();
-  }, [selectedProduct, itemPromotion]);
-
-  function calculateProductInCart() {
-    console.log("itemPromotion: ", itemPromotion.length);
-    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
-      const { quantity } = selectedProduct;
-      const maxValue =
-        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
-      const valueSet = (quantity / maxValue) * 100;
-      if (valueSet >= 97) {
-        setProgressValue(97);
-        setStep({ stepsItems: itemPromotion, currentStep: 4 });
-        return;
-      } else {
-        setProgressValue(valueSet);
-      }
-    }
-    setStep({ stepsItems: itemPromotion, currentStep: 2 });
-  }
-
           <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
             <p className="text-[12px] sm:text-[14px]">
               <span className="text-red-600">(*)</span> Giá và khuyến mãi dự
@@ -149,10 +150,8 @@ function ContentRight(props) {
                 {itemPromotion.map((item, idx) => (
                   <span
                     key={idx}
-                    style={{"--left_for_step": `${
-                      (idx + 1) * (100 / itemPromotion.length)
-                    }`}}
-                    className={`absolute left-[var(--left_for_step)%] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
+                    style={{ "--leftForStep": `${(idx + 1) * (100 / itemPromotion.length)}%` }}
+                    className={`absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
                   ></span>
                 ))}
               </span>
