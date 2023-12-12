@@ -117,7 +117,7 @@ export function* searchRecommendProduct(action) {
 /* GET DETAIL */
 export function* getDetail(action) {
     yield call(() =>
-        getDetailProduct(productServices.getProductDetailApi, action)
+        getDetailProduct(productServices.getDetailProduct, action)
     )
 }
 

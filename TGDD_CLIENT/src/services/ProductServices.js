@@ -23,6 +23,10 @@ export class ProductServices extends BaseService {
         return this.get(`${type}/feature?search=${keyword}`)
     }
 
+    getDetailProduct = (id) => {
+        return axios.get(`${DOMAIN2}/products/${id}`)
+    }
+
     getProductDetailApi = (type, id) => {
         return this.get(`${type}/${id}`)
     }

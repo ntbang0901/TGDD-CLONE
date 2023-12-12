@@ -64,7 +64,7 @@ function Comments(props) {
                                                 action={EDIT_COMMENT_SAGA}
                                                 value={item?.comment}
                                                 category={category}
-                                                firstImage={images[0]}
+                                                firstImage={images}
                                                 idProduct={id}
                                                 user={user}
                                                 isLogin={isLogin}
@@ -195,7 +195,7 @@ function Comments(props) {
                                     action={CREATE_COMMENT_SAGA}
                                     value=""
                                     category={category}
-                                    firstImage={images[0]}
+                                    firstImage={images}
                                     idProduct={id}
                                     user={user}
                                     isLogin={isLogin}

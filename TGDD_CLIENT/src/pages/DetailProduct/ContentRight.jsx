@@ -368,9 +368,9 @@ function ContentRight(props) {
             {renderStaticItem2()}
             {/* Configuration */}
             <div className="my-2">
-                {productDetail?.name ? (
+                {productDetail?.productName ? (
                     <h1 className="font-semibold text-base text-center sm:text-left sm:text-xl text-struncate">
-                        Cấu hình {productDetail?.name}
+                        Cấu hình {productDetail?.productName}
                     </h1>
                 ) : (
                     <SimpleSkeleton height={20} />

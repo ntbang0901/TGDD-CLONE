@@ -215,7 +215,7 @@ export function* getAllProduct(callbackApi, action) {
     } catch (error) {
         console.log(error)
         console.log(error.response?.data)
-        yield call(() => showMess(error.response?.data.message, false))
+        yield call(() => showMess(error.response?.data?.message, false))
     }
     // yield call(() => handleLoading(false));
 }
@@ -224,11 +224,11 @@ export function* getDetailProduct(callbackApi, action) {
     // yield call(() => handleLoading(true));
     try {
         const { data } = yield call(() =>
-            callbackApi(action.category, action._id)
+            callbackApi(action._id)
         )
         yield put({
             type: SET_PRODUCT_DETAIL,
-            product: data.product,
+            product: data,
         })
     } catch (error) {
         console.log(error)

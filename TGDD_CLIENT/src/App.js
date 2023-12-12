@@ -118,6 +118,8 @@ function App() {
                         <Route path="" element={<DetailPageTablet />} />
                     </Route>
 
+                    <Route path="/:id" element={<DetailProduct />}/>
+
                     {/* AccessoryPage */}
                     <Route
                         path="/accessory-adv"
