@@ -7,6 +7,7 @@ import ContentLeft from "./ContentLeft"
 import ContentRight from "./ContentRight"
 import Title from "./Title"
 import axios from "axios"
+import { DOMAIN2 } from "../../utils/Settings/global"
 const theme = createTheme({
     palette: {
         primary: {
@@ -30,7 +31,7 @@ function DetailProduct(props) {
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.get(
-                `http://localhost:8080/promotion/product-suggest-promotion/${productDetail.productId}`
+                `${DOMAIN2}/promotion/product-suggest-promotion/${productDetail.productId}`
             )
 
             setItemPromotion(response.data.productPromotion)
@@ -42,23 +43,23 @@ function DetailProduct(props) {
 
     useEffect(() => {
         const arrPathName = location.pathname.split("/")
-        if (arrPathName[1] && arrPathName[2]) {
-            const category = arrPathName[1]
-            const _id = arrPathName[2]
+        if (arrPathName[1]) {
+            const _id = arrPathName[1]
             dispatch({
                 type: GET_DETAIL_PRODUCT_SAGA,
-                category,
                 _id,
             })
         }
     }, [dispatch, location.pathname])
+
+    console.log(productDetail)
     return (
         <ThemeProvider theme={theme}>
             <div className="px-4 sm:px-12 py-4">
                 <Title
-                    name={productDetail?.name}
+                    name={productDetail?.productName}
                     brand={productDetail?.brand}
-                    category={productDetail.category}
+                    category={productDetail?.category}
                 />
                 <div className="flex gap-4">
                     <div className="w-[60%] col-span-1">
@@ -68,8 +69,8 @@ function DetailProduct(props) {
                             category={location.pathname.split("/")[1]}
                             id={productDetail?._id}
                             idVideo={productDetail?.idVideo}
-                            images={productDetail?.images}
-                            name={productDetail?.name}
+                            images={productDetail?.photo}
+                            name={productDetail?.productName}
                             description={productDetail?.description}
                         />
                     </div>

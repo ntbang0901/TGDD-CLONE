@@ -146,36 +146,29 @@ function ContentLeft(props) {
                             </div>
                             {/* End Video button */}
                             {/* Image color */}
-                            {images?.map((item, index) => (
+                            {images && (
                                 <div
                                     className="cursor-pointer mx-2"
-                                    key={index}
                                     onClick={() => {
-                                        setValue(item)
+                                        setValue(images)
                                     }}
                                 >
                                     <div className="flex h-[60px] justify-center items-center">
                                         {/* icon */}
                                         <div
-                                            className={`h-[100%] flex justify-center items-center flex-col rounded-md p-2 font-thin border-[1px] ${
-                                                value?.colorValue ===
-                                                item.colorValue
-                                                    ? "border-orange-600"
-                                                    : ""
-                                            }`}
-                                        >
+                                            className={`h-[100%] flex justify-center items-center flex-col rounded-md p-2 font-thin border-[1px] `}>
                                             <img
                                                 className="w-[100%] h-[100%] object-contain"
-                                                src={item}
+                                                src={images}
                                                 alt=""
                                             />
                                         </div>
                                     </div>
-                                    <div className="max-w-[70px] text-center text-[15px] mt-1 ">
+                                    {/* <div className="max-w-[70px] text-center text-[15px] mt-1 ">
                                         {item.colorName}
-                                    </div>
+                                    </div> */}
                                 </div>
-                            ))}
+                            )}
                             {/* End Image color */}
                             <div className="">
                                 <div className="flex h-[60px] justify-center items-center">

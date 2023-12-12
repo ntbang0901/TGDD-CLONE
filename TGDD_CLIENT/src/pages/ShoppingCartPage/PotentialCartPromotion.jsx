@@ -1,6 +1,7 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import { DOMAIN2 } from "../../utils/Settings/global"
 
 const PotentialCartPromotion = () => {
     const [cartPromotion, setCartPromotion] = useState([])
@@ -17,7 +18,7 @@ const PotentialCartPromotion = () => {
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.post(
-                "http://localhost:8080/promotion/suggest-promotion",
+                `${DOMAIN2}/promotion/suggest-promotion`,
                 {
                     product: {},
                     cart: {

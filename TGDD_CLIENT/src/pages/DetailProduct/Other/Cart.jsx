@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
 import axios from "axios"
+import { DOMAIN2 } from "../../../utils/Settings/global"
 const theme = createTheme({
     palette: {
         primary: {
@@ -21,7 +22,7 @@ function Cart(props) {
 
     const addCart = (data) => {
         console.log(data)
-        axios.post("http://localhost:8080/cart/add", {
+        axios.post(`${DOMAIN2}/cart/add`, {
             userId: data.idUser,
             productId: productDetail.productId,
             quantity: data.quantity,

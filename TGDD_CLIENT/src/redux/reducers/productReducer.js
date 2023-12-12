@@ -10,6 +10,7 @@ const {
     SET_RECOMMEND_PRODUCT,
     SET_PRODUCT_SEARCH,
     SET_CURRENT_TOTAL_PRODUCT,
+    SET_ALL_PRODUCT,
 } = require("./types/mainType")
 
 const initialState = {
@@ -25,6 +26,7 @@ const initialState = {
     productSearch: [],
     filterProducts: [],
     currentTotalProduct: 0,
+    products: [],
 }
 
 const productReducer = (state = initialState, action) => {
@@ -93,6 +95,14 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 currentProducts: action.products,
+            }
+        }
+
+        case SET_ALL_PRODUCT: {
+            console.log(action)
+            return {
+                ...state,
+                products: action.product,
             }
         }
 
