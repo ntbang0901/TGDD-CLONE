@@ -227,7 +227,7 @@ export function* addToCart(action) {
             productServices.addToCartApi(action.data)
         )
 
-        yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
+        // yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
