@@ -17,6 +17,8 @@ import {
     SET_SHOPPING_CART,
     SHOW_LOADING_HISTORY,
     SHOW_LOADING_SHOPPING_CART,
+    GET_ALL_PRODUCT,
+    SET_ALL_PRODUCT,
 } from "../reducers/types/mainType"
 import {
     DELETE_ALL_CART_SAGA,
@@ -29,6 +31,7 @@ import {
     getHistoryAdmin,
     handleLoading,
     showMess,
+    getAllProduct,
 } from "./globalAction"
 
 /* PAGE */
@@ -40,6 +43,17 @@ export function* getDataHomePage(action) {
             SET_DATA_HOME_PAGE,
             action
         )
+    )
+
+    // yield call(() =>
+    //     getAllProduct(pageServices.getDataPageApi, SET_ALL_PRODUCT, action)
+    // )
+}
+
+/* PAGE */
+export function* getAllProductData(action) {
+    yield call(() =>
+        getAllProduct(pageServices.getDataPageApi, SET_ALL_PRODUCT, action)
     )
 }
 
@@ -193,7 +207,7 @@ export function* deleteComment(action) {
 /* CART */
 export function* getCart(action) {
     // yield put({
-      //   type: SHOW_LOADING_SHOPPING_CART,
+    //   type: SHOW_LOADING_SHOPPING_CART,
     // })
     try {
         const { data } = yield call(() =>
@@ -215,7 +229,7 @@ export function* getCart(action) {
         yield call(() => showMess(error.response?.data?.message, false))
     }
     // yield put({
-      //   type: HIDE_LOADING_SHOPPING_CART,
+    //   type: HIDE_LOADING_SHOPPING_CART,
     // })
 }
 
@@ -227,7 +241,7 @@ export function* addToCart(action) {
             productServices.addToCartApi(action.data)
         )
 
-        yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
+        // yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
@@ -260,7 +274,7 @@ export function* editCart(action) {
 }
 
 export function* deleteCart(action) {
-    yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         const { data } = yield call(() =>
             productServices.deleteCartApi(action.data)

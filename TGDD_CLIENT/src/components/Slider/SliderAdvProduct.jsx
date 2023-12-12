@@ -19,15 +19,15 @@ function SliderAdvProduct(props) {
                 slidesPerView={1}
                 navigation
             >
-                {images?.map((item, index) => (
-                    <SwiperSlide key={index}>
+                {images && (
+                    <SwiperSlide>
                         <img
                             className="h-[350px] w-[100%] sm:object-contain object-cover"
-                            src={item}
+                            src={images}
                             alt=""
                         />
                     </SwiperSlide>
-                ))}
+                )}
             </Swiper>
         </div>
     )

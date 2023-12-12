@@ -367,85 +367,99 @@ function ContentRight(props) {
         <SimpleSkeleton height={150} />
       )}
 
-      {/* Price */}
-      <div className="flex flex-wrap my-2">
-        {productDetail?.price ? (
-          <>
-            <span className="text-red-600 font-semibold text-2xl">
-              {productDetail?.price.toLocaleString("en-US", {
-                currency: "USD",
-              })}
-              đ*
-            </span>
-            <span className="text-gray-400 line-through mx-2">
-              {(productDetail?.price * 1.2).toLocaleString("en-US", {
-                currency: "USD",
-              })}
-              đ
-            </span>
-            <span className="text-red-600">8%</span>
-            <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
-              Trả góp 0%
-            </span>
-          </>
-        ) : (
-          <SimpleSkeleton height={20} />
-        )}
-      </div>
-      {renderStaticItem1()}
-      {/* Add to cart + Order product */}
-      <div className="my-2">
-        <Button
-          onClick={() => {
-            if (isLogin) {
-              dispatch({
-                type: OPEN_MODAL_HOC,
-                title: "Thêm vào giỏ hàng",
-                ComponentContentModal: (
-                  <Cart user={user} productDetail={productDetail} />
-                ),
-              });
-            } else {
-              navigate("/login");
-            }
-          }}
-          style={{ width: "100%", marginBottom: "8px" }}
-          variant="contained"
-          color="primary"
-        >
-          <span className="text-[12px] sm:text-[14px]">Thêm vào giỏ hàng</span>
-        </Button>
-        <Button
-          onClick={() => {
-            if (isLogin) {
-              dispatch({
-                type: OPEN_MODAL_HOC,
-                title: "Thêm vào giỏ hàng",
-                ComponentContentModal: (
-                  <Cart productDetail={productDetail} user={user} />
-                ),
-              });
-            } else {
-              navigate("/login");
-            }
-          }}
-          style={{ width: "100%" }}
-          variant="contained"
-          color="error"
-        >
-          <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
-        </Button>
-      </div>
-      {renderStaticItem2()}
-      {/* Configuration */}
-      <div className="my-2">
-        {productDetail?.name ? (
-          <h1 className="font-semibold text-base text-center sm:text-left sm:text-xl text-struncate">
-            Cấu hình {productDetail?.name}
-          </h1>
-        ) : (
-          <SimpleSkeleton height={20} />
-        )}
+            {/* Price */}
+            <div className="flex flex-wrap my-2">
+                {productDetail?.price ? (
+                    <>
+                        <span className="text-red-600 font-semibold text-2xl">
+                            {productDetail?.price.toLocaleString("en-US", {
+                                currency: "USD",
+                            })}
+                            đ*
+                        </span>
+                        <span className="text-gray-400 line-through mx-2">
+                            {(productDetail?.price * 1.2).toLocaleString(
+                                "en-US",
+                                {
+                                    currency: "USD",
+                                }
+                            )}
+                            đ
+                        </span>
+                        <span className="text-red-600">8%</span>
+                        <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
+                            Trả góp 0%
+                        </span>
+                    </>
+                ) : (
+                    <SimpleSkeleton height={20} />
+                )}
+            </div>
+            {renderStaticItem1()}
+            {/* Add to cart + Order product */}
+            <div className="my-2">
+                <Button
+                    onClick={() => {
+                        if (isLogin) {
+                            dispatch({
+                                type: OPEN_MODAL_HOC,
+                                title: "Thêm vào giỏ hàng",
+                                ComponentContentModal: (
+                                    <Cart
+                                        user={user}
+                                        productDetail={productDetail}
+                                    />
+                                ),
+                            })
+                        } else {
+                            navigate("/login")
+                        }
+                    }}
+                    style={{ width: "100%", marginBottom: "8px" }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <span className="text-[12px] sm:text-[14px]">
+                        Thêm vào giỏ hàng
+                    </span>
+                </Button>
+                <Button
+                    onClick={() => {
+                        if (isLogin) {
+                            dispatch({
+                                type: OPEN_MODAL_HOC,
+                                title: "Thêm vào giỏ hàng",
+                                ComponentContentModal: (
+                                    <Cart
+                                        productDetail={productDetail}
+                                        user={user}
+                                    />
+                                ),
+                            })
+                        } else {
+                            navigate("/login")
+                        }
+                    }}
+                    style={{ width: "100%" }}
+                    variant="contained"
+                    color="error"
+                >
+                    <span className="text-[12px] sm:text-[14px]">
+                        {" "}
+                        Đặt hàng
+                    </span>
+                </Button>
+            </div>
+            {renderStaticItem2()}
+            {/* Configuration */}
+            <div className="my-2">
+                {productDetail?.productName ? (
+                    <h1 className="font-semibold text-base text-center sm:text-left sm:text-xl text-struncate">
+                        Cấu hình {productDetail?.productName}
+                    </h1>
+                ) : (
+                    <SimpleSkeleton height={20} />
+                )}
 
         {!_.isEmpty(productDetail) ? (
           <div className="my-2">

@@ -3,6 +3,7 @@ import { globalService } from "../../services/globalServices"
 import { SET_NEW_FILTER } from "../reducers/types/filterType"
 import {
     HIDE_LOADING,
+    SET_ALL_PRODUCT,
     SET_HISTORY_ADMIN,
     SET_PRODUCT_DETAIL,
     SHOW_ALERT,
@@ -201,15 +202,33 @@ export function* searchProduct(callbackApi, type, action) {
     }
 }
 
+export function* getAllProduct(callbackApi, action) {
+    console.log("getAllProduct")
+    // yield call(() => handleLoading(true));
+    try {
+        const { data } = yield call(() => callbackApi())
+        console.log(data)
+        yield put({
+            type: SET_ALL_PRODUCT,
+            product: data,
+        })
+    } catch (error) {
+        console.log(error)
+        console.log(error.response?.data)
+        yield call(() => showMess(error.response?.data?.message, false))
+    }
+    // yield call(() => handleLoading(false));
+}
+
 export function* getDetailProduct(callbackApi, action) {
     // yield call(() => handleLoading(true));
     try {
         const { data } = yield call(() =>
-            callbackApi(action.category, action._id)
+            callbackApi(action._id)
         )
         yield put({
             type: SET_PRODUCT_DETAIL,
-            product: data.product,
+            product: data,
         })
     } catch (error) {
         console.log(error)

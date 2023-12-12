@@ -1,9 +1,14 @@
 import axios from "axios"
 import { BaseService } from "./BaseServices"
+import { DOMAIN2 } from "../utils/Settings/global"
 
 export class ProductServices extends BaseService {
     constructor() {
         return super()
+    }
+
+    getAllDataProduct = () => {
+        return axios.get(`${DOMAIN2}/products/getAll`)
     }
 
     searchRecommendProductApi = (type, keyword) => {
@@ -18,6 +23,10 @@ export class ProductServices extends BaseService {
         return this.get(`${type}/feature?search=${keyword}`)
     }
 
+    getDetailProduct = (id) => {
+        return axios.get(`${DOMAIN2}/products/${id}`)
+    }
+
     getProductDetailApi = (type, id) => {
         return this.get(`${type}/${id}`)
     }
@@ -28,11 +37,11 @@ export class ProductServices extends BaseService {
 
     getCartApi = (idUser) => {
         // return this.get(`cart/${idUser}`)
-        return axios.get(`http://localhost:8080/cart/${idUser}`)
+        return axios.get(`${DOMAIN2}/cart/${idUser}`)
     }
 
     addToCartApi = (data) => {
-        return axios.post("http://localhost:8080/cart/add", {
+        return axios.post(`${DOMAIN2}/cart/add`, {
             userId: data.idUser,
             cartId: data.cartId,
             productId: data.productId,
@@ -46,7 +55,7 @@ export class ProductServices extends BaseService {
 
     deleteCartApi = (data) => {
         console.log(data)
-        return axios.post(`http://localhost:8080/cart/delete`, {
+        return axios.post(`${DOMAIN2}/cart/delete`, {
             userId: data.idUser,
             productId: data.productId,
         })

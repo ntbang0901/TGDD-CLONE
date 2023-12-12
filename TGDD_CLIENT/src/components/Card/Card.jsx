@@ -10,7 +10,7 @@ import "./Card.css"
 export default function CardCustom(props) {
     const { product } = props
     return (
-        <Link to={`/${product?.category}/${product?._id}`}>
+        <Link to={`/${product?.productId}`}>
             <Card
                 sx={{ maxWidth: 345 }}
                 className="px-2 py-4 h-full cursor-pointer"
@@ -18,7 +18,7 @@ export default function CardCustom(props) {
                 <CardMedia
                     component="img"
                     style={{ height: "250px", objectFit: "contain" }}
-                    image={product?.images[0]}
+                    image={product.photo}
                     alt="green iguana"
                 />
                 <CardContent className="h-[150px]">
@@ -33,16 +33,16 @@ export default function CardCustom(props) {
                         </span>
                     </div>
                     <p className="text-sm mt-2 h-[38px] text-struncate-card-ct">
-                        🌺{product?.name}🌺
+                        🌺{product?.productName}🌺
                     </p>
 
                     <div className="flex gap-2 mt-4">
-                        <div className="basis-1/2 text-center text-[12px] border-2 boder-gray-400 px-2">
+                        <div className=" text-center text-[12px] border-2 boder-gray-400 px-2">
                             {product?.category}
                         </div>
                         {product.brand && (
                             <div className="basis-1/2 text-center text-[12px] border-2 boder-gray-400 px-2">
-                                {product.brand}
+                                {product?.brand}
                             </div>
                         )}
                     </div>
