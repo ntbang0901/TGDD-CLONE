@@ -51,7 +51,9 @@ const ProductCart = ({ item, itemPromotion }) => {
           index
         ]?.discountValue.toLocaleString("en-US", {
           currency: "USD",
-        })}đ`
+        })}${
+          itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"
+        } `
       );
       setTimeout(()=> {
         setNotify('')
@@ -73,8 +75,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                     {
                       currency: "USD",
                     }
-                  )} ${
-                    itemPromotion[0]?.discountType === "percentage" ? "%" : "đ"
+                  )}${
+                    itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"
                   } `
             : notify}
             item={
@@ -123,8 +125,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                           {
                             currency: "USD",
                           }
-                        )}`}{" "}
-                        {p?.discountType === "percentage" ? "%" : "đồng"}
+                        )}`}
+                        {p?.discountType === "percentage" ? "%" : " đồng"}
                       </span>
                       <button
                         className="hover:bg-[#ccc] p-2 rounded-md"

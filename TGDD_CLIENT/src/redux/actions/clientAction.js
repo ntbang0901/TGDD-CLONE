@@ -260,7 +260,7 @@ export function* editCart(action) {
 }
 
 export function* deleteCart(action) {
-    yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         const { data } = yield call(() =>
             productServices.deleteCartApi(action.data)

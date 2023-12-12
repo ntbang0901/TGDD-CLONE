@@ -160,7 +160,8 @@ function ShoppingCartPage(props) {
                         />
                     </div>
                     <div>
-                        <ul className="rounded-xl bg-[#ffd500ae]">
+                        <p>Ưu đãi cho giỏ hàng</p>
+                        <ul className="rounded-xl bg-[#ffd500ae] mt-2">
                             {/* <PotentialCartPromotion /> */}
                             {promotionList.cart.slice(0, 3).map((p, index) => (
                                 <li key={JSON.stringify(p)} className="p-2">
