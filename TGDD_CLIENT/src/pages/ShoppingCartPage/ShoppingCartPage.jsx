@@ -47,22 +47,6 @@ function ShoppingCartPage(props) {
 
     useEffect(() => {
         const getKMTN = async () => {
-            // let body = {
-            //     product: {},
-            //     cart: {
-            //         totalQuantity: quantityShoppingCart,
-            //         totalPrice: shoppingCarts.reduce(
-            //             (res, curentPro, index) => {
-            //                 return (
-            //                     res +
-            //                     curentPro.product.price * curentPro.quantity
-            //                 )
-            //             },
-            //             0
-            //         ),
-            //         products: productPayload,
-            //     },
-            // }
             let body = {
                 totalQuantity: quantityShoppingCart,
                 totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
@@ -128,7 +112,7 @@ function ShoppingCartPage(props) {
                         data: values,
                     })
                 } else {
-                    alert("Giõ hàng trống")
+                    alert("Giỏ hàng trống")
                 }
             },
         })
@@ -176,7 +160,8 @@ function ShoppingCartPage(props) {
                         />
                     </div>
                     <div>
-                        <ul className="rounded-xl bg-[#ffd500ae]">
+                        <p>Ưu đãi cho giỏ hàng</p>
+                        <ul className="rounded-xl bg-[#ffd500ae] mt-2">
                             {/* <PotentialCartPromotion /> */}
                             {promotionList.cart.slice(0, 3).map((p, index) => (
                                 <li key={JSON.stringify(p)} className="p-2">
@@ -197,7 +182,7 @@ function ShoppingCartPage(props) {
                                         )}`}
                                         {p.discountType === "percentage"
                                             ? "%"
-                                            : "d"}
+                                            : " đồng"}
                                     </span>
                                 </li>
                             ))}
