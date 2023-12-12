@@ -41,6 +41,7 @@ function ShoppingCartPage(props) {
         return obj
     })
     console.log("promotionlist:: -> ", promotionList)
+    console.log("productPayload:: -> ", productPayload)
 
     const ButtonStyles = styled(Button)({
         borderRadius: "24px",
