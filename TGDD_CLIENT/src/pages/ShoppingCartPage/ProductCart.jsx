@@ -214,19 +214,19 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </div>
                 </div>
                 {/* Action  */}
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-5">
                     <p className="text-red-600">
                         {item?.product?.price.toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
                     </p>
-                    <p className="line-through text-sm my-1 text-gray-400">
+                    {/* <p className="line-through text-sm my-1 text-gray-400">
                         {(item?.product?.price * 1.8).toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
-                    </p>
+                    </p> */}
                     <div className="flex">
                         <button
                             onClick={async () => {
