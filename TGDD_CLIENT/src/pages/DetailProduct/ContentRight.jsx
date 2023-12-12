@@ -3,8 +3,11 @@ import LocalAirportOutlinedIcon from "@mui/icons-material/LocalAirportOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import { Button } from "@mui/material";
 import _ from "lodash";
-import { memo, useState, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import SimpleSkeleton from "../../components/Skeleton/SimpleSkeleton";
+import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import {
   dataKeyAcessory,
   dataKeyLaptop,
@@ -18,10 +21,7 @@ import {
   selectStorageSmartPhone,
   selectStorageTablet,
 } from "../../utils/Settings/data";
-import { useDispatch } from "react-redux";
-import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import Cart from "./Other/Cart";
-import { useNavigate } from "react-router-dom";
 function ContentRight(props) {
 
   const {
