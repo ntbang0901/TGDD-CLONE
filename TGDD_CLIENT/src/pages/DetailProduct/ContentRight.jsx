@@ -3,8 +3,11 @@ import LocalAirportOutlinedIcon from "@mui/icons-material/LocalAirportOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import { Button } from "@mui/material";
 import _ from "lodash";
-import { memo, useState, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import SimpleSkeleton from "../../components/Skeleton/SimpleSkeleton";
+import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import {
   dataKeyAcessory,
   dataKeyLaptop,
@@ -18,10 +21,7 @@ import {
   selectStorageSmartPhone,
   selectStorageTablet,
 } from "../../utils/Settings/data";
-import { useDispatch } from "react-redux";
-import { OPEN_MODAL_HOC } from "../../redux/reducers/types/mainType";
 import Cart from "./Other/Cart";
-import { useNavigate } from "react-router-dom";
 function ContentRight(props) {
 
   const {
@@ -41,6 +41,27 @@ function ContentRight(props) {
     currentStep: 0,
   });
   const [progressValue, setProgressValue] = useState();
+  useEffect(() => {
+    calculateProductInCart();
+  }, [selectedProduct, itemPromotion]);
+
+  function calculateProductInCart() {
+    console.log("itemPromotion: ", itemPromotion.length);
+    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
+      const { quantity } = selectedProduct;
+      const maxValue =
+        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
+      const valueSet = (quantity / maxValue) * 100;
+      if (valueSet >= 97) {
+        setProgressValue(97);
+        setStep({ stepsItems: itemPromotion, currentStep: 4 });
+        return;
+      } else {
+        setProgressValue(valueSet);
+      }
+    }
+    setStep({ stepsItems: itemPromotion, currentStep: 2 });
+  }
   const renderStaticItem1 = () => {
         return !_.isEmpty(productDetail) ? (
             <>
@@ -92,27 +113,7 @@ function ContentRight(props) {
                         )}
                     </div>
 
-  useEffect(() => {
-    calculateProductInCart();
-  }, [selectedProduct, itemPromotion]);
-
-  function calculateProductInCart() {
-    console.log("itemPromotion: ", itemPromotion.length);
-    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
-      const { quantity } = selectedProduct;
-      const maxValue =
-        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
-      const valueSet = (quantity / maxValue) * 100;
-      if (valueSet >= 97) {
-        setProgressValue(97);
-        setStep({ stepsItems: itemPromotion, currentStep: 4 });
-        return;
-      } else {
-        setProgressValue(valueSet);
-      }
-    }
-    setStep({ stepsItems: itemPromotion, currentStep: 2 });
-  }
+  
 
           <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
             <p className="text-[12px] sm:text-[14px]">
