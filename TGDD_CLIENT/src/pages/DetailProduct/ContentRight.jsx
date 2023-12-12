@@ -61,8 +61,12 @@ function ContentRight(props) {
                                             {
                                                 currency: "USD",
                                             }
-                                        )}`}{" "}
-                                        đồng
+                                        )}${
+                                            itemPromotion[0]?.discountType ===
+                                            "percentage"
+                                                ? "%"
+                                                : " đồng"
+                                        }`}
                                     </span>
                                 </li>
                             ))}
@@ -290,9 +294,9 @@ function ContentRight(props) {
                             {productDetail?.price.toLocaleString("en-US", {
                                 currency: "USD",
                             })}
-                            đ*
+                            đ
                         </span>
-                        <span className="text-gray-400 line-through mx-2">
+                        {/* <span className="text-gray-400 line-through mx-2">
                             {(productDetail?.price * 1.2).toLocaleString(
                                 "en-US",
                                 {
@@ -300,8 +304,8 @@ function ContentRight(props) {
                                 }
                             )}
                             đ
-                        </span>
-                        <span className="text-red-600">8%</span>
+                        </span> */}
+                        {/* <span className="text-red-600">8%</span> */}
                         <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
                             Trả góp 0%
                         </span>

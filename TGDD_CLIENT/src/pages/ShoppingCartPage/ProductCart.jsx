@@ -178,9 +178,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                     <div className="flex flex-col items-center justify-center">
                         <img
                             className="w-[80px] h-[80px] object-contain"
-                            src={
-                                "https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_75/https://cdn.tgdd.vn/Products/Images/42/305658/iphone-15-pro-max-blue-thumbnew-200x200.jpg"
-                            }
+                            src={item?.product?.photo}
                             alt=""
                         />
                         <CancelPresentationRoundedIcon
@@ -205,13 +203,13 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </div>
                     <div className="">
                         <h1 className="font-semibold text-struncate text-center md:text-left">
-                            {item?.product?.name}
+                            {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
-                            2 khuyến mãi
+                            {/* {itemPromotion?.item.length} */}
                         </p>
                         <p className="text-sm capitalize text-minLink text-center md:text-left">
-                            màu: {"Blue"}
+                            màu: {item?.product.color}
                         </p>
                     </div>
                 </div>

@@ -116,12 +116,12 @@ function Cart(props) {
                 </div>
                 <Button
                     onClick={() => {
-                        const { name, category, _id, price } = productDetail
-                        let images = [productDetail.images[indexColor]]
+                        const { name, category, productId, price } = productDetail
+                        let images = [productDetail.photo]
                         const product = {
                             name,
                             category,
-                            _id,
+                            _id: productId,
                             price,
                             images,
                         }
