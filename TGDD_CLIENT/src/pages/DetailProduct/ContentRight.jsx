@@ -41,6 +41,27 @@ function ContentRight(props) {
     currentStep: 0,
   });
   const [progressValue, setProgressValue] = useState();
+  useEffect(() => {
+    calculateProductInCart();
+  }, [selectedProduct, itemPromotion]);
+
+  function calculateProductInCart() {
+    console.log("itemPromotion: ", itemPromotion.length);
+    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
+      const { quantity } = selectedProduct;
+      const maxValue =
+        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
+      const valueSet = (quantity / maxValue) * 100;
+      if (valueSet >= 97) {
+        setProgressValue(97);
+        setStep({ stepsItems: itemPromotion, currentStep: 4 });
+        return;
+      } else {
+        setProgressValue(valueSet);
+      }
+    }
+    setStep({ stepsItems: itemPromotion, currentStep: 2 });
+  }
   const renderStaticItem1 = () => {
         return !_.isEmpty(productDetail) ? (
             <>
@@ -54,7 +75,7 @@ function ContentRight(props) {
                             phẩm
                         </p>
                     </div>
-                    <div className={``}>
+                    <div>
                         <ul
                             className={` ${
                                 !open && itemPromotion.length > 3
@@ -92,27 +113,7 @@ function ContentRight(props) {
                         )}
                     </div>
 
-  useEffect(() => {
-    calculateProductInCart();
-  }, [selectedProduct, itemPromotion]);
-
-  function calculateProductInCart() {
-    console.log("itemPromotion: ", itemPromotion.length);
-    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
-      const { quantity } = selectedProduct;
-      const maxValue =
-        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
-      const valueSet = (quantity / maxValue) * 100;
-      if (valueSet >= 97) {
-        setProgressValue(97);
-        setStep({ stepsItems: itemPromotion, currentStep: 4 });
-        return;
-      } else {
-        setProgressValue(valueSet);
-      }
-    }
-    setStep({ stepsItems: itemPromotion, currentStep: 2 });
-  }
+  
 
           <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
             <p className="text-[12px] sm:text-[14px]">
@@ -122,63 +123,6 @@ function ContentRight(props) {
           </div>
         </div>
 
-        {/*progress bar*/}
-        {itemPromotion.length !== 0 ? (
-          <div className="max-w-screen-xl mx-auto px-4 md:px-8 my-auto rounded-sm border-[1px] min-w-fit">
-            <div className="pt-2">
-              <span id="ProgressLabel" className="sr-only">
-                Loading
-              </span>
-
-              <span
-                role="progressbar"
-                aria-labelledby="ProgressLabel"
-                aria-valuenow="75"
-                className="block relative rounded-full bg-gray-200"
-              >
-                <span
-                  style={{ "--progress-width": `${progressValue}%` }}
-                  className="block h-3 rounded-full bg-[repeating-linear-gradient(45deg,_var(--tw-gradient-from)_0,_var(--tw-gradient-from)_20px,_var(--tw-gradient-to)_20px,_var(--tw-gradient-to)_40px)] from-indigo-400 to-indigo-500 w-[var(--progress-width)]"
-                ></span>
-
-                {/* Điểm mốc 
-                <span className="absolute left-30percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>
-                <span className="absolute left-63percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>
-                <span className="absolute left-97percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>*/}
-                {/* ... (Các phần khác của mã) ... */}
-                {itemPromotion.map((item, idx) => (
-                  <span
-                    key={idx}
-                    style={{"--left_for_step": `${
-                      (idx + 1) * (100 / itemPromotion.length)
-                    }`}}
-                    className={`absolute left-[var(--left_for_step)%] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
-                  ></span>
-                ))}
-              </span>
-            </div>
-            <div aria-label="Steps" className=" text-gray-600 flex">
-              {steps.stepsItems.map((item, idx) => (
-                <div
-                  key={idx}
-                  aria-current={steps.currentStep === idx + 1 ? "step" : false}
-                  className="flex-1 flex-col"
-                >
-                  <div className="md:mt-2 flex justify-end">
-                    <p
-                      className={`text-sm ${
-                        steps.currentStep > idx + 1 ? "text-indigo-600" : ""
-                      }`}
-                    >
-                      KM {idx + 1}
-                    </p>
-                    {/* <p className="mt-1">{item.promotionName}</p> */}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
 
         <div className="my-2">
           <p>
@@ -366,7 +310,7 @@ function ContentRight(props) {
           </div>
           {/* Colors */}
           <div className="grid grid-cols-2  sm:grid-cols-3 lg:grid-cols-4 my-2  gap-2">
-            {renderColor(productDetail?.images)}
+            {renderColor(productDetail?.photo)}
           </div>
         </>
       ) : (
