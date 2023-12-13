@@ -245,15 +245,12 @@ export function* addToCart(action) {
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
         })
-        yield put({
-            type: HIDE_CARD_PRODUCT
-        })
     } catch (error) {
         console.log(error)
         console.log(error.response?.data)
         yield call(() => showMess(error.response?.data.message, false))
     }
-    yield call(() => handleLoading(false))
+    // yield call(() => handleLoading(false))
 }
 
 export function* editCart(action) {
