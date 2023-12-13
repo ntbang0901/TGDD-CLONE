@@ -33,7 +33,7 @@ const initialState = {
         mess: "",
         success: false,
     },
-    isLogin: null,
+    isLogin: true,
     loadingSkeleton: false,
     productChoosed: {
         productSales: [],
@@ -134,17 +134,17 @@ const globalReducer = (state = initialState, action) => {
             }
         }
 
-    case SHOW_ALERT: {
-      return {
-        ...state,
-        statusAlert: {
-          open: true,
-          time: action?.time,
-          mess: action.mess,
-          success: action.success,
-        },
-      };
-    }
+        case SHOW_ALERT: {
+            return {
+                ...state,
+                statusAlert: {
+                    open: true,
+                    time: action?.time,
+                    mess: action.mess,
+                    success: action.success,
+                },
+            }
+        }
 
         case HIDE_ALERT: {
             return {

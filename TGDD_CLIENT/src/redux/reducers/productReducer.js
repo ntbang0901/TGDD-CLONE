@@ -99,7 +99,6 @@ const productReducer = (state = initialState, action) => {
         }
 
         case SET_ALL_PRODUCT: {
-            console.log(action)
             return {
                 ...state,
                 products: action.product,

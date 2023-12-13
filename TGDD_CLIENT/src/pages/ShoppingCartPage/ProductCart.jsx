@@ -13,6 +13,7 @@ import Dialog from "@mui/material/Dialog"
 import DialogContent from "@mui/material/DialogContent"
 import DialogTitle from "@mui/material/DialogTitle"
 import IconButton from "@mui/material/IconButton"
+import { useNavigate } from "react-router-dom"
 import { useDebounce } from "../../utils/hooks/useDebounce"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -30,7 +31,7 @@ const ProductCart = ({ item, itemPromotion }) => {
     const [open, setOpen] = useState(false)
     const [itemQuantity, setItemQuantity] = useState(item.quantity)
     let quantityDebounce = useDebounce(itemQuantity)
-
+    const navigate = useNavigate()
     const [notify, setNotify] = useState("")
 
     const handleClickOpen = () => {
@@ -73,6 +74,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                     : " đồng"
                 } `
             )
+        }
+        if (itemPromotion[index]?.promotionItems[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
@@ -187,15 +190,11 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                         <CancelPresentationRoundedIcon
                             onClick={() => {
-                                if (
-                                    window.confirm(
-                                        "Bạn chắc chắn muốn xóa sản phẩm khỏi giõ hàng?"
-                                    )
-                                ) {
+                                {
                                     dispatch({
                                         type: DELETE_CART_SAGA,
                                         data: {
-                                            idUser: user._id,
+                                            idUser: user.idUser,
                                             productId: item.product.productId,
                                             idCart: item.cartId,
                                         },
@@ -206,7 +205,12 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                     </div>
                     <div className="">
-                        <h1 className="font-semibold text-struncate text-center md:text-left">
+                        <h1
+                            className="font-semibold text-struncate text-center md:text-left cursor-pointer"
+                            onClick={() =>
+                                navigate(`/${item?.product.productId}`)
+                            }
+                        >
                             {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">

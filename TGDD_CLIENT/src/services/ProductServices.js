@@ -41,9 +41,10 @@ export class ProductServices extends BaseService {
     }
 
     addToCartApi = (data) => {
+        console.log("data", data)
         return axios.post(`${DOMAIN2}/cart/add`, {
             userId: data.idUser,
-            cartId: data.cartId,
+            cartId: data.idCart,
             productId: data.productId,
             quantity: data.quantity,
         })

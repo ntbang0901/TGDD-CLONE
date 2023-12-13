@@ -73,13 +73,13 @@ function ShoppingCartPage(props) {
     }, [shoppingCarts])
 
     useEffect(() => {
-        if (user._id) {
+        if (user.idUser) {
             dispatch({
                 type: GET_CART_SAGA,
-                idUser: user._id,
+                idUser: user.idUser,
             })
         }
-    }, [dispatch, user._id])
+    }, [dispatch, user.idUser])
 
     const getTotalPrice = useMemo(() => {
         const result = shoppingCarts.reduce((res, curentPro, index) => {

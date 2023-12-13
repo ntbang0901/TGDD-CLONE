@@ -2,12 +2,13 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
     GET_ALL_PRODUCT,
+    GET_CART_SAGA,
     GET_DATA_SWATCH_PAGE_SAGA,
 } from "../../../redux/sagas/types/main"
+import BannerProducts from "../global/BannerProducts"
 import Slider from "../global/Slider"
 import TitleProduct from "../global/TitleProduct"
 import Brand from "./Brand"
-import BannerProducts from "../global/BannerProducts"
 function DetailPageSwatch(props) {
     const { dataSwatchPage } = useSelector((state) => state.page)
     const { products } = useSelector((state) => state.product)
@@ -19,10 +20,15 @@ function DetailPageSwatch(props) {
         dispatch({
             type: GET_DATA_SWATCH_PAGE_SAGA,
         })
+        let {idUser} = JSON.parse(localStorage.getItem("user"))
+        dispatch({
+            type: GET_CART_SAGA,
+            idUser
+        })
     }, [dispatch])
 
-    console.log("products: ->> ", products)
-    console.log("dataSwatchPage: ->> ", dataSwatchPage)
+    // console.log("products: ->> ", products)
+    // console.log("dataSwatchPage: ->> ", dataSwatchPage)
     let finalIndex = dataSwatchPage.length - 1
     return (
         <div className="bg-[#f3f3f3]">
