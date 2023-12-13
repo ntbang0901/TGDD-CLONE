@@ -240,6 +240,7 @@ export function* addToCart(action) {
         const { data } = yield call(() =>
             productServices.addToCartApi(action.data)
         )
+        
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,

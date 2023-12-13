@@ -46,7 +46,7 @@ const ProductCart = ({ item, itemPromotion }) => {
             if (quantityDebounce !== item.quantity) {
 
                 let data = {
-                    idUser: user._id,
+                    idUser: user.idUser,
                     productId: item.product.productId,
                     idCart: item.cartId,
                     quantity: quantityDebounce,
