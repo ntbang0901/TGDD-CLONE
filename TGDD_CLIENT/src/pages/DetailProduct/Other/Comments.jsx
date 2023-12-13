@@ -1,20 +1,14 @@
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined"
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import ModeIcon from "@mui/icons-material/Mode"
 import StarOutlineIcon from "@mui/icons-material/StarOutline"
 import { Button, Pagination } from "@mui/material"
-import { memo, useEffect, useState } from "react"
+import { memo, useState } from "react"
 import { useDispatch } from "react-redux"
-import likeAction from "../../../assests/img/like.png"
 import Comment from "../../../components/Comment/Comment"
 import { OPEN_MODAL_HOC } from "../../../redux/reducers/types/mainType"
 import {
     CREATE_COMMENT_SAGA,
-    DELETE_COMMENT_SAGA,
-    EDIT_COMMENT_SAGA,
-    GET_COMMENT_SAGA,
+    GET_COMMENT_SAGA
 } from "../../../redux/sagas/types/main"
 
 function Comments(props) {
@@ -79,7 +73,6 @@ function Comments(props) {
                     </div>
                     {renderRateEvaluate()}
                 </div>
-  
             </div>
 
             {renderComment()}
