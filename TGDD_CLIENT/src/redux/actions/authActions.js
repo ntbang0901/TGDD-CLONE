@@ -43,7 +43,6 @@ export function* loginUser(action) {
 export function* checkLogin(action) {
     yield call(() => handleLoading(true))
 
-    console.log(process.env.USER_ID)
 
     localStorage.setItem(
         "user",
