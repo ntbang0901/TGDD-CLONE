@@ -1,11 +1,11 @@
 import { Button, createTheme, ThemeProvider } from "@mui/material"
+import axios from "axios"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
-import axios from "axios"
-import { DOMAIN2 } from "../../../utils/Settings/global"
-import { HIDE_CARD_PRODUCT } from "../../../redux/reducers/types/mainType"
 import { showMess } from "../../../redux/actions/globalAction"
+import { HIDE_CARD_PRODUCT } from "../../../redux/reducers/types/mainType"
+import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
+import { DOMAIN2 } from "../../../utils/Settings/global"
 const theme = createTheme({
     palette: {
         primary: {
@@ -22,17 +22,10 @@ function Cart(props) {
     const [quantity, setQuantity] = useState(1)
     const dispatch = useDispatch()
 
-    const addCart = (data) => {
-        console.log(data)
-        axios.post(`${DOMAIN2}/cart/add`, {
-            userId: data.idUser,
-            productId: productDetail.productId,
-            quantity: data.quantity,
-        })
-    }
+
 
     const handleCloseModal = () => {
-        // showMess("Thêm vào giỏ hàng thành công", true)
+        showMess("Thêm vào giỏ hàng thành công", true)
         dispatch({
             type: HIDE_CARD_PRODUCT,
         });
@@ -135,7 +128,6 @@ function Cart(props) {
                             price,
                             images,
                         }
-
                         if (quantity > 0) {
                             const data = {
                                 productId: productDetail.productId,
@@ -149,6 +141,7 @@ function Cart(props) {
                                 type: ADD_TO_CART_SAGA,
                                 data,
                             })
+                            handleCloseModal()
                         } else {
                             alert("Số lượng sản phẩm phải lớn hơn 0")
                         }

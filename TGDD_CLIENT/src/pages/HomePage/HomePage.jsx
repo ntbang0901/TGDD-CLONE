@@ -1,21 +1,5 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import Light from "../../components/Light/Light"
-import {
-    GET_ALL_PRODUCT,
-    GET_DATA_HOME_PAGE_SAGA,
-} from "../../redux/sagas/types/main"
-import Banner from "../DetailPage/global/Banner"
-import BannerProductSlider from "../DetailPage/global/BannerProductSlider"
-import Slider from "../DetailPage/global/Slider"
-import TitleBannerProduct from "../DetailPage/global/TitleBannerProduct"
-import Brand from "./Brand"
-import HotCategory from "./HotCategory"
-import NewHotDeal from "./NewHotDeal"
-import PromoteOption from "./PromoteOption"
-import Recommend from "./Recommend"
-import SaleOnline from "./SaleOnline"
-import Trend from "./TrendShopping"
 import DetailPageSwatch from "../DetailPage/DetailPageSwatch/DetailPageSwatch"
 
 function HomePage(props) {

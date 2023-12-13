@@ -1,22 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react"
+
 import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
+import { styled } from "@mui/material/styles"
+import { useDispatch, useSelector } from "react-redux"
 import {
     ADD_TO_CART_SAGA,
     DELETE_CART_SAGA,
     EDIT_CART_SAGA,
     GET_HISTORY_LAST_PROMOTION,
 } from "../../redux/sagas/types/main"
-import { useDispatch, useSelector } from "react-redux"
-import { SHOW_ALERT } from "../../redux/reducers/types/mainType"
-import { styled } from "@mui/material/styles"
 import ProgressBar from "./../../components/ProgressBar/ProgressBar"
 
-import Dialog from "@mui/material/Dialog"
-import DialogTitle from "@mui/material/DialogTitle"
-import DialogContent from "@mui/material/DialogContent"
-import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@mui/icons-material/Close"
+import Dialog from "@mui/material/Dialog"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import IconButton from "@mui/material/IconButton"
 import { useNavigate } from "react-router-dom"
+import { useDebounce } from "../../utils/hooks/useDebounce"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -35,7 +36,9 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
-
+    const [itemQuantity, setItemQuantity] = useState(item.quantity)
+    let quantityDebounce = useDebounce(itemQuantity)
+    const navigate = useNavigate()
     const [notify, setNotify] = useState("")
 
     const handleClickOpen = () => {
@@ -45,8 +48,22 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
         setOpen(false)
     }
 
-    const navigate = useNavigate()
+    useEffect(() => {
+        if (quantityDebounce !== item.quantity) {
+            let data = {
+                idUser: user.idUser,
+                productId: item.product.productId,
+                idCart: item.cartId,
+                quantity: quantityDebounce,
+            }
 
+            dispatch({
+                type: ADD_TO_CART_SAGA,
+                data,
+            })
+            checkPromotion(itemQuantity, 0)
+        }
+    }, [quantityDebounce])
     const checkPromotion = (quantity, index) => {
         if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
             setNotify(
@@ -161,23 +178,11 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                         <button
                                             className="hover:bg-[#ccc] p-2 rounded-md"
                                             onClick={async () => {
-                                                let data = {
-                                                    idUser: user.idUser,
-                                                    idCart: item.cartId,
-                                                    productId:
-                                                        item?.product.productId,
-                                                    quantity:
-                                                        p?.promotionItems[0]
-                                                            .quantity,
-                                                }
-                                                checkPromotion(
-                                                    data?.quantity,
-                                                    index
+                                                setItemQuantity(
+                                                    p?.promotionItems[0]
+                                                        .quantity
                                                 )
-                                                dispatch({
-                                                    type: ADD_TO_CART_SAGA,
-                                                    data,
-                                                })
+
                                                 handleClose()
                                             }}
                                         >
@@ -255,18 +260,8 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     <div className="flex">
                         <button
                             onClick={async () => {
-                                if (item.quantity > 1) {
-                                    let data = {
-                                        idUser: user.idUser,
-                                        productId: item.product.productId,
-                                        idCart: item.cartId,
-                                        quantity: item.quantity - 1,
-                                    }
-                                    checkPromotion(data?.quantity, 0)
-                                    dispatch({
-                                        type: ADD_TO_CART_SAGA,
-                                        data,
-                                    })
+                                if (itemQuantity > 1) {
+                                    setItemQuantity((e) => e - 1)
                                 }
                             }}
                             className={`border-[1px] ${
@@ -276,22 +271,12 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             -
                         </button>
                         <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
-                            {item?.quantity}
+                            {itemQuantity}
                         </button>
 
                         <button
                             onClick={async () => {
-                                let data = {
-                                    idUser: user.idUser,
-                                    productId: item.product.productId,
-                                    idCart: item.cartId,
-                                    quantity: item.quantity + 1,
-                                }
-                                checkPromotion(data?.quantity, 0)
-                                dispatch({
-                                    type: ADD_TO_CART_SAGA,
-                                    data,
-                                })
+                                setItemQuantity((e) => e + 1)
                             }}
                             className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
                         >

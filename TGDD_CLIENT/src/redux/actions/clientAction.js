@@ -1,10 +1,13 @@
 import { call, put } from "redux-saga/effects"
+import { productServices } from "../../services/ProductServices"
 import { commentServices } from "../../services/commentServices"
 import { pageServices } from "../../services/pageServices"
-import { productServices } from "../../services/ProductServices"
 import {
+    GET_ALL_PRODUCT,
+    HIDE_CARD_PRODUCT,
     HIDE_LOADING_HISTORY,
     HIDE_LOADING_SHOPPING_CART,
+    SET_ALL_PRODUCT,
     SET_COMMENT,
     SET_DATA_ACCESSORY_PAGE,
     SET_DATA_HOME_PAGE,
@@ -17,8 +20,6 @@ import {
     SET_SHOPPING_CART,
     SHOW_LOADING_HISTORY,
     SHOW_LOADING_SHOPPING_CART,
-    GET_ALL_PRODUCT,
-    SET_ALL_PRODUCT,
 } from "../reducers/types/mainType"
 import {
     DELETE_ALL_CART_SAGA,
@@ -27,11 +28,11 @@ import {
     GET_HISTORY_SAGA,
 } from "../sagas/types/main"
 import {
+    getAllProduct,
     getDataPage,
     getHistoryAdmin,
     handleLoading,
     showMess,
-    getAllProduct,
 } from "./globalAction"
 
 /* PAGE */
@@ -213,9 +214,8 @@ export function* getCart(action) {
         const { data } = yield call(() =>
             productServices.getCartApi(action.idUser)
         )
-        console.log("DATA::", data)
         let total = 0
-        data?.listCartItems.map((item) => {
+        data?.listCartItems.forEach((item) => {
             total += item.quantity
         })
         yield put({
@@ -240,8 +240,7 @@ export function* addToCart(action) {
         const { data } = yield call(() =>
             productServices.addToCartApi(action.data)
         )
-
-        // yield call(() => showMess("Thêm vào giỏ hàng thành công", true))
+        
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,
@@ -251,7 +250,7 @@ export function* addToCart(action) {
         console.log(error.response?.data)
         yield call(() => showMess(error.response?.data.message, false))
     }
-    yield call(() => handleLoading(false))
+    // yield call(() => handleLoading(false))
 }
 
 export function* editCart(action) {

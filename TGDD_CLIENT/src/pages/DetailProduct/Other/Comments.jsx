@@ -1,35 +1,21 @@
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined"
 import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined"
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import ModeIcon from "@mui/icons-material/Mode"
 import StarOutlineIcon from "@mui/icons-material/StarOutline"
 import { Button, Pagination } from "@mui/material"
-import { memo, useEffect, useState } from "react"
+import { memo, useState } from "react"
 import { useDispatch } from "react-redux"
 import Comment from "../../../components/Comment/Comment"
 import { OPEN_MODAL_HOC } from "../../../redux/reducers/types/mainType"
 import {
     CREATE_COMMENT_SAGA,
-    DELETE_COMMENT_SAGA,
-    EDIT_COMMENT_SAGA,
-    GET_COMMENT_SAGA,
+    GET_COMMENT_SAGA
 } from "../../../redux/sagas/types/main"
-import likeAction from "../../../assests/img/like.png"
 
 function Comments(props) {
     const dispatch = useDispatch()
     const { images, name, id, category, user, isLogin, comments } = props
     const [showPaginate, setShowPaginate] = useState(false)
-    useEffect(() => {
-        dispatch({
-            type: GET_COMMENT_SAGA,
-            data: {
-                idProduct: id,
-                page: 1,
-            },
-        })
-    }, [])
+
     const renderStar = (quantity) => {
         let jsx = []
         for (let i = 0; i < quantity; i++) {
@@ -44,78 +30,8 @@ function Comments(props) {
         return jsx
     }
     const renderComment = () => {
-        return comments?.comments?.length > 0 ? (
-            <>
-                {comments?.comments?.map((item, index) => (
-                    <div key={index} className="py-4 border-b-[1px] ">
-                        <div className="flex gap-2 items-center">
-                            <AccountCircleOutlinedIcon className="text-[#ffc400]" />
-                            <h1 className="font-semibold capitalize">
-                                {item?.firstName + " " + item?.lastName}
-                            </h1>
-                            <CreateOutlinedIcon
-                                onClick={() => {
-                                    dispatch({
-                                        type: OPEN_MODAL_HOC,
-                                        ComponentContentModal: (
-                                            <Comment
-                                                star={item?.star}
-                                                idComment={item?._id}
-                                                action={EDIT_COMMENT_SAGA}
-                                                value={item?.comment}
-                                                category={category}
-                                                firstImage={images}
-                                                idProduct={id}
-                                                user={user}
-                                                isLogin={isLogin}
-                                                name={name}
-                                            />
-                                        ),
-                                    })
-                                }}
-                                style={
-                                    item.idUser === user._id
-                                        ? { fontSize: "18px", display: "block" }
-                                        : { display: "none" }
-                                }
-                                className={`text-minLink text-[18px] `}
-                            />
-                            <DeleteOutlineOutlinedIcon
-                                onClick={() => {
-                                    if (
-                                        window.confirm(
-                                            "Bạn chắc chắc chắn muốn xóa đánh giá này?"
-                                        )
-                                    ) {
-                                        dispatch({
-                                            type: DELETE_COMMENT_SAGA,
-                                            data: {
-                                                idComment: item._id,
-                                                idProduct: id,
-                                            },
-                                        })
-                                    }
-                                }}
-                                style={
-                                    item.idUser === user._id
-                                        ? { fontSize: "18px", display: "block" }
-                                        : { display: "none" }
-                                }
-                                className={`text-red-600 text-[18px]`}
-                            />
-                        </div>
-                        <p className="text-sm si:text-base my-2">
-                            {item?.comment}
-                        </p>
-                        <div className="flex gap-2 items-center">
-                            <div className="">{renderStar(item.star)}</div>
-                        </div>
-                    </div>
-                ))}
-            </>
-        ) : (
-            <p className="text-center mt-2 text-xl">Không có đánh giá nào</p>
-        )
+        return <p className="text-center mt-2 text-xl">Không có đánh giá nào</p>
+        
     }
 
     const renderRateEvaluate = () => {
@@ -156,16 +72,6 @@ function Comments(props) {
                         </span>
                     </div>
                     {renderRateEvaluate()}
-                </div>
-                <div className="col-span-1 pt-4 gap-2">
-                    <img
-                        src={likeAction}
-                        className="w-[100px] h-[100px] m-auto"
-                        alt=""
-                    />
-                    <p className="text-sm si:text-base text-center">
-                        Được bình chọn là sản phẩm yêu thích nhất
-                    </p>
                 </div>
             </div>
 
