@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react"
 import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
+import { styled } from "@mui/material/styles"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import {
     ADD_TO_CART_SAGA,
-    DELETE_CART_SAGA,
-    EDIT_CART_SAGA,
+    DELETE_CART_SAGA
 } from "../../redux/sagas/types/main"
-import { useDispatch, useSelector } from "react-redux"
-import { SHOW_ALERT } from "../../redux/reducers/types/mainType"
-import { styled } from "@mui/material/styles"
 import ProgressBar from "./../../components/ProgressBar/ProgressBar"
 
-import Dialog from "@mui/material/Dialog"
-import DialogTitle from "@mui/material/DialogTitle"
-import DialogContent from "@mui/material/DialogContent"
-import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@mui/icons-material/Close"
+import Dialog from "@mui/material/Dialog"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import IconButton from "@mui/material/IconButton"
+import { useDebounce } from "../../utils/hooks/useDebounce"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -27,9 +26,10 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const ProductCart = ({ item, itemPromotion }) => {
     const dispatch = useDispatch()
-
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
+    const [itemQuantity, setItemQuantity] = useState(item.quantity)
+    let quantityDebounce = useDebounce(itemQuantity)
 
     const [notify, setNotify] = useState("")
 
@@ -40,7 +40,24 @@ const ProductCart = ({ item, itemPromotion }) => {
         setOpen(false)
     }
 
-    console.log(item)
+    useEffect(
+        () => {
+            if (quantityDebounce !== item.quantity) {
+
+                let data = {
+                    idUser: user._id,
+                    productId: item.product.productId,
+                    idCart: item.cartId,
+                    quantity: quantityDebounce,
+                }
+
+                dispatch({
+                    type: ADD_TO_CART_SAGA,
+                    data
+                })
+            }
+        }, [quantityDebounce]
+    )
 
     const checkPromotion = (quantity, index) => {
         console.log("quantity :: ", quantity)
@@ -51,10 +68,9 @@ const ProductCart = ({ item, itemPromotion }) => {
                     index
                 ]?.discountValue.toLocaleString("en-US", {
                     currency: "USD",
-                })}${
-                    itemPromotion[0]?.discountType === "percentage"
-                        ? "%"
-                        : " đồng"
+                })}${itemPromotion[0]?.discountType === "percentage"
+                    ? "%"
+                    : " đồng"
                 } `
             )
             setTimeout(() => {
@@ -70,19 +86,17 @@ const ProductCart = ({ item, itemPromotion }) => {
                     <ProgressBar
                         text={
                             notify === ""
-                                ? `Mua thêm ${
-                                      itemPromotion[0]?.soLuongMuaThem
-                                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
-                                      "en-US",
-                                      {
-                                          currency: "USD",
-                                      }
-                                  )}${
-                                      itemPromotion[0]?.discountType ===
-                                      "percentage"
-                                          ? "%"
-                                          : " đồng"
-                                  } `
+                                ? `Mua thêm ${itemPromotion[0]?.soLuongMuaThem
+                                } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
+                                    "en-US",
+                                    {
+                                        currency: "USD",
+                                    }
+                                )}${itemPromotion[0]?.discountType ===
+                                    "percentage"
+                                    ? "%"
+                                    : " đồng"
+                                } `
                                 : notify
                         }
                         item={
@@ -128,14 +142,13 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         key={index}
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
-                                            {`Mua thêm ${
-                                                p?.soLuongMuaThem
-                                            } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
-                                                "en-US",
-                                                {
-                                                    currency: "USD",
-                                                }
-                                            )}`}
+                                            {`Mua thêm ${p?.soLuongMuaThem
+                                                } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
+                                                    "en-US",
+                                                    {
+                                                        currency: "USD",
+                                                    }
+                                                )}`}
                                             {p?.discountType === "percentage"
                                                 ? "%"
                                                 : " đồng"}
@@ -143,23 +156,14 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         <button
                                             className="hover:bg-[#ccc] p-2 rounded-md"
                                             onClick={async () => {
-                                                let data = {
-                                                    idUser: user._id,
-                                                    idCart: item._id,
-                                                    productId:
-                                                        item?.product.productId,
-                                                    quantity:
-                                                        p?.promotionItems[0]
-                                                            .quantity,
-                                                }
+                                                setItemQuantity(
+                                                    p?.promotionItems[0]
+                                                        .quantity,
+                                                )
                                                 checkPromotion(
-                                                    data?.quantity,
+                                                    itemQuantity,
                                                     index
                                                 )
-                                                dispatch({
-                                                    type: ADD_TO_CART_SAGA,
-                                                    data,
-                                                })
                                                 handleClose()
                                             }}
                                         >
@@ -230,42 +234,24 @@ const ProductCart = ({ item, itemPromotion }) => {
                     <div className="flex">
                         <button
                             onClick={async () => {
-                                if (item.quantity > 1) {
-                                    let data = {
-                                        idUser: user._id,
-                                        productId: item.product.productId,
-                                        idCart: item.cartId,
-                                        quantity: item.quantity - 1,
-                                    }
-                                    dispatch({
-                                        type: ADD_TO_CART_SAGA,
-                                        data,
-                                    })
+                                if (itemQuantity > 1) {
+                                    setItemQuantity(e => e - 1)
                                 }
                             }}
-                            className={`border-[1px] ${
-                                item.quantity === 1 ? "bg-gray-100" : ""
-                            }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
+                            className={`border-[1px] ${item.quantity === 1 ? "bg-gray-100" : ""
+                                }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
                         >
                             -
                         </button>
                         <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
-                            {item?.quantity}
+                            {itemQuantity}
                         </button>
 
                         <button
                             onClick={async () => {
-                                let data = {
-                                    idUser: user._id,
-                                    productId: item.product.productId,
-                                    idCart: item.cartId,
-                                    quantity: item.quantity + 1,
-                                }
-                                checkPromotion(data?.quantity, 0)
-                                dispatch({
-                                    type: ADD_TO_CART_SAGA,
-                                    data,
-                                })
+                                setItemQuantity(e => e + 1);
+                                checkPromotion(itemQuantity, 0)
+
                             }}
                             className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
                         >
