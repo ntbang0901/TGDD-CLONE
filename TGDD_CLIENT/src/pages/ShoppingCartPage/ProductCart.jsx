@@ -41,13 +41,9 @@ const ProductCart = ({ item, itemPromotion }) => {
         setOpen(false)
     }
 
-<<<<<<< HEAD
-    console.log(user)
-=======
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     console.log(item)
->>>>>>> 97515753da3d9b3228d469194913f23de5a3da8d
 
     const checkPromotion = (quantity, index) => {
         console.log("quantity :: ", quantity)
@@ -65,7 +61,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                 } `
             )
         }
-        if(itemPromotion[index]?.promotionItems[0]?.quantity) {
+        if (itemPromotion[index]?.promotionItems[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
@@ -207,7 +203,12 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                     </div>
                     <div className="">
-                        <h1 className="font-semibold text-struncate text-center md:text-left cursor-pointer" onClick={()=> navigate(`/${item?.product.productId}`)}>
+                        <h1
+                            className="font-semibold text-struncate text-center md:text-left cursor-pointer"
+                            onClick={() =>
+                                navigate(`/${item?.product.productId}`)
+                            }
+                        >
                             {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
