@@ -40,7 +40,7 @@ const ProductCart = ({ item, itemPromotion }) => {
         setOpen(false)
     }
 
-    console.log(item)
+    console.log(user)
 
     const checkPromotion = (quantity, index) => {
         console.log("quantity :: ", quantity)
@@ -144,8 +144,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                                             className="hover:bg-[#ccc] p-2 rounded-md"
                                             onClick={async () => {
                                                 let data = {
-                                                    idUser: user._id,
-                                                    idCart: item._id,
+                                                    idUser: user.idUser,
+                                                    idCart: item.cartId,
                                                     productId:
                                                         item?.product.productId,
                                                     quantity:
@@ -191,7 +191,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                                     dispatch({
                                         type: DELETE_CART_SAGA,
                                         data: {
-                                            idUser: user._id,
+                                            idUser: user.idUser,
                                             productId: item.product.productId,
                                             idCart: item.cartId,
                                         },
@@ -232,11 +232,12 @@ const ProductCart = ({ item, itemPromotion }) => {
                             onClick={async () => {
                                 if (item.quantity > 1) {
                                     let data = {
-                                        idUser: user._id,
+                                        idUser: user.idUser,
                                         productId: item.product.productId,
                                         idCart: item.cartId,
                                         quantity: item.quantity - 1,
                                     }
+
                                     dispatch({
                                         type: ADD_TO_CART_SAGA,
                                         data,
@@ -256,7 +257,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         <button
                             onClick={async () => {
                                 let data = {
-                                    idUser: user._id,
+                                    idUser: user.idUser,
                                     productId: item.product.productId,
                                     idCart: item.cartId,
                                     quantity: item.quantity + 1,

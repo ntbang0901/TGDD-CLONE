@@ -23,6 +23,7 @@ function Header(props) {
         loadingShoppingCart,
         loadingHistory,
     } = useSelector((state) => state.global)
+    console.log(isLogin)
     const { user } = useSelector((state) => state.user)
     const dispatch = useDispatch()
     const showMenu = () => {
@@ -96,7 +97,7 @@ function Header(props) {
                         />
                     )}
 
-                    <div className="text-center cursor-pointer py-4 md:py-0 ">
+                    {/* <div className="text-center cursor-pointer py-4 md:py-0 ">
                         {isLogin ? (
                             <>
                                 <p
@@ -120,7 +121,7 @@ function Header(props) {
                                 </p>
                             </Link>
                         )}
-                    </div>
+                    </div> */}
                 </div>
                 <div
                     className=" col-span-1 flex md:hidden mt-3 justify-center"

@@ -118,7 +118,7 @@ function App() {
                         <Route path="" element={<DetailPageTablet />} />
                     </Route>
 
-                    <Route path="/:id" element={<DetailProduct />}/>
+                    <Route path="/:id" element={<DetailProduct />} />
 
                     {/* AccessoryPage */}
                     <Route
@@ -150,7 +150,7 @@ function App() {
                     </Route>
 
                     {/* Shopping Cart Page */}
-                    <Route element={<ProtectedRouteClient />}>
+                    <Route>
                         <Route path="/cart" element={<ShoppingCartPage />} />
                         <Route path="/history" element={<HistoryPage />} />
                     </Route>

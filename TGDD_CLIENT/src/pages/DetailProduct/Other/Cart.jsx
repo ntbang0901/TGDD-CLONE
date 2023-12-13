@@ -116,7 +116,8 @@ function Cart(props) {
                 </div>
                 <Button
                     onClick={() => {
-                        const { name, category, productId, price } = productDetail
+                        const { name, category, productId, price } =
+                            productDetail
                         let images = [productDetail.photo]
                         const product = {
                             name,
@@ -129,7 +130,7 @@ function Cart(props) {
                         if (quantity > 0) {
                             const data = {
                                 productId: productDetail.productId,
-                                idUser: user._id,
+                                idUser: user.idUser,
                                 idColor: images[0].colorValue,
                                 product,
                                 quantity,

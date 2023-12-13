@@ -15,7 +15,7 @@ export function* loginUser(action) {
         // Save info user
         yield put({
             type: SET_USER,
-            user: data.user,
+            user: data.user || localStorage.getItem("user"),
         })
 
         yield call(() => showMess("Đăng nhập thành công", true))
@@ -42,8 +42,17 @@ export function* loginUser(action) {
 export function* checkLogin(action) {
     yield call(() => handleLoading(true))
 
+    console.log(process.env.USER_ID)
+
+    localStorage.setItem(
+        "user",
+        JSON.stringify({
+            idUser: "ff82e751-5313-43b9-a097-f6214395ede9",
+        })
+    )
+
     try {
-        const { data } = yield call(() => authServices.checkLoginApi())
+        // const { data } = yield call(() => authServices.checkLoginApi())
         yield put({
             type: CHECK_LOGIN,
             isLogin: true,
@@ -52,7 +61,7 @@ export function* checkLogin(action) {
         // Save info user
         yield put({
             type: SET_USER,
-            user: data.user,
+            user: JSON.parse(localStorage.getItem("user")),
         })
     } catch (error) {
         console.log(error)
@@ -60,7 +69,11 @@ export function* checkLogin(action) {
 
         yield put({
             type: CHECK_LOGIN,
-            isLogin: false,
+            isLogin: true,
+        })
+        yield put({
+            type: SET_USER,
+            user: JSON.parse(localStorage.getItem("user")),
         })
     }
 
