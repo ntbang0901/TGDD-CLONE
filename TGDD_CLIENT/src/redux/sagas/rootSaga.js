@@ -74,6 +74,7 @@ import {
     followActionGetCart,
     followActionGetDetailProducteSaga,
     followActionGetHistory,
+    followActionGetHistoryLastPromotion,
     followActionGetHistoryNoSign,
     followActionGetHistorySign,
     followActionSearchAccessorySaga,
@@ -137,6 +138,10 @@ export function* rootSaga() {
         followActionSearchProduct(),
         followActionSearchRecommendProductSaga(),
         // PAGE
+
+        //PROMOTION
+
+        followActionGetHistoryLastPromotion(),
 
         //product
         followActionGetAllProduct(),

@@ -6,6 +6,7 @@ import {
     SET_ALL_PRODUCT,
     SET_CURRENT_TOTAL_PRODUCT,
     SET_FILTER_PRODUCT,
+    SET_HISTORY_LAST_PROMOTION,
     SET_LAPTOP,
     SET_PC,
     SET_PRODUCT_SEARCH,
@@ -79,6 +80,13 @@ export function* fetchAllProduct(action) {
     )
 }
 
+export function* lastPromotion(action) {
+    yield put({
+        type: SET_HISTORY_LAST_PROMOTION,
+        promotion: action.promotion,
+    })
+}
+
 export function* searchPc(action) {
     yield call(() => handleLoading(true))
 
@@ -116,9 +124,7 @@ export function* searchRecommendProduct(action) {
 
 /* GET DETAIL */
 export function* getDetail(action) {
-    yield call(() =>
-        getDetailProduct(productServices.getDetailProduct, action)
-    )
+    yield call(() => getDetailProduct(productServices.getDetailProduct, action))
 }
 
 /* FILTER */

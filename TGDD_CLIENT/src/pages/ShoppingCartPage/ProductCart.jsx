@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
 import {
     ADD_TO_CART_SAGA,
     DELETE_CART_SAGA,
     EDIT_CART_SAGA,
+    GET_HISTORY_LAST_PROMOTION,
 } from "../../redux/sagas/types/main"
 import { useDispatch, useSelector } from "react-redux"
 import { SHOW_ALERT } from "../../redux/reducers/types/mainType"
@@ -26,8 +27,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }))
 
-const ProductCart = ({ item, itemPromotion }) => {
+const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
+    const { last_promotions } = useSelector((state) => state.product)
     const dispatch = useDispatch()
+
+    console.log("listHistory:: --> ", listHistory)
 
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
@@ -43,11 +47,7 @@ const ProductCart = ({ item, itemPromotion }) => {
 
     const navigate = useNavigate()
 
-    console.log(item)
-
     const checkPromotion = (quantity, index) => {
-        console.log("quantity :: ", quantity)
-
         if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
             setNotify(
                 `Yay! Bạn đã tiết kiệm được ${itemPromotion[
@@ -60,6 +60,18 @@ const ProductCart = ({ item, itemPromotion }) => {
                         : " đồng"
                 } `
             )
+
+            listHistory.push(itemPromotion[index])
+
+            dispatch({
+                type: GET_HISTORY_LAST_PROMOTION,
+                promotion: listHistory,
+            })
+        } else {
+            dispatch({
+                type: GET_HISTORY_LAST_PROMOTION,
+                promotion: listHistory,
+            })
         }
         if (itemPromotion[index]?.promotionItems[0]?.quantity) {
             setTimeout(() => {
@@ -125,6 +137,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         >
                             <CloseIcon />
                         </IconButton>
+
                         <DialogContent dividers>
                             <ul>
                                 {itemPromotion.map((p, index) => (
@@ -179,6 +192,7 @@ const ProductCart = ({ item, itemPromotion }) => {
             ) : null}
             <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
                 {/* Info  */}
+
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="flex flex-col items-center justify-center">
                         <img
@@ -202,6 +216,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                             className="cursor-pointer text-red-500 pt-2"
                         />
                     </div>
+                    <div></div>
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"
@@ -211,6 +226,10 @@ const ProductCart = ({ item, itemPromotion }) => {
                         >
                             {item?.product?.productName}
                         </h1>
+                        <p className="my-2 text-sm text-minLink text-center md:text-left">
+                            <span>khuyến mãi đã áp dụng : </span>{" "}
+                            {promotionUsed.length}
+                        </p>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}
                         </p>
@@ -243,7 +262,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                                         idCart: item.cartId,
                                         quantity: item.quantity - 1,
                                     }
-
+                                    checkPromotion(data?.quantity, 0)
                                     dispatch({
                                         type: ADD_TO_CART_SAGA,
                                         data,

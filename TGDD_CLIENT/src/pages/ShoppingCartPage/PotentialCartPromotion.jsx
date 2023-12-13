@@ -6,6 +6,7 @@ import { DOMAIN2 } from "../../utils/Settings/global"
 const PotentialCartPromotion = () => {
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
+
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
         useSelector((state) => state.global)
     const productPayload = shoppingCarts.map((cart) => {

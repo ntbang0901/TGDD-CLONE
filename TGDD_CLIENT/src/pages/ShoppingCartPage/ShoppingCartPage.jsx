@@ -22,6 +22,8 @@ import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
+    const { last_promotions } = useSelector((state) => state.product)
+
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
         useSelector((state) => state.global)
 
@@ -88,6 +90,19 @@ function ShoppingCartPage(props) {
         return result
     }, [dispatch, quantityShoppingCart])
 
+    function filterElementsNotInArray(arr1, arr2) {
+        const newArray = arr1.filter((item1) => {
+            return !arr2.some((item2) => item1.id === item2.id)
+        })
+        return newArray
+    }
+
+    console.log("After result:: --> ", last_promotions)
+
+    const result = filterElementsNotInArray(last_promotions, promotionList.item)
+
+    console.log("result:: --> ", result)
+
     const { handleSubmit, errors, touched, handleChange, setFieldValue } =
         useFormik({
             enableReinitialize: true,
@@ -119,9 +134,23 @@ function ShoppingCartPage(props) {
             },
         })
 
-    useEffect(() => {
-        console.log("user", user)
-    }, [])
+    const totalDiscount = () => {
+        let total = 0
+        result.forEach((item) => {
+            if (item.discountType === "value") {
+                total += item.discountValue
+            } else {
+                total +=
+                    (item.discountValue / 100) *
+                    (item.promotionItems[0].quantity *
+                        item.promotionItems[0].price)
+            }
+        })
+
+        return total
+    }
+
+    const totalDiscountValue = totalDiscount()
 
     return (
         <div className="flex bg-[#eee] items-center justify-center p-4">
@@ -142,6 +171,12 @@ function ShoppingCartPage(props) {
                     {shoppingCarts?.map((item, index) => (
                         <ProductCart
                             item={item}
+                            listHistory={result}
+                            promotionUsed={result.filter(
+                                (pro) =>
+                                    pro.promotionItems[0].productId ===
+                                    item.product.productId
+                            )}
                             itemPromotion={promotionList.item.filter(
                                 (pro) =>
                                     pro.promotionItems[0].productId ===
@@ -193,14 +228,38 @@ function ShoppingCartPage(props) {
 
                 {/* Total money */}
                 <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
-                    <h1 className="font-semibold">
-                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
-                    </h1>
+                    <h1 className="font-semibold">Tạm tính: </h1>
 
                     <span className="text-base text-red-600 font-semibold">
                         {getTotalPrice.toLocaleString("en-US", {
                             currency: "USD",
                         })}
+                        đ
+                    </span>
+                </div>
+
+                <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
+                    <h1 className="font-semibold">Tiền giảm: </h1>
+
+                    <span className="text-base text-red-600 font-semibold">
+                        {totalDiscountValue.toLocaleString("en-US", {
+                            currency: "USD",
+                        })}
+                        đ
+                    </span>
+                </div>
+                <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
+                    <h1 className="font-semibold">
+                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
+                    </h1>
+
+                    <span className="text-base text-red-600 font-semibold">
+                        {(getTotalPrice - totalDiscountValue).toLocaleString(
+                            "en-US",
+                            {
+                                currency: "USD",
+                            }
+                        )}
                         đ
                     </span>
                 </div>
