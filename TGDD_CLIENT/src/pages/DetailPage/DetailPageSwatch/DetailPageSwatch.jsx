@@ -21,8 +21,8 @@ function DetailPageSwatch(props) {
         })
     }, [dispatch])
 
-    console.log("products: ->> ", products)
-    console.log("dataSwatchPage: ->> ", dataSwatchPage)
+    // console.log("products: ->> ", products)
+    // console.log("dataSwatchPage: ->> ", dataSwatchPage)
     let finalIndex = dataSwatchPage.length - 1
     return (
         <div className="bg-[#f3f3f3]">

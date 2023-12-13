@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle"
 import DialogContent from "@mui/material/DialogContent"
 import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@mui/icons-material/Close"
+import { useNavigate } from "react-router-dom"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -40,7 +41,13 @@ const ProductCart = ({ item, itemPromotion }) => {
         setOpen(false)
     }
 
+<<<<<<< HEAD
     console.log(user)
+=======
+    const navigate = useNavigate();
+
+    console.log(item)
+>>>>>>> 97515753da3d9b3228d469194913f23de5a3da8d
 
     const checkPromotion = (quantity, index) => {
         console.log("quantity :: ", quantity)
@@ -57,6 +64,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                         : " đồng"
                 } `
             )
+        }
+        if(itemPromotion[index]?.promotionItems[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
@@ -183,11 +192,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                         <CancelPresentationRoundedIcon
                             onClick={() => {
-                                if (
-                                    window.confirm(
-                                        "Bạn chắc chắn muốn xóa sản phẩm khỏi giõ hàng?"
-                                    )
-                                ) {
+                                {
                                     dispatch({
                                         type: DELETE_CART_SAGA,
                                         data: {
@@ -202,7 +207,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                     </div>
                     <div className="">
-                        <h1 className="font-semibold text-struncate text-center md:text-left">
+                        <h1 className="font-semibold text-struncate text-center md:text-left cursor-pointer" onClick={()=> navigate(`/${item?.product.productId}`)}>
                             {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
@@ -214,19 +219,19 @@ const ProductCart = ({ item, itemPromotion }) => {
                     </div>
                 </div>
                 {/* Action  */}
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-5">
                     <p className="text-red-600">
                         {item?.product?.price.toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
                     </p>
-                    <p className="line-through text-sm my-1 text-gray-400">
+                    {/* <p className="line-through text-sm my-1 text-gray-400">
                         {(item?.product?.price * 1.8).toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
-                    </p>
+                    </p> */}
                     <div className="flex">
                         <button
                             onClick={async () => {
