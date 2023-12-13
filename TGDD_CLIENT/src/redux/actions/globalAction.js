@@ -203,11 +203,11 @@ export function* searchProduct(callbackApi, type, action) {
 }
 
 export function* getAllProduct(callbackApi, action) {
-    console.log("getAllProduct")
+    // console.log("getAllProduct")
     // yield call(() => handleLoading(true));
     try {
         const { data } = yield call(() => callbackApi())
-        console.log(data)
+        // console.log(data)
         yield put({
             type: SET_ALL_PRODUCT,
             product: data,

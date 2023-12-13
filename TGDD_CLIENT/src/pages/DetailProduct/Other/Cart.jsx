@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux"
 import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
 import axios from "axios"
 import { DOMAIN2 } from "../../../utils/Settings/global"
+import { HIDE_CARD_PRODUCT } from "../../../redux/reducers/types/mainType"
+import { showMess } from "../../../redux/actions/globalAction"
 const theme = createTheme({
     palette: {
         primary: {
@@ -27,6 +29,13 @@ function Cart(props) {
             productId: productDetail.productId,
             quantity: data.quantity,
         })
+    }
+
+    const handleCloseModal = () => {
+        // showMess("Thêm vào giỏ hàng thành công", true)
+        dispatch({
+            type: HIDE_CARD_PRODUCT,
+        });
     }
 
     return (
@@ -147,7 +156,7 @@ function Cart(props) {
                     variant="contained"
                     color="primary"
                 >
-                    <span className="text-[12px] sm:text-[14px] text-white">
+                    <span className="text-[12px] sm:text-[14px] text-white" onClick={handleCloseModal}>
                         Thêm vào giỏ hàng
                     </span>
                 </Button>

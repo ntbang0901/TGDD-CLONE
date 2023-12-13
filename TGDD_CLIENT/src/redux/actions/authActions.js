@@ -5,7 +5,7 @@ import { CHECK_LOGIN, SET_USER } from "../reducers/types/mainType"
 import { handleLoading, showMess } from "./globalAction"
 
 export function* loginUser(action) {
-    yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         const { data } = yield call(() => authServices.loginApi(action.values))
 
@@ -15,6 +15,7 @@ export function* loginUser(action) {
         // Save info user
         yield put({
             type: SET_USER,
+            userId: data.user.id,
             user: data.user,
         })
 
@@ -36,7 +37,7 @@ export function* loginUser(action) {
         yield call(() => showMess(error.response?.data.message, false))
     }
 
-    yield call(() => handleLoading(false))
+    // yield call(() => handleLoading(false))
 }
 
 export function* checkLogin(action) {

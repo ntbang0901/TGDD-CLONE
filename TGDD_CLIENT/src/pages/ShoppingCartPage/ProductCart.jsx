@@ -15,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle"
 import DialogContent from "@mui/material/DialogContent"
 import IconButton from "@mui/material/IconButton"
 import CloseIcon from "@mui/icons-material/Close"
+import { useNavigate } from "react-router-dom"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     "& .MuiDialogContent-root": {
@@ -40,6 +41,8 @@ const ProductCart = ({ item, itemPromotion }) => {
         setOpen(false)
     }
 
+    const navigate = useNavigate();
+
     console.log(item)
 
     const checkPromotion = (quantity, index) => {
@@ -57,6 +60,8 @@ const ProductCart = ({ item, itemPromotion }) => {
                         : " đồng"
                 } `
             )
+        }
+        if(itemPromotion[index]?.promotionItems[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
@@ -183,11 +188,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                         <CancelPresentationRoundedIcon
                             onClick={() => {
-                                if (
-                                    window.confirm(
-                                        "Bạn chắc chắn muốn xóa sản phẩm khỏi giõ hàng?"
-                                    )
-                                ) {
+                                {
                                     dispatch({
                                         type: DELETE_CART_SAGA,
                                         data: {
@@ -202,7 +203,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         />
                     </div>
                     <div className="">
-                        <h1 className="font-semibold text-struncate text-center md:text-left">
+                        <h1 className="font-semibold text-struncate text-center md:text-left cursor-pointer" onClick={()=> navigate(`/${item?.product.productId}`)}>
                             {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
