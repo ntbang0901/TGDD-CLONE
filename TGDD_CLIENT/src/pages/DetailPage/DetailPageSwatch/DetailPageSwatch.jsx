@@ -17,9 +17,7 @@ function DetailPageSwatch(props) {
         dispatch({
             type: GET_ALL_PRODUCT,
         })
-        dispatch({
-            type: GET_DATA_SWATCH_PAGE_SAGA,
-        })
+       
         let {idUser} = JSON.parse(localStorage.getItem("user"))
         dispatch({
             type: GET_CART_SAGA,

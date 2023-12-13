@@ -56,7 +56,9 @@ const ProductCart = ({ item, itemPromotion }) => {
                     type: ADD_TO_CART_SAGA,
                     data
                 })
+                checkPromotion(itemQuantity, 0)
             }
+
         }, [quantityDebounce]
     )
 
@@ -163,10 +165,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                                                     p?.promotionItems[0]
                                                         .quantity,
                                                 )
-                                                checkPromotion(
-                                                    itemQuantity,
-                                                    index
-                                                )
+                                   
                                                 handleClose()
                                             }}
                                         >
@@ -254,7 +253,7 @@ const ProductCart = ({ item, itemPromotion }) => {
                         <button
                             onClick={async () => {
                                 setItemQuantity(e => e + 1);
-                                checkPromotion(itemQuantity, 0)
+
 
                             }}
                             className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"

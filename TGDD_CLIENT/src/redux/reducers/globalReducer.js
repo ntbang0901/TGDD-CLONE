@@ -204,13 +204,13 @@ const globalReducer = (state = initialState, action) => {
 
         case SET_SHOPPING_CART: {
             console.log("SET_SHOPPING_CART:::", action)
-            if(!(isEqual(action.data,state.shoppingCarts)&&action.total===state.quantityShoppingCart))
+            // if(!(isEqual(action.data,state.shoppingCarts)&&action.total===state.quantityShoppingCart))
             return {
                 ...state,
                 shoppingCarts: action.data,
                 quantityShoppingCart: action.total,
             }
-            return state;
+            // return state;
         }
 
         case SET_HISTORY: {
