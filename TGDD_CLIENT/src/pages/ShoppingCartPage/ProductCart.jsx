@@ -37,7 +37,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
     const [itemQuantity, setItemQuantity] = useState(item.quantity)
-    let quantityDebounce = useDebounce(itemQuantity)
+    let quantityDebounce = useDebounce(itemQuantity, 200)
     const navigate = useNavigate()
     const [notify, setNotify] = useState("")
 
@@ -207,21 +207,30 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         />
                         <CancelPresentationRoundedIcon
                             onClick={() => {
-                                {
-                                    dispatch({
-                                        type: DELETE_CART_SAGA,
-                                        data: {
-                                            idUser: user.idUser,
-                                            productId: item.product.productId,
-                                            idCart: item.cartId,
-                                        },
-                                    })
-                                }
+                                let newResult = last_promotions.filter((pro) =>
+                                    listHistory.some(
+                                        (pro1) => pro1.id === pro.id
+                                    )
+                                )
+
+                                dispatch({
+                                    type: GET_HISTORY_LAST_PROMOTION,
+                                    promotion: newResult,
+                                })
+                                dispatch({
+                                    type: DELETE_CART_SAGA,
+                                    data: {
+                                        idUser: user.idUser,
+                                        productId: item.product.productId,
+                                        idCart: item.cartId,
+                                    },
+                                })
                             }}
                             className="cursor-pointer text-red-500 pt-2"
                         />
                     </div>
-                    <div></div>
+                    <div>{item.quantity}</div>
+                    <div>{}</div>
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"

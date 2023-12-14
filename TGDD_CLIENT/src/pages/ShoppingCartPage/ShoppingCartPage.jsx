@@ -32,6 +32,8 @@ function ShoppingCartPage(props) {
         item: [],
     })
 
+    const [total, setTotal] = useState(0)
+
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {
             quantity: cart.quantity,
@@ -136,15 +138,26 @@ function ShoppingCartPage(props) {
 
     const totalDiscount = () => {
         let total = 0
-        result.forEach((item) => {
-            if (item.discountType === "value") {
-                total += item.discountValue
-            } else {
-                total +=
-                    (item.discountValue / 100) *
-                    (item.promotionItems[0].quantity *
-                        item.promotionItems[0].price)
-            }
+        shoppingCarts.forEach((item) => {
+            console.log(item)
+            result.forEach((value) => {
+                console.log(
+                    item.product.productId === value.promotionItems[0].productId
+                )
+                if (
+                    item.quantity === value.promotionItems[0].quantity &&
+                    item.product.productId === value.promotionItems[0].productId
+                ) {
+                    if (value.discountType === "value") {
+                        total += value.discountValue
+                    } else {
+                        total +=
+                            (value.discountValue / 100) *
+                            (value.promotionItems[0].quantity *
+                                value.promotionItems[0].price)
+                    }
+                }
+            })
         })
 
         return total
@@ -196,6 +209,7 @@ function ShoppingCartPage(props) {
                         errors={errors}
                     />
                 </div>
+                <div>{total}</div>
                 <div>
                     <p>Ưu đãi cho giỏ hàng</p>
                     <ul className="rounded-xl bg-[#ffd500ae] mt-2">
