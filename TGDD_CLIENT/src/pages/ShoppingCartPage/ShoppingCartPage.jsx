@@ -205,7 +205,7 @@ function ShoppingCartPage(props) {
                         errors={errors}
                     />
                 </div>
-                <div>{total}</div>
+                {/* <div>{total}</div> */}
                 <div>
                     <p>Ưu đãi cho giỏ hàng</p>
                     <ul className="rounded-xl bg-[#ffd500ae] mt-2">

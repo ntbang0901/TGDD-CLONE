@@ -94,7 +94,7 @@ function ContentRight(props) {
                         {
                           currency: "USD",
                         }
-                      )}${itemPromotion[0]?.discountType ===
+                      )}${itemPromotion[index]?.discountType ===
                         "percentage"
                         ? "%"
                         : " đồng"

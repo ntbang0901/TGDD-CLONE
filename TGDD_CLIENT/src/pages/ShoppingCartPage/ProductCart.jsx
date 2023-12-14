@@ -61,7 +61,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
         type: ADD_TO_CART_SAGA,
         data,
       });
-      checkPromotion(itemQuantity, 0);
+      // checkPromotion(itemQuantity, 0);
     }
   }, [quantityDebounce]);
   const checkPromotion = (quantity, index) => {
@@ -78,7 +78,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
           index
         ]?.discountValue.toLocaleString("en-US", {
           currency: "USD",
-        })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
+        })}${itemPromotion[index]?.discountType === "percentage" ? "%" : " đồng"} `
       );
       // console.log(listHistory)
     } else {
@@ -91,7 +91,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
   };
   setTimeout(()=> {
     setNotify("")
-  }, 1500)
+  }, 800)
 
   return (
     <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
@@ -146,7 +146,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
             </IconButton>
 
             <DialogContent dividers>
-              {itemPromotion[0]?.soLuongMuaThem ? <ul>
+              {itemPromotion?.length ? <ul>
                 {itemPromotion.map((p, index) => (
                   <li
                     className="p-2 hover:cursor-pointer flex justify-between items-center"
@@ -167,7 +167,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                       className="hover:bg-[#ccc] p-2 rounded-md"
                       onClick={async () => {
                         setItemQuantity(p?.promotionItems[0].quantity);
-
+                        checkPromotion(itemPromotion[index]?.promotionItems[0]?.quantity, index)
                         handleClose();
                       }}
                     >
@@ -224,15 +224,15 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             {item?.product?.productName}
                         </h1>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
-                            <span>khuyến mãi đã áp dụng : </span>{" "}
+                            <span>Khuyến mãi đã áp dụng : </span>{" "}
                             {promotionUsed.length}
                         </p>
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}
                         </p>
-                        <p className="text-sm capitalize text-minLink text-center md:text-left">
+                        {/* <p className="text-sm capitalize text-minLink text-center md:text-left">
                             màu: {item?.product.color}
-                        </p>
+                        </p> */}
                     </div>
                 </div>
                 {/* Action  */}
@@ -254,6 +254,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
               onClick={async () => {
                 if (itemQuantity > 1) {
                   setItemQuantity((e) => e - 1);
+                  checkPromotion(item.quantity - 1, 0)
                 }
               }}
               className={`border-[1px] ${
@@ -268,7 +269,8 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
             <button
               onClick={async () => {
-                setItemQuantity((e) => e + 1);
+                setItemQuantity((e)=> e + 1 );
+                checkPromotion(item.quantity + 1, 0)
               }}
               className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
             >
