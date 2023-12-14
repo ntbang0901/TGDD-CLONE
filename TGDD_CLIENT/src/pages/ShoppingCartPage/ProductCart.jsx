@@ -201,57 +201,69 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
       <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
         {/* Info  */}
 
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="flex flex-col items-center justify-center">
-            <img
-              className="w-[80px] h-[80px] object-contain"
-              src={item?.product?.photo}
-              alt=""
-            />
-            <CancelPresentationRoundedIcon
-              onClick={() => {
-                {
-                  dispatch({
-                    type: DELETE_CART_SAGA,
-                    data: {
-                      idUser: user.idUser,
-                      productId: item.product.productId,
-                      idCart: item.cartId,
-                    },
-                  });
-                }
-              }}
-              className="cursor-pointer text-red-500 pt-2"
-            />
-          </div>
-          <div></div>
-          <div className="">
-            <h1
-              className="font-semibold text-struncate text-center md:text-left cursor-pointer"
-              onClick={() => navigate(`/${item?.product.productId}`)}
-            >
-              {item?.product?.productName}
-            </h1>
-            <p className="my-2 text-sm text-minLink text-center md:text-left">
-              <span>Khuyến mãi đã áp dụng : </span> {promotionUsed.length}
-            </p>
-            <p className="my-2 text-sm text-minLink text-center md:text-left">
-              {/* {itemPromotion?.item.length} */}
-            </p>
-            {/* <p className="text-sm capitalize text-minLink text-center md:text-left">
-                            Màu: {item?.product.color}
-                        </p> */}
-          </div>
-        </div>
-        {/* Action  */}
-        <div className="flex flex-col gap-5">
-          <p className="text-red-600">
-            {item?.product?.price.toLocaleString("en-US", {
-              currency: "USD",
-            })}
-            đ
-          </p>
-          {/* <p className="line-through text-sm my-1 text-gray-400">
+                <div className="flex flex-col md:flex-row gap-2">
+                    <div className="flex flex-col items-center justify-center">
+                        <img
+                            className="w-[80px] h-[80px] object-contain"
+                            src={item?.product?.photo}
+                            alt=""
+                        />
+                        <CancelPresentationRoundedIcon
+                            onClick={() => {
+                                let newResult = last_promotions.filter((pro) =>
+                                    listHistory.some(
+                                        (pro1) => pro1.id === pro.id
+                                    )
+                                )
+
+                                dispatch({
+                                    type: GET_HISTORY_LAST_PROMOTION,
+                                    promotion: newResult,
+                                })
+                                dispatch({
+                                    type: DELETE_CART_SAGA,
+                                    data: {
+                                        idUser: user.idUser,
+                                        productId: item.product.productId,
+                                        idCart: item.cartId,
+                                    },
+                                })
+                            }}
+                            className="cursor-pointer text-red-500 pt-2"
+                        />
+                    </div>
+                    <div>{item.quantity}</div>
+                    <div>{}</div>
+                    <div className="">
+                        <h1
+                            className="font-semibold text-struncate text-center md:text-left cursor-pointer"
+                            onClick={() =>
+                                navigate(`/${item?.product.productId}`)
+                            }
+                        >
+                            {item?.product?.productName}
+                        </h1>
+                        <p className="my-2 text-sm text-minLink text-center md:text-left">
+                            <span>khuyến mãi đã áp dụng : </span>{" "}
+                            {promotionUsed.length}
+                        </p>
+                        <p className="my-2 text-sm text-minLink text-center md:text-left">
+                            {/* {itemPromotion?.item.length} */}
+                        </p>
+                        <p className="text-sm capitalize text-minLink text-center md:text-left">
+                            màu: {item?.product.color}
+                        </p>
+                    </div>
+                </div>
+                {/* Action  */}
+                <div className="flex flex-col gap-5">
+                    <p className="text-red-600">
+                        {item?.product?.price.toLocaleString("en-US", {
+                            currency: "USD",
+                        })}
+                        đ
+                    </p>
+                    {/* <p className="line-through text-sm my-1 text-gray-400">
                         {(item?.product?.price * 1.8).toLocaleString("en-US", {
                             currency: "USD",
                         })}
