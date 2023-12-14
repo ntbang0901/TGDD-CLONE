@@ -3,7 +3,7 @@ import axios from "axios"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { showMess } from "../../../redux/actions/globalAction"
-import { HIDE_CARD_PRODUCT } from "../../../redux/reducers/types/mainType"
+import { HIDE_CARD_PRODUCT, SHOW_ALERT } from "../../../redux/reducers/types/mainType"
 import { ADD_TO_CART_SAGA } from "../../../redux/sagas/types/main"
 import { DOMAIN2 } from "../../../utils/Settings/global"
 const theme = createTheme({
@@ -22,10 +22,43 @@ function Cart(props) {
     const [quantity, setQuantity] = useState(1)
     const dispatch = useDispatch()
 
-
+    const handleAddToCart = () => {
+        const { name, category, productId, price } =
+            productDetail
+        let images = [productDetail.photo]
+        const product = {
+            name,
+            category,
+            _id: productId,
+            price,
+            images,
+        }
+        if (quantity > 0) {
+            const data = {
+                productId: productDetail.productId,
+                idUser: user.idUser,
+                idColor: images[0].colorValue,
+                product,
+                quantity,
+            }
+            // addCart(data)
+            dispatch({
+                type: ADD_TO_CART_SAGA,
+                data,
+            })
+            dispatch({
+                type: SHOW_ALERT,
+                success:true,
+                mess: "Thêm vào giỏ hàng thành công"
+            })
+            handleCloseModal()
+        } else {
+            alert("Số lượng sản phẩm phải lớn hơn 0")
+        }
+    }
 
     const handleCloseModal = () => {
-        showMess("Thêm vào giỏ hàng thành công", true)
+        
         dispatch({
             type: HIDE_CARD_PRODUCT,
         });
@@ -117,35 +150,7 @@ function Cart(props) {
                     </span>
                 </div>
                 <Button
-                    onClick={() => {
-                        const { name, category, productId, price } =
-                            productDetail
-                        let images = [productDetail.photo]
-                        const product = {
-                            name,
-                            category,
-                            _id: productId,
-                            price,
-                            images,
-                        }
-                        if (quantity > 0) {
-                            const data = {
-                                productId: productDetail.productId,
-                                idUser: user.idUser,
-                                idColor: images[0].colorValue,
-                                product,
-                                quantity,
-                            }
-                            // addCart(data)
-                            dispatch({
-                                type: ADD_TO_CART_SAGA,
-                                data,
-                            })
-                            handleCloseModal()
-                        } else {
-                            alert("Số lượng sản phẩm phải lớn hơn 0")
-                        }
-                    }}
+                    onClick={handleAddToCart}
                     style={{ width: "100%", marginTop: "8px" }}
                     variant="contained"
                     color="primary"
