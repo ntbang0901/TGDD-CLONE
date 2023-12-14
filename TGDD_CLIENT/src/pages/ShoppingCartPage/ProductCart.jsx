@@ -66,18 +66,6 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
   }, [quantityDebounce]);
   const checkPromotion = (quantity, index) => {
     if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
-      // setNotify(
-      //     `Yay! Bạn đã tiết kiệm được ${itemPromotion[
-      //         index
-      //     ]?.discountValue.toLocaleString("en-US", {
-      //         currency: "USD",
-      //     })}${
-      //         itemPromotion[0]?.discountType === "percentage"
-      //             ? "%"
-      //             : " đồng"
-      //     } `
-      // )
-
       listHistory.push(itemPromotion[index]);
 
       dispatch({
@@ -100,14 +88,10 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
       });
     }
 
-    const resetNotify = setTimeout(() => {
-      setNotify("");
-    }, 1500);
-
-    if (!itemPromotion) {
-      clearTimeout(resetNotify);
-    }
   };
+  setTimeout(()=> {
+    setNotify("")
+  }, 1500)
 
   return (
     <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
@@ -128,9 +112,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                       ? "%"
                       : " đồng"
                   } `
-                : `Yay! Bạn đã tiết kiệm được ${listHistory[listHistory.length - 1]?.discountValue.toLocaleString("en-US", {
-                    currency: "USD",
-                  })}${listHistory[listHistory.length - 1]?.discountType === "percentage" ? "%" : " đồng"} `
+                : notify
             }
             item={
               itemPromotion[0]?.promotionItems[0]?.quantity -
@@ -138,7 +120,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
             }
             itemQuantity={itemPromotion[0]?.promotionItems[0]?.quantity}
             onClick={handleClickOpen}
-            notify={notify}
+            notify={itemPromotion?.length > 0 ? notify : 'notify'}
           />
           <BootstrapDialog
             onClose={handleClose}
@@ -232,8 +214,6 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             className="cursor-pointer text-red-500 pt-2"
                         />
                     </div>
-                    <div>{item.quantity}</div>
-                    <div>{}</div>
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"
