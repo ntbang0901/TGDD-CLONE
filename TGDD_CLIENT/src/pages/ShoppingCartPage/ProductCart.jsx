@@ -71,10 +71,9 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     index
                 ]?.discountValue.toLocaleString("en-US", {
                     currency: "USD",
-                })}${
-                    itemPromotion[0]?.discountType === "percentage"
-                        ? "%"
-                        : " đồng"
+                })}${itemPromotion[0]?.discountType === "percentage"
+                    ? "%"
+                    : " đồng"
                 } `
             )
 
@@ -104,19 +103,17 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     <ProgressBar
                         text={
                             notify === ""
-                                ? `Mua thêm ${
-                                      itemPromotion[0]?.soLuongMuaThem
-                                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
-                                      "en-US",
-                                      {
-                                          currency: "USD",
-                                      }
-                                  )}${
-                                      itemPromotion[0]?.discountType ===
-                                      "percentage"
-                                          ? "%"
-                                          : " đồng"
-                                  } `
+                                ? `Mua thêm ${itemPromotion[0]?.soLuongMuaThem
+                                } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
+                                    "en-US",
+                                    {
+                                        currency: "USD",
+                                    }
+                                )}${itemPromotion[0]?.discountType ===
+                                    "percentage"
+                                    ? "%"
+                                    : " đồng"
+                                } `
                                 : notify
                         }
                         item={
@@ -163,14 +160,13 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                         key={index}
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
-                                            {`Mua thêm ${
-                                                p?.soLuongMuaThem
-                                            } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
-                                                "en-US",
-                                                {
-                                                    currency: "USD",
-                                                }
-                                            )}`}
+                                            {`Mua thêm ${p?.soLuongMuaThem
+                                                } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
+                                                    "en-US",
+                                                    {
+                                                        currency: "USD",
+                                                    }
+                                                )}`}
                                             {p?.discountType === "percentage"
                                                 ? "%"
                                                 : " đồng"}
@@ -229,8 +225,6 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             className="cursor-pointer text-red-500 pt-2"
                         />
                     </div>
-                    <div>{item.quantity}</div>
-                    <div>{}</div>
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"
@@ -260,12 +254,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         })}
                         đ
                     </p>
-                    {/* <p className="line-through text-sm my-1 text-gray-400">
-                        {(item?.product?.price * 1.8).toLocaleString("en-US", {
-                            currency: "USD",
-                        })}
-                        đ
-                    </p> */}
+
                     <div className="flex">
                         <button
                             onClick={async () => {
@@ -273,9 +262,8 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                     setItemQuantity((e) => e - 1)
                                 }
                             }}
-                            className={`border-[1px] ${
-                                item.quantity === 1 ? "bg-gray-100" : ""
-                            }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
+                            className={`border-[1px] ${item.quantity === 1 ? "bg-gray-100" : ""
+                                }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
                         >
                             -
                         </button>
@@ -294,39 +282,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     </div>
                 </div>
             </div>
-            {/* <div className={``}>
-                <ul
-                    className={` ${
-                        !open && itemPromotion.length > 3
-                            ? "h-[130px] overflow-hidden"
-                            : ""
-                    } transition duration-150 ease-out p-[5px] `}
-                >
-                    {itemPromotion.map((p, index) => (
-                        <li className="p-2">
-                            <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
-                                HOT
-                            </span>
-                            <span className="text-[12px] sm:text-[14px] ml-2">
-                                {`Mua thêm ${
-                                    p.soLuongMuaThem
-                                } sản phẩm để được giảm ${p.discountValue.toLocaleString(
-                                    "en-US",
-                                    {
-                                        currency: "USD",
-                                    }
-                                )}`}{" "}
-                                {p.discountType === "percentage" ? "%" : "đ"}
-                            </span>
-                        </li>
-                    ))}
-                </ul> :  null}
-                {itemPromotion.length > 3 && (
-                    <ButtonStyles onClick={() => setOpen(!open)}>
-                        {open ? "Thu gọn" : "Xem thêm"}
-                    </ButtonStyles>
-                )}
-            </div> */}
+
         </div>
     )
 }
