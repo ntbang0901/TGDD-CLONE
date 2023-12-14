@@ -24,8 +24,7 @@ function ShoppingCartPage(props) {
     const { user } = useSelector((state) => state.user)
     const { last_promotions } = useSelector((state) => state.product)
 
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
-        useSelector((state) => state.global)
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
 
     const [promotionList, setPromotionList] = useState({
         cart: [],
@@ -136,14 +135,14 @@ function ShoppingCartPage(props) {
 
     const totalDiscount = () => {
         let total = 0
-        result.forEach((item) => {
+        result.forEach((item, index) => {
             if (item.discountType === "value") {
-                total += item.discountValue
+                total = item.discountValue
             } else {
-                total +=
+                total =
                     (item.discountValue / 100) *
-                    (item.promotionItems[0].quantity *
-                        item.promotionItems[0].price)
+                    (item.promotionItems[index-1].quantity *
+                        item.promotionItems[index-1].price)
             }
         })
 
