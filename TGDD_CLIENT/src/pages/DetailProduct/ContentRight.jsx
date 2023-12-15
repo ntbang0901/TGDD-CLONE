@@ -53,26 +53,40 @@ function ContentRight(props) {
       console.log("quantity: ", quantity);
       console.log("step: ", calculateWhichStep(quantity));
 
-      if(quantity >= promotionMap[promotionMap.length - 1].promotionItems[0].quantity)
-      {
+      if (
+        quantity >=
+        promotionMap[promotionMap.length - 1].promotionItems[0].quantity
+      ) {
         setProgressValue(97);
-        return
+        return;
       }
 
-      console.log(promotionMap[calculateWhichStep(quantity - 2)].promotionItems[0].quantity);
-
       if (calculateWhichStep(quantity) > 1) {
-        const borderRight = promotionMap[calculateWhichStep(quantity) - 1].promotionItems[0].quantity;
-        const borderLeft = promotionMap[calculateWhichStep(quantity) - 2].promotionItems[0].quantity
+        const borderRight =
+          promotionMap[calculateWhichStep(quantity) - 1].promotionItems[0]
+            .quantity;
+        const borderLeft =
+          promotionMap[calculateWhichStep(quantity) - 2].promotionItems[0]
+            .quantity;
         const distance = borderRight - borderLeft;
 
-        console.log("distance: ", distance)
-        console.log("borderRight: ", borderRight)
-        console.log("borderLeft: ", borderLeft)
+        console.log("distance: ", distance);
+        console.log("borderRight: ", borderRight);
+        console.log("borderLeft: ", borderLeft);
 
-        const valueSet = (((calculateWhichStep(quantity) - 1) * calculatePagePerStep()) + ((1/distance) * (quantity - borderLeft) * calculatePagePerStep())) * 100
-        console.log("value set: ",((calculateWhichStep(quantity) - 1) * calculatePagePerStep()), "+",((1/distance) * (quantity - borderLeft) * calculatePagePerStep()), "* 100 = ", valueSet);
-        ifValueMaxOut(valueSet)
+        const valueSet =
+          ((calculateWhichStep(quantity) - 1) * calculatePagePerStep() +
+            (1 / distance) * (quantity - borderLeft) * calculatePagePerStep()) *
+          100;
+        console.log(
+          "value set: ",
+          (calculateWhichStep(quantity) - 1) * calculatePagePerStep(),
+          "+",
+          (1 / distance) * (quantity - borderLeft) * calculatePagePerStep(),
+          "* 100 = ",
+          valueSet
+        );
+        ifValueMaxOut(valueSet);
       } else {
         const maxValue =
           promotionMap[calculateWhichStep(quantity) - 1].promotionItems[0]
@@ -84,14 +98,15 @@ function ContentRight(props) {
           100 *
           (calculatePagePerStep() * calculateWhichStep(quantity));
         console.log("value set: ", valueSet);
-        ifValueMaxOut(valueSet)
+        ifValueMaxOut(valueSet);
       }
-      
     } else {
       setProgressValue(0);
     }
     setStep({ stepsItems: promotionMap, currentStep: 2 });
   }
+
+  console.log()
 
   function ifValueMaxOut(valueSet) {
     if (valueSet >= 97) {
@@ -100,7 +115,7 @@ function ContentRight(props) {
       return;
     } else {
       setProgressValue(valueSet);
-      return
+      return;
     }
   }
   function calculateLength() {
@@ -127,8 +142,20 @@ function ContentRight(props) {
         return index + 1;
       }
     }
-    return promotionMap.length + 1
+    return promotionMap.length + 1;
   }
+
+  function archivedStep() {
+    if (progressValue >= 97)
+    {
+      return calculateLength() - 1;
+    }
+    const realStep = Math.floor(progressValue / (calculatePagePerStep() * 100))
+    console.log("calcu: ", progressValue, "/", calculatePagePerStep(), "*", 100, "=", realStep)
+    return realStep;
+  }
+
+  console.log("archivedStep: ", archivedStep())
 
   const renderStaticItem1 = () => {
     return !_.isEmpty(productDetail) ? (
@@ -156,9 +183,9 @@ function ContentRight(props) {
                     HOT
                   </span>
                   <span className="text-[12px] sm:text-[14px] ml-2">
-                    {`Mua thêm ${
-                      p.soLuongMuaThem
-                    } sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                    {`Mua từ ${
+                      p.additionalQuantity
+                    } sản phẩm được giảm ${p.discountValue.toLocaleString(
                       "en-US",
                       {
                         currency: "USD",
@@ -192,7 +219,11 @@ function ContentRight(props) {
         {console.log("itemPromotion:-->right ", itemPromotion)}
         {console.log("promotionMap:-->right ", promotionMap)}
 
-        {console.log("Math: ", Math.floor(progressValue/(calculatePagePerStep() * 100)))}
+        {console.log(
+          "Math: ",
+          Math.floor(progressValue / (calculatePagePerStep() * 100))
+        )}
+
         {promotionMap.length !== 0 ? (
           <div className="max-w-screen-xl mx-auto px-4 md:px-8 my-auto rounded-sm border-[1px] min-w-fit">
             <div className="pt-2">
@@ -217,6 +248,7 @@ function ContentRight(props) {
                 <span className="absolute left-97percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>*/}
                 {/* ... (Các phần khác của mã) ... */}
                 {promotionMap.map((item, idx) => (
+                  
                   <span
                     key={idx}
                     style={{
@@ -226,7 +258,7 @@ function ContentRight(props) {
                       )}%)`,
                     }}
                     className={
-                      idx === 0
+                      idx === (archivedStep())
                         ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
                         : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
                     }
@@ -240,9 +272,9 @@ function ContentRight(props) {
                       }}
                       className="tooltip absolute left-[var(--leftForStep)] top-[80%] transform -translate-x-1/2 -translate-y-1/2 rounded shadow-lg p-1 bg-gray-100 text-red-500 mt-8 min-w-max"
                     >
-                      {`Mua thêm ${
-                        item.soLuongMuaThem
-                      } sản phẩm để được giảm ${item.discountValue.toLocaleString(
+                      {`Mua từ ${
+                        item.additionalQuantity
+                      } sản phẩm được giảm ${item.discountValue.toLocaleString(
                         "en-US",
                         {
                           currency: "USD",
@@ -454,6 +486,7 @@ function ContentRight(props) {
     }
     return jsx;
   };
+
   return (
     <>
       {!_.isEmpty(productDetail) ? (
@@ -473,17 +506,6 @@ function ContentRight(props) {
         <SimpleSkeleton height={150} />
       )}
 
-      {/* Price */}
-      <div className="flex flex-wrap my-2">
-        {productDetail?.price ? (
-          <>
-            <span className="text-red-600 font-semibold text-2xl">
-              {productDetail?.price.toLocaleString("en-US", {
-                currency: "USD",
-              })}
-              đ
-            </span>
-            {/* <span className="text-gray-400 line-through mx-2">
       {/* Price */}
       <div className="flex flex-wrap my-2">
         {productDetail?.price ? (
@@ -521,21 +543,15 @@ function ContentRight(props) {
               type: OPEN_MODAL_HOC,
               title: "Thêm vào giỏ hàng",
               ComponentContentModal: (
-                <Cart
-                  user={user}
-                  productDetail={productDetail}
-                />
+                <Cart user={user} productDetail={productDetail} />
               ),
-            })
-
+            });
           }}
           style={{ width: "100%", marginBottom: "8px" }}
           variant="contained"
           color="primary"
         >
-          <span className="text-[12px] sm:text-[14px]">
-            Thêm vào giỏ hàng
-          </span>
+          <span className="text-[12px] sm:text-[14px]">Thêm vào giỏ hàng</span>
         </Button>
         <Button
           onClick={() => {
@@ -544,24 +560,18 @@ function ContentRight(props) {
                 type: OPEN_MODAL_HOC,
                 title: "Thêm vào giỏ hàng",
                 ComponentContentModal: (
-                  <Cart
-                    productDetail={productDetail}
-                    user={user}
-                  />
+                  <Cart productDetail={productDetail} user={user} />
                 ),
-              })
+              });
             } else {
-              navigate("/login")
+              navigate("/login");
             }
           }}
           style={{ width: "100%" }}
           variant="contained"
           color="error"
         >
-          <span className="text-[12px] sm:text-[14px]">
-            {" "}
-            Đặt hàng
-          </span>
+          <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
         </Button>
       </div>
       {renderStaticItem2()}

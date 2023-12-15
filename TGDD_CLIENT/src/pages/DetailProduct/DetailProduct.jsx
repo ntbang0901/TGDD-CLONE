@@ -60,14 +60,14 @@ function DetailProduct(props) {
       const promotionMapTemp = [];
       itemPromotion.forEach((promotion) => {
         // Tạo một đối tượng để lưu trữ thông tin về số sản phẩm và mức giảm giá tương ứng
-        const { soLuongMuaThem, discountValue } = promotion;
+        const { additionalQuantity, discountValue } = promotion;
         // Kiểm tra xem có thông tin về khuyến mãi với số sản phẩm này chưa
         if (
-          !promotionMapTemp[soLuongMuaThem] ||
-          promotionMapTemp[soLuongMuaThem].discountValue < discountValue
+          !promotionMapTemp[additionalQuantity] ||
+          promotionMapTemp[additionalQuantity].discountValue < discountValue
         ) {
           // Nếu chưa có hoặc mức giảm giá mới lớn hơn, cập nhật thông tin khuyến mãi
-          promotionMapTemp[soLuongMuaThem] = promotion;
+          promotionMapTemp[additionalQuantity] = promotion;
         }
       });
       const newArray = promotionMapTemp?.filter(Boolean);
@@ -110,27 +110,6 @@ function DetailProduct(props) {
 
   console.log("selectedProduct-->detail", selectedProduct);
   console.log("productPayload-->detail", productPayload);
-
-  function filterUniquePromotion() {
-    const promotionMapTemp = [];
-    itemPromotion.forEach((promotion) => {
-      // Tạo một đối tượng để lưu trữ thông tin về số sản phẩm và mức giảm giá tương ứng
-      const { soLuongMuaThem, discountValue } = promotion;
-      // Kiểm tra xem có thông tin về khuyến mãi với số sản phẩm này chưa
-      if (
-        !promotionMapTemp[soLuongMuaThem] ||
-        promotionMapTemp[soLuongMuaThem].discountValue < discountValue
-      ) {
-        // Nếu chưa có hoặc mức giảm giá mới lớn hơn, cập nhật thông tin khuyến mãi
-        promotionMapTemp[soLuongMuaThem] = promotion;
-      }
-    });
-    const newArray = promotionMapTemp?.filter(Boolean);
-    setPromotionMap(promotionMap);
-    console.log("promotionMapTemp: ", promotionMapTemp);
-    console.log("newArray: ", newArray);
-    console.log("promotionMap: ", promotionMap);
-  }
 
   return (
     <ThemeProvider theme={theme}>
