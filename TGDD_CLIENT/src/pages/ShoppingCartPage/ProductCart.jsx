@@ -98,12 +98,12 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
     return (
         <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-            {itemPromotion[0]?.soLuongMuaThem ? (
+            {itemPromotion[0]?.additionalQuantity ? (
                 <>
                     <ProgressBar
                         text={
                             notify === ""
-                                ? `Mua thêm ${itemPromotion[0]?.soLuongMuaThem
+                                ? `Mua thêm ${itemPromotion[0]?.additionalQuantity
                                 } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
                                     "en-US",
                                     {
@@ -118,7 +118,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         }
                         item={
                             itemPromotion[0]?.promotionItems[0]?.quantity -
-                            itemPromotion[0]?.soLuongMuaThem
+                            itemPromotion[0]?.additionalQuantity
                         }
                         itemQuantity={
                             itemPromotion[0]?.promotionItems[0]?.quantity
@@ -160,7 +160,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                         key={index}
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
-                                            {`Mua thêm ${p?.soLuongMuaThem
+                                            {`Mua thêm ${p?.additionalQuantity
                                                 } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
                                                     "en-US",
                                                     {
