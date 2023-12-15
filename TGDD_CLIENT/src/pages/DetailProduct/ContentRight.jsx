@@ -2,7 +2,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import LocalAirportOutlinedIcon from "@mui/icons-material/LocalAirportOutlined";
 import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
 import { Button } from "@mui/material";
-import _ from "lodash";
+import _, { forEach } from "lodash";
 import { memo, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +23,6 @@ import {
 } from "../../utils/Settings/data";
 import Cart from "./Other/Cart";
 function ContentRight(props) {
-
   const {
     productDetail,
     category,
@@ -32,6 +31,7 @@ function ContentRight(props) {
     itemPromotion,
     productPayload,
     selectedProduct,
+    promotionMap,
   } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,80 +40,144 @@ function ContentRight(props) {
     stepsItems: [{}],
     currentStep: 0,
   });
-  const [milestone, setMilestone] = useState();
   const [progressValue, setProgressValue] = useState();
+
   useEffect(() => {
     calculateProductInCart();
-  }, [selectedProduct, itemPromotion]);
+  }, [selectedProduct, promotionMap]);
 
   function calculateProductInCart() {
-    console.log("itemPromotion: ", itemPromotion.length);
-    if (selectedProduct !== undefined && itemPromotion.length !== 0) {
+    if (selectedProduct !== undefined && promotionMap.length !== 0) {
       const { quantity } = selectedProduct;
-      const maxValue =
-        itemPromotion[itemPromotion.length - 1].promotionItems[0].quantity;
-      const valueSet = (quantity / maxValue) * 100;
-      if (valueSet >= 97) {
+
+      console.log("quantity: ", quantity);
+      console.log("step: ", calculateWhichStep(quantity));
+
+      if(quantity >= promotionMap[promotionMap.length - 1].promotionItems[0].quantity)
+      {
         setProgressValue(97);
-        setStep({ stepsItems: itemPromotion, currentStep: 4 });
-        return;
+        return
+      }
+
+      console.log(promotionMap[calculateWhichStep(quantity - 2)].promotionItems[0].quantity);
+
+      if (calculateWhichStep(quantity) > 1) {
+        const borderRight = promotionMap[calculateWhichStep(quantity) - 1].promotionItems[0].quantity;
+        const borderLeft = promotionMap[calculateWhichStep(quantity) - 2].promotionItems[0].quantity
+        const distance = borderRight - borderLeft;
+
+        console.log("distance: ", distance)
+        console.log("borderRight: ", borderRight)
+        console.log("borderLeft: ", borderLeft)
+
+        const valueSet = (((calculateWhichStep(quantity) - 1) * calculatePagePerStep()) + ((1/distance) * (quantity - borderLeft) * calculatePagePerStep())) * 100
+        console.log("value set: ",((calculateWhichStep(quantity) - 1) * calculatePagePerStep()), "+",((1/distance) * (quantity - borderLeft) * calculatePagePerStep()), "* 100 = ", valueSet);
+        ifValueMaxOut(valueSet)
       } else {
-        setProgressValue(valueSet);
+        const maxValue =
+          promotionMap[calculateWhichStep(quantity) - 1].promotionItems[0]
+            .quantity;
+
+        console.log("maxValue: ", maxValue);
+        const valueSet =
+          (quantity / maxValue) *
+          100 *
+          (calculatePagePerStep() * calculateWhichStep(quantity));
+        console.log("value set: ", valueSet);
+        ifValueMaxOut(valueSet)
+      }
+      
+    } else {
+      setProgressValue(0);
+    }
+    setStep({ stepsItems: promotionMap, currentStep: 2 });
+  }
+
+  function ifValueMaxOut(valueSet) {
+    if (valueSet >= 97) {
+      setProgressValue(97);
+      setStep({ stepsItems: promotionMap, currentStep: 4 });
+      return;
+    } else {
+      setProgressValue(valueSet);
+      return
+    }
+  }
+  function calculateLength() {
+    return promotionMap.length;
+  }
+
+  function calculatePagePerStep() {
+    switch (calculateLength()) {
+      case 1:
+        return 1;
+      case 2:
+        return 1 / 2;
+      case 3:
+        return 1 / 3;
+      default:
+        return 1;
+    }
+  }
+
+  function calculateWhichStep(quantity) {
+    for (let index = 0; index < promotionMap.length; index++) {
+      const element = promotionMap[index];
+      if (element.promotionItems[0].quantity > quantity) {
+        return index + 1;
       }
     }
-    setStep({ stepsItems: itemPromotion, currentStep: 2 });
+    return promotionMap.length + 1
   }
 
   const renderStaticItem1 = () => {
-        return !_.isEmpty(productDetail) ? (
-            <>
-                <div className="my-2 rounded-sm border-[1px]">
-                    <div className="bg-gray-200 px-2 py-2">
-                        <h1 className="font-semibold sm:text-left text-center text-base">
-                            Khuyến mãi sắp đạt được
-                        </h1>
-                        <p className="text-[12px] sm:text-[14px] sm:text-left text-center">
-                            Giá và khuyến mãi dự kiến áp dụng đến khi hết sản
-                            phẩm
-                        </p>
-                    </div>
-                    <div>
-                        <ul
-                            className={` ${
-                                !open && itemPromotion.length > 3
-                                    ? "h-[115px] overflow-hidden"
-                                    : ""
-                            } transition duration-150 ease-out `}
-                        >
-                            {itemPromotion.map((p, index) => (
-                                <li className="p-2">
-                                    <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
-                                        HOT
-                                    </span>
-                                    <span className="text-[12px] sm:text-[14px] ml-2">
-                                        {`Mua thêm ${
-                                            p.soLuongMuaThem
-                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString(
-                                            "en-US",
-                                            {
-                                                currency: "USD",
-                                            }
-                                        )}${
-                                            itemPromotion[0]?.discountType ===
-                                            "percentage"
-                                                ? "%"
-                                                : " đồng"
-                                        }`}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                        {itemPromotion.length > 3 && (
-                            <Button onClick={() => setOpen(!open)}>
-                                {open ? "Thu gọn" : "Xem thêm"}
-                            </Button>
-                        )}
-                    </div>
+    return !_.isEmpty(productDetail) ? (
+      <>
+        <div className="my-2 rounded-sm border-[1px]">
+          <div className="bg-gray-200 px-2 py-2">
+            <h1 className="font-semibold sm:text-left text-center text-base">
+              Khuyến mãi sắp đạt được
+            </h1>
+            <p className="text-[12px] sm:text-[14px] sm:text-left text-center">
+              Giá và khuyến mãi dự kiến áp dụng đến khi hết sản phẩm
+            </p>
+          </div>
+          <div>
+            <ul
+              className={` ${
+                !open && promotionMap.length > 3
+                  ? "h-[115px] overflow-hidden"
+                  : ""
+              } transition duration-150 ease-out `}
+            >
+              {promotionMap.map((p, index) => (
+                <li className="p-2">
+                  <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
+                    HOT
+                  </span>
+                  <span className="text-[12px] sm:text-[14px] ml-2">
+                    {`Mua thêm ${
+                      p.soLuongMuaThem
+                    } sản phẩm để được giảm ${p.discountValue.toLocaleString(
+                      "en-US",
+                      {
+                        currency: "USD",
+                      }
+                    )}${
+                      promotionMap[0]?.discountType === "percentage"
+                        ? "%"
+                        : " đồng"
+                    }`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {promotionMap.length > 3 && (
+              <Button onClick={() => setOpen(!open)}>
+                {open ? "Thu gọn" : "Xem thêm"}
+              </Button>
+            )}
+          </div>
 
           <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
             <p className="text-[12px] sm:text-[14px]">
@@ -124,7 +188,12 @@ function ContentRight(props) {
         </div>
 
         {/*progress bar*/}
-        {itemPromotion.length !== 0 ? (
+        {console.log("selectedProduct:-->right ", selectedProduct)}
+        {console.log("itemPromotion:-->right ", itemPromotion)}
+        {console.log("promotionMap:-->right ", promotionMap)}
+
+        {console.log("Math: ", Math.floor(progressValue/(calculatePagePerStep() * 100)))}
+        {promotionMap.length !== 0 ? (
           <div className="max-w-screen-xl mx-auto px-4 md:px-8 my-auto rounded-sm border-[1px] min-w-fit">
             <div className="pt-2">
               <span id="ProgressLabel" className="sr-only">
@@ -147,12 +216,44 @@ function ContentRight(props) {
                 <span className="absolute left-63percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>
                 <span className="absolute left-97percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>*/}
                 {/* ... (Các phần khác của mã) ... */}
-                {itemPromotion.map((item, idx) => (
+                {promotionMap.map((item, idx) => (
                   <span
                     key={idx}
-                    style={{ "--leftForStep": `${(idx + 1) * (100 / itemPromotion.length)}%` }}
-                    className={`absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`}
-                  ></span>
+                    style={{
+                      "--leftForStep": `calc(${Math.min(
+                        (idx + 1) * (100 / promotionMap.length),
+                        97
+                      )}%)`,
+                    }}
+                    className={
+                      idx === 0
+                        ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
+                        : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
+                    }
+                  >
+                    <p
+                      style={{
+                        "--leftForStep": `calc(${Math.min(
+                          (idx + 1) * (100 / promotionMap.length),
+                          97
+                        )}%)`,
+                      }}
+                      className="tooltip absolute left-[var(--leftForStep)] top-[80%] transform -translate-x-1/2 -translate-y-1/2 rounded shadow-lg p-1 bg-gray-100 text-red-500 mt-8 min-w-max"
+                    >
+                      {`Mua thêm ${
+                        item.soLuongMuaThem
+                      } sản phẩm để được giảm ${item.discountValue.toLocaleString(
+                        "en-US",
+                        {
+                          currency: "USD",
+                        }
+                      )}${
+                        promotionMap[0]?.discountType === "percentage"
+                          ? "%"
+                          : " đồng"
+                      }`}
+                    </p>
+                  </span>
                 ))}
               </span>
             </div>
@@ -372,17 +473,17 @@ function ContentRight(props) {
         <SimpleSkeleton height={150} />
       )}
 
-            {/* Price */}
-            <div className="flex flex-wrap my-2">
-                {productDetail?.price ? (
-                    <>
-                        <span className="text-red-600 font-semibold text-2xl">
-                            {productDetail?.price.toLocaleString("en-US", {
-                                currency: "USD",
-                            })}
-                            đ
-                        </span>
-                        {/* <span className="text-gray-400 line-through mx-2">
+      {/* Price */}
+      <div className="flex flex-wrap my-2">
+        {productDetail?.price ? (
+          <>
+            <span className="text-red-600 font-semibold text-2xl">
+              {productDetail?.price.toLocaleString("en-US", {
+                currency: "USD",
+              })}
+              đ
+            </span>
+            {/* <span className="text-gray-400 line-through mx-2">
                             {(productDetail?.price * 1.2).toLocaleString(
                                 "en-US",
                                 {
@@ -391,80 +492,69 @@ function ContentRight(props) {
                             )}
                             đ
                         </span> */}
-                        {/* <span className="text-red-600">8%</span> */}
-                        <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
-                            Trả góp 0%
-                        </span>
-                    </>
-                ) : (
-                    <SimpleSkeleton height={20} />
-                )}
-            </div>
-            {renderStaticItem1()}
-            {/* Add to cart + Order product */}
-            <div className="my-2">
-                <Button
-                    onClick={() => {
-                        if (isLogin) {
-                            dispatch({
-                                type: OPEN_MODAL_HOC,
-                                title: "Thêm vào giỏ hàng",
-                                ComponentContentModal: (
-                                    <Cart
-                                        user={user}
-                                        productDetail={productDetail}
-                                    />
-                                ),
-                            })
-                        } else {
-                            navigate("/login")
-                        }
-                    }}
-                    style={{ width: "100%", marginBottom: "8px" }}
-                    variant="contained"
-                    color="primary"
-                >
-                    <span className="text-[12px] sm:text-[14px]">
-                        Thêm vào giỏ hàng
-                    </span>
-                </Button>
-                <Button
-                    onClick={() => {
-                        if (isLogin) {
-                            dispatch({
-                                type: OPEN_MODAL_HOC,
-                                title: "Thêm vào giỏ hàng",
-                                ComponentContentModal: (
-                                    <Cart
-                                        productDetail={productDetail}
-                                        user={user}
-                                    />
-                                ),
-                            })
-                        } else {
-                            navigate("/login")
-                        }
-                    }}
-                    style={{ width: "100%" }}
-                    variant="contained"
-                    color="error"
-                >
-                    <span className="text-[12px] sm:text-[14px]">
-                        {" "}
-                        Đặt hàng
-                    </span>
-                </Button>
-            </div>
-            {renderStaticItem2()}
-            {/* Configuration */}
-            <div className="my-2">
-                {productDetail?.productName ? (
-                    <h1 className="font-semibold text-base text-center sm:text-left sm:text-xl text-struncate">
-                        Cấu hình {productDetail?.productName}
-                    </h1>
-                ) : (
-                    <SimpleSkeleton height={20} />
-                )}
+            {/* <span className="text-red-600">8%</span> */}
+            <span className="px-2 leading-7 bg-gray-300 mx-2 rounded-sm text-black  text-[11px]">
+              Trả góp 0%
+            </span>
+          </>
+        ) : (
+          <SimpleSkeleton height={20} />
+        )}
+      </div>
+      {renderStaticItem1()}
+      {/* Add to cart + Order product */}
+      <div className="my-2">
+        <Button
+          onClick={() => {
+            if (isLogin) {
+              dispatch({
+                type: OPEN_MODAL_HOC,
+                title: "Thêm vào giỏ hàng",
+                ComponentContentModal: (
+                  <Cart user={user} productDetail={productDetail} />
+                ),
+              });
+            } else {
+              navigate("/login");
+            }
+          }}
+          style={{ width: "100%", marginBottom: "8px" }}
+          variant="contained"
+          color="primary"
+        >
+          <span className="text-[12px] sm:text-[14px]">Thêm vào giỏ hàng</span>
+        </Button>
+        <Button
+          onClick={() => {
+            if (isLogin) {
+              dispatch({
+                type: OPEN_MODAL_HOC,
+                title: "Thêm vào giỏ hàng",
+                ComponentContentModal: (
+                  <Cart productDetail={productDetail} user={user} />
+                ),
+              });
+            } else {
+              navigate("/login");
+            }
+          }}
+          style={{ width: "100%" }}
+          variant="contained"
+          color="error"
+        >
+          <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
+        </Button>
+      </div>
+      {renderStaticItem2()}
+      {/* Configuration */}
+      <div className="my-2">
+        {productDetail?.productName ? (
+          <h1 className="font-semibold text-base text-center sm:text-left sm:text-xl text-struncate">
+            Cấu hình {productDetail?.productName}
+          </h1>
+        ) : (
+          <SimpleSkeleton height={20} />
+        )}
 
         {!_.isEmpty(productDetail) ? (
           <div className="my-2">

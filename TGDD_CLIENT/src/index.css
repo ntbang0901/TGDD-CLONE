@@ -9,32 +9,14 @@ html {
   padding-top: 24px !important;
 }
 
-/* .css-i4bv87-MuiSvgIcon-root {
-  width: 0.8em !important;
-} */
+.tooltip {
+  @apply invisible absolute;
+}
 
-@layer utilities {
-  .left-97percent {
-    left: 97%;
-  }
+.hover-tooltip:hover .tooltip {
+  @apply visible z-50;
+}
 
-  .left-63percent {
-    left: 63%;
-  }
-
-  .left-30percent {
-    left: 30%;
-  }
-
-  .w-97percent {
-    width: 97%;
-  }
-
-  .w-63percent {
-    width: 63%;
-  }
-
-  .w-30percent {
-    width: 30%;
-  }
+.has-tooltip .tooltip {
+  @apply visible z-50;
 }

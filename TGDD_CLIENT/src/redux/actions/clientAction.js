@@ -215,12 +215,12 @@ export function* getCart(action) {
         )
         console.log("DATA::", data)
         let total = 0
-        data?.listCartItems.map((item) => {
+        data?.data.listCartItems.map((item) => {
             total += item.quantity
         })
         yield put({
             type: SET_SHOPPING_CART,
-            data: data.listCartItems,
+            data: data?.data.listCartItems,
             total: total,
         })
     } catch (error) {
