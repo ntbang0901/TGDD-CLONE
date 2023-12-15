@@ -61,6 +61,10 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
         type: ADD_TO_CART_SAGA,
         data,
       });
+
+      setTimeout(()=> {
+        setNotify("")
+      }, 800)
       // checkPromotion(itemQuantity, 0);
     }
   }, [quantityDebounce]);
@@ -89,9 +93,9 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
     }
 
   };
-  setTimeout(()=> {
-    setNotify("")
-  }, 800)
+  // setTimeout(()=> {
+  //   setNotify("")
+  // }, 800)
 
   return (
     <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
