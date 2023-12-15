@@ -105,7 +105,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         text={
                             notify === ""
                                 ? `Mua thêm ${
-                                      itemPromotion[0]?.additionalQuantity
+                                      itemPromotion[0]?.soLuongMuaThem
                                   } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
                                       "en-US",
                                       {
@@ -164,7 +164,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
                                             {`Mua thêm ${
-                                                p?.additionalQuantity
+                                                p?.soLuongMuaThem
                                             } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
                                                 "en-US",
                                                 {
@@ -230,8 +230,6 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             className="cursor-pointer text-red-500 pt-2"
                         />
                     </div>
-                    <div>{item.quantity}</div>
-                    <div>{}</div>
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"
@@ -261,12 +259,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         })}
                         đ
                     </p>
-                    {/* <p className="line-through text-sm my-1 text-gray-400">
-                        {(item?.product?.price * 1.8).toLocaleString("en-US", {
-                            currency: "USD",
-                        })}
-                        đ
-                    </p> */}
+
                     <div className="flex">
                         <button
                             onClick={async () => {
@@ -310,7 +303,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 {`Mua thêm ${
-                                    p.additionalQuantity
+                                    p.soLuongMuaThem
                                 } sản phẩm để được giảm ${p.discountValue.toLocaleString(
                                     "en-US",
                                     {
