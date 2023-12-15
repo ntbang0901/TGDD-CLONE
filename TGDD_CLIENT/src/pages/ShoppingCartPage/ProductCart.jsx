@@ -28,7 +28,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }))
 
-const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
+const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLoading }) => {
     const { last_promotions } = useSelector((state) => state.product)
     const dispatch = useDispatch()
 
@@ -98,7 +98,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
     return (
         <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-            {itemPromotion[0]?.additionalQuantity ? (
+            {itemPromotion[0]?.additionalQuantity ||suggestLoading ? (
                 <>
                     <ProgressBar
                         text={
@@ -116,15 +116,15 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                 } `
                                 : notify
                         }
-                        item={
-                            itemPromotion[0]?.promotionItems[0]?.quantity -
-                            itemPromotion[0]?.additionalQuantity
+                        cartItemQuantity={
+                            itemQuantity
                         }
-                        itemQuantity={
+                        conditionQuantity={
                             itemPromotion[0]?.promotionItems[0]?.quantity
                         }
                         onClick={handleClickOpen}
                         notify={notify}
+                        loading={suggestLoading}
                     />
                     <BootstrapDialog
                         onClose={handleClose}

@@ -1,29 +1,27 @@
-import React from "react"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import { Button, CircularProgress } from "@mui/material"
+import { Button, CircularProgress, Collapse } from "@mui/material"
 import { styled } from "@mui/material/styles"
+import axios from "axios"
 import { useFormik } from "formik"
-import { Collapse } from "@mui/material"
-import { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
-import axios from "axios"
 import {
     ADD_HISTORY_SAGA,
     DELETE_CART_SAGA,
     EDIT_CART_SAGA,
     GET_CART_SAGA,
 } from "../../redux/sagas/types/main"
+import { DOMAIN2 } from "../../utils/Settings/global"
 import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
 import ProductCart from "./ProductCart"
-import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
     const { last_promotions } = useSelector((state) => state.product)
-
+    const [suggestLoading, setSuggestLoading] = useState(true)
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
         useSelector((state) => state.global)
 
@@ -53,6 +51,7 @@ function ShoppingCartPage(props) {
 
     useEffect(() => {
         const getKMTN = async () => {
+            setSuggestLoading(true)
             let body = {
                 totalQuantity: quantityShoppingCart,
                 totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
@@ -70,6 +69,7 @@ function ShoppingCartPage(props) {
             }
 
             setPromotionList(data)
+            setSuggestLoading(false)
         }
         if (shoppingCarts.length > 0) {
             getKMTN()
@@ -195,6 +195,7 @@ function ShoppingCartPage(props) {
                                     pro.promotionItems[0].productId ===
                                     item.product.productId
                             )}
+                            suggestLoading={suggestLoading}
                             key={index}
                         />
                     ))}
