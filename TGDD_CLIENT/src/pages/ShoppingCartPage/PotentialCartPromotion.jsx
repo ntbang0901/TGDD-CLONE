@@ -48,7 +48,7 @@ const PotentialCartPromotion = () => {
         <div>
             {cartPromotion.slice(0, 3).map((p) => (
                 <div key={JSON.stringify(p)}>
-                    {`Mua thêm ${p.tienmuathem} để được giản ${p.value}`}
+                    {`Mua thêm ${p.additionalAmount} để được giản ${p.value}`}
                 </div>
             ))}
         </div>

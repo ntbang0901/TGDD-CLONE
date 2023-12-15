@@ -81,6 +81,7 @@ export function* fetchAllProduct(action) {
 }
 
 export function* lastPromotion(action) {
+    localStorage.setItem("promotionUsed", JSON.stringify(action.promotion))
     yield put({
         type: SET_HISTORY_LAST_PROMOTION,
         promotion: action.promotion,

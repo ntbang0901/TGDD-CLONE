@@ -214,13 +214,14 @@ export function* getCart(action) {
         const { data } = yield call(() =>
             productServices.getCartApi(action.idUser)
         )
+        console.log("data:: -> ", data)
         let total = 0
-        data?.listCartItems.forEach((item) => {
+        data?.data?.listCartItems.forEach((item) => {
             total += item.quantity
         })
         yield put({
             type: SET_SHOPPING_CART,
-            data: data.listCartItems,
+            data: data.data.listCartItems,
             total: total,
         })
     } catch (error) {
@@ -240,7 +241,7 @@ export function* addToCart(action) {
         const { data } = yield call(() =>
             productServices.addToCartApi(action.data)
         )
-        
+
         yield put({
             type: GET_CART_SAGA,
             idUser: action.data.idUser,

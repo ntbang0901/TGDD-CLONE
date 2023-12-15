@@ -99,13 +99,13 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
     return (
         <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-            {itemPromotion[0]?.soLuongMuaThem ? (
+            {itemPromotion[0]?.additionalQuantity ? (
                 <>
                     <ProgressBar
                         text={
                             notify === ""
                                 ? `Mua thêm ${
-                                      itemPromotion[0]?.soLuongMuaThem
+                                      itemPromotion[0]?.additionalQuantity
                                   } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
                                       "en-US",
                                       {
@@ -121,7 +121,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         }
                         item={
                             itemPromotion[0]?.promotionItems[0]?.quantity -
-                            itemPromotion[0]?.soLuongMuaThem
+                            itemPromotion[0]?.additionalQuantity
                         }
                         itemQuantity={
                             itemPromotion[0]?.promotionItems[0]?.quantity
@@ -164,7 +164,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
                                             {`Mua thêm ${
-                                                p?.soLuongMuaThem
+                                                p?.additionalQuantity
                                             } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
                                                 "en-US",
                                                 {
@@ -195,6 +195,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     </BootstrapDialog>
                 </>
             ) : null}
+
             <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
                 {/* Info  */}
 
@@ -309,7 +310,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 {`Mua thêm ${
-                                    p.soLuongMuaThem
+                                    p.additionalQuantity
                                 } sản phẩm để được giảm ${p.discountValue.toLocaleString(
                                     "en-US",
                                     {
