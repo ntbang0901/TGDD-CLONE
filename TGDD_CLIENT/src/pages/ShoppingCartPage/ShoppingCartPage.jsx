@@ -22,13 +22,16 @@ import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
-        useSelector((state) => state.global)
+    const { last_promotions } = useSelector((state) => state.product)
+
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
 
     const [promotionList, setPromotionList] = useState({
         cart: [],
         item: [],
     })
+
+    const [total, setTotal] = useState(0)
 
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {
@@ -73,13 +76,13 @@ function ShoppingCartPage(props) {
     }, [shoppingCarts])
 
     useEffect(() => {
-        if (user._id) {
+        if (user.idUser) {
             dispatch({
                 type: GET_CART_SAGA,
-                idUser: user._id,
+                idUser: user.idUser,
             })
         }
-    }, [dispatch, user._id])
+    }, [dispatch, user.idUser])
 
     const getTotalPrice = useMemo(() => {
         const result = shoppingCarts.reduce((res, curentPro, index) => {
@@ -87,6 +90,19 @@ function ShoppingCartPage(props) {
         }, 0)
         return result
     }, [dispatch, quantityShoppingCart])
+
+    function filterElementsNotInArray(arr1, arr2) {
+        const newArray = arr1.filter((item1) => {
+            return !arr2.some((item2) => item1.id === item2.id)
+        })
+        return newArray
+    }
+
+    console.log("After result:: --> ", last_promotions)
+
+    const result = filterElementsNotInArray(last_promotions, promotionList.item)
+
+    console.log("result:: --> ", result)
 
     const { handleSubmit, errors, touched, handleChange, setFieldValue } =
         useFormik({
@@ -119,9 +135,31 @@ function ShoppingCartPage(props) {
             },
         })
 
-    useEffect(() => {
-        console.log("user", user)
-    }, [])
+        const totalDiscount = () => {
+            let total = 0
+            shoppingCarts.forEach((item) => {
+                let newArray = result.filter(
+                    (pro) =>
+                        pro.promotionItems[0].productId === item.product.productId
+                )
+                if (newArray.length > 0) {
+                    let promotion = newArray[newArray.length - 1]
+    
+                    if (promotion.discountType === "value") {
+                        total += promotion.discountValue
+                    } else {
+                        total +=
+                            (promotion.discountValue / 100) *
+                            (promotion.promotionItems[0].quantity *
+                                promotion.promotionItems[0].price)
+                    }
+                }
+            })
+    
+            return total
+        }
+
+    const totalDiscountValue = totalDiscount()
 
     return (
         <div className="flex bg-[#eee] items-center justify-center p-4">
@@ -142,6 +180,12 @@ function ShoppingCartPage(props) {
                     {shoppingCarts?.map((item, index) => (
                         <ProductCart
                             item={item}
+                            listHistory={result}
+                            promotionUsed={result.filter(
+                                (pro) =>
+                                    pro.promotionItems[0].productId ===
+                                    item.product.productId
+                            )}
                             itemPromotion={promotionList.item.filter(
                                 (pro) =>
                                     pro.promotionItems[0].productId ===
@@ -161,6 +205,7 @@ function ShoppingCartPage(props) {
                         errors={errors}
                     />
                 </div>
+                {/* <div>{total}</div> */}
                 <div>
                     <p>Ưu đãi cho giỏ hàng</p>
                     <ul className="rounded-xl bg-[#ffd500ae] mt-2">
@@ -171,7 +216,7 @@ function ShoppingCartPage(props) {
                                     {index + 1}
                                 </span>
                                 <span className="text-[12px] sm:text-[14px] ml-2">
-                                    {`Mua thêm ${p.tienmuathem.toLocaleString(
+                                    {`Mua thêm ${p.additionalAmount.toLocaleString(
                                         "en-US",
                                         {
                                             currency: "USD",
@@ -193,14 +238,38 @@ function ShoppingCartPage(props) {
 
                 {/* Total money */}
                 <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
-                    <h1 className="font-semibold">
-                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
-                    </h1>
+                    <h1 className="font-semibold">Tạm tính: </h1>
 
                     <span className="text-base text-red-600 font-semibold">
                         {getTotalPrice.toLocaleString("en-US", {
                             currency: "USD",
                         })}
+                        đ
+                    </span>
+                </div>
+
+                <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
+                    <h1 className="font-semibold">Tiền giảm: </h1>
+
+                    <span className="text-base text-red-600 font-semibold">
+                        {totalDiscountValue.toLocaleString("en-US", {
+                            currency: "USD",
+                        })}
+                        đ
+                    </span>
+                </div>
+                <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
+                    <h1 className="font-semibold">
+                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
+                    </h1>
+
+                    <span className="text-base text-red-600 font-semibold">
+                        {(getTotalPrice - totalDiscountValue).toLocaleString(
+                            "en-US",
+                            {
+                                currency: "USD",
+                            }
+                        )}
                         đ
                     </span>
                 </div>

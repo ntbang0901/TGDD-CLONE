@@ -11,6 +11,7 @@ const {
     SET_PRODUCT_SEARCH,
     SET_CURRENT_TOTAL_PRODUCT,
     SET_ALL_PRODUCT,
+    SET_HISTORY_LAST_PROMOTION,
 } = require("./types/mainType")
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
     filterProducts: [],
     currentTotalProduct: 0,
     products: [],
+    last_promotions: [],
 }
 
 const productReducer = (state = initialState, action) => {
@@ -99,7 +101,6 @@ const productReducer = (state = initialState, action) => {
         }
 
         case SET_ALL_PRODUCT: {
-            console.log(action)
             return {
                 ...state,
                 products: action.product,
@@ -118,6 +119,13 @@ const productReducer = (state = initialState, action) => {
                 ...state,
                 productSearch: action.products,
                 currentTotalProduct: action.total,
+            }
+        }
+
+        case SET_HISTORY_LAST_PROMOTION: {
+            return {
+                ...state,
+                last_promotions: [...action.promotion],
             }
         }
 

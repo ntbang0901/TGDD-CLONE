@@ -151,7 +151,7 @@ function ContentRight(props) {
               } transition duration-150 ease-out `}
             >
               {promotionMap.map((p, index) => (
-                <li className="p-2">
+                <li className="p-2" key={index}>
                   <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
                     HOT
                   </span>
@@ -164,7 +164,7 @@ function ContentRight(props) {
                         currency: "USD",
                       }
                     )}${
-                      promotionMap[0]?.discountType === "percentage"
+                      promotionMap[index]?.discountType === "percentage"
                         ? "%"
                         : " đồng"
                     }`}
@@ -484,6 +484,17 @@ function ContentRight(props) {
               đ
             </span>
             {/* <span className="text-gray-400 line-through mx-2">
+      {/* Price */}
+      <div className="flex flex-wrap my-2">
+        {productDetail?.price ? (
+          <>
+            <span className="text-red-600 font-semibold text-2xl">
+              {productDetail?.price.toLocaleString("en-US", {
+                currency: "USD",
+              })}
+              đ
+            </span>
+            {/* <span className="text-gray-400 line-through mx-2">
                             {(productDetail?.price * 1.2).toLocaleString(
                                 "en-US",
                                 {
@@ -506,23 +517,25 @@ function ContentRight(props) {
       <div className="my-2">
         <Button
           onClick={() => {
-            if (isLogin) {
-              dispatch({
-                type: OPEN_MODAL_HOC,
-                title: "Thêm vào giỏ hàng",
-                ComponentContentModal: (
-                  <Cart user={user} productDetail={productDetail} />
-                ),
-              });
-            } else {
-              navigate("/login");
-            }
+            dispatch({
+              type: OPEN_MODAL_HOC,
+              title: "Thêm vào giỏ hàng",
+              ComponentContentModal: (
+                <Cart
+                  user={user}
+                  productDetail={productDetail}
+                />
+              ),
+            })
+
           }}
           style={{ width: "100%", marginBottom: "8px" }}
           variant="contained"
           color="primary"
         >
-          <span className="text-[12px] sm:text-[14px]">Thêm vào giỏ hàng</span>
+          <span className="text-[12px] sm:text-[14px]">
+            Thêm vào giỏ hàng
+          </span>
         </Button>
         <Button
           onClick={() => {
@@ -531,18 +544,24 @@ function ContentRight(props) {
                 type: OPEN_MODAL_HOC,
                 title: "Thêm vào giỏ hàng",
                 ComponentContentModal: (
-                  <Cart productDetail={productDetail} user={user} />
+                  <Cart
+                    productDetail={productDetail}
+                    user={user}
+                  />
                 ),
-              });
+              })
             } else {
-              navigate("/login");
+              navigate("/login")
             }
           }}
           style={{ width: "100%" }}
           variant="contained"
           color="error"
         >
-          <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
+          <span className="text-[12px] sm:text-[14px]">
+            {" "}
+            Đặt hàng
+          </span>
         </Button>
       </div>
       {renderStaticItem2()}

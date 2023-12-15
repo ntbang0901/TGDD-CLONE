@@ -1,3 +1,4 @@
+import { isEqual } from "lodash"
 const {
     SHOW_LOADING,
     HIDE_LOADING,
@@ -32,7 +33,7 @@ const initialState = {
         mess: "",
         success: false,
     },
-    isLogin: null,
+    isLogin: true,
     loadingSkeleton: false,
     productChoosed: {
         productSales: [],
@@ -133,17 +134,17 @@ const globalReducer = (state = initialState, action) => {
             }
         }
 
-    case SHOW_ALERT: {
-      return {
-        ...state,
-        statusAlert: {
-          open: true,
-          time: action?.time,
-          mess: action.mess,
-          success: action.success,
-        },
-      };
-    }
+        case SHOW_ALERT: {
+            return {
+                ...state,
+                statusAlert: {
+                    open: true,
+                    time: action?.time,
+                    mess: action.mess,
+                    success: action.success,
+                },
+            }
+        }
 
         case HIDE_ALERT: {
             return {
@@ -203,11 +204,13 @@ const globalReducer = (state = initialState, action) => {
 
         case SET_SHOPPING_CART: {
             console.log("SET_SHOPPING_CART:::", action)
+            // if(!(isEqual(action.data,state.shoppingCarts)&&action.total===state.quantityShoppingCart))
             return {
                 ...state,
                 shoppingCarts: action.data,
                 quantityShoppingCart: action.total,
             }
+            // return state;
         }
 
         case SET_HISTORY: {

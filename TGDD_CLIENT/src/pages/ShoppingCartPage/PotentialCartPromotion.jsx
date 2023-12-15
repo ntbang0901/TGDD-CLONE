@@ -6,6 +6,7 @@ import { DOMAIN2 } from "../../utils/Settings/global"
 const PotentialCartPromotion = () => {
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
+
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
         useSelector((state) => state.global)
     const productPayload = shoppingCarts.map((cart) => {
@@ -47,7 +48,7 @@ const PotentialCartPromotion = () => {
         <div>
             {cartPromotion.slice(0, 3).map((p) => (
                 <div key={JSON.stringify(p)}>
-                    {`Mua thêm ${p.tienmuathem} để được giản ${p.value}`}
+                    {`Mua thêm ${p.additionalAmount} để được giản ${p.value}`}
                 </div>
             ))}
         </div>

@@ -6,6 +6,7 @@ import { handleLoading, showMess } from "./globalAction"
 
 export function* loginUser(action) {
     // yield call(() => handleLoading(true))
+    // yield call(() => handleLoading(true))
     try {
         const { data } = yield call(() => authServices.loginApi(action.values))
 
@@ -47,7 +48,7 @@ export function* checkLogin(action) {
     localStorage.setItem(
         "user",
         JSON.stringify({
-            idUser: "ff82e751-5313-43b9-a097-f6214395ede9",
+            idUser: "1f35dfcd-7dfa-4605-8cb0-64f28b19b8cd",
         })
     )
 

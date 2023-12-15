@@ -25,6 +25,8 @@ export const SET_SWATCH = "SET_SWATCH"
 export const SET_PC = "SET_PC"
 export const SET_LAPTOP = "SET_LAPTOP"
 
+export const SET_HISTORY_LAST_PROMOTION = "SET_HISTORY_LAST_PROMOTION"
+
 export const HIDE_CARD_PRODUCT = "HIDE_CARD_PRODUCT"
 export const OPEN_MODAL_HOC = "OPEN_MODAL_HOC"
 

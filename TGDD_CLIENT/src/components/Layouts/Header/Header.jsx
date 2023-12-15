@@ -1,16 +1,8 @@
-import React from "react"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
-import DesktopMacIcon from "@mui/icons-material/DesktopMac"
-import HeadphonesIcon from "@mui/icons-material/Headphones"
-import LaptopIcon from "@mui/icons-material/Laptop"
-import SmartphoneIcon from "@mui/icons-material/Smartphone"
-import TabletMacIcon from "@mui/icons-material/TabletMac"
-import WatchIcon from "@mui/icons-material/Watch"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { CHECK_LOGIN_SAGA, LOGOUT_SAGA } from "../../../redux/sagas/types/main"
+import { CHECK_LOGIN_SAGA } from "../../../redux/sagas/types/main"
 import "./Header.css"
 import History from "./History"
 import Search from "./Search"
@@ -96,7 +88,7 @@ function Header(props) {
                         />
                     )}
 
-                    <div className="text-center cursor-pointer py-4 md:py-0 ">
+                    {/* <div className="text-center cursor-pointer py-4 md:py-0 ">
                         {isLogin ? (
                             <>
                                 <p
@@ -120,7 +112,7 @@ function Header(props) {
                                 </p>
                             </Link>
                         )}
-                    </div>
+                    </div> */}
                 </div>
                 <div
                     className=" col-span-1 flex md:hidden mt-3 justify-center"
