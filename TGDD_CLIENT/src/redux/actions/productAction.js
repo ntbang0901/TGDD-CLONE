@@ -85,6 +85,7 @@ export function* lastPromotion(action) {
         type: SET_HISTORY_LAST_PROMOTION,
         promotion: action.promotion,
     })
+    localStorage.setItem("promotionUsed", JSON.stringify(action.promotion))
 }
 
 export function* searchPc(action) {

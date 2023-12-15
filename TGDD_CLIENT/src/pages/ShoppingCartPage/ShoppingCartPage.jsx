@@ -36,9 +36,7 @@ function ShoppingCartPage(props) {
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {
             quantity: cart.quantity,
-            product: {
-                productId: cart.product.productId,
-            },
+            productId: cart.product.productId,
         }
 
         return obj

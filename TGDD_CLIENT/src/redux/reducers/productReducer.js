@@ -28,7 +28,7 @@ const initialState = {
     filterProducts: [],
     currentTotalProduct: 0,
     products: [],
-    last_promotions: [],
+    last_promotions: JSON.parse(localStorage.getItem("promotionUsed")) || [],
 }
 
 const productReducer = (state = initialState, action) => {

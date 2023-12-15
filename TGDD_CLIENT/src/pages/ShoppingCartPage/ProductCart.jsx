@@ -99,7 +99,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
   return (
     <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-      {itemPromotion[0]?.additionalQuantity || listHistory ? (
+      {itemPromotion[0]?.additionalQuantity || notify !== "" ? (
         <>
           <ProgressBar
             text={
@@ -150,7 +150,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
             </IconButton>
 
             <DialogContent dividers>
-              {itemPromotion?.length ? <ul>
+              <ul>
                 {itemPromotion.map((p, index) => (
                   <li
                     className="p-2 hover:cursor-pointer flex justify-between items-center"
@@ -179,7 +179,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     </button>
                   </li>
                 ))}
-              </ul> : 'Hiện chưa có thêm khuyến mãi phù hợp với giỏ hàng của bạn. Hãy thêm sản phẩm xem nào !!!'}
+              </ul>
             </DialogContent>
           </BootstrapDialog>
         </>
