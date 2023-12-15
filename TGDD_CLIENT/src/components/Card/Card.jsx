@@ -22,7 +22,7 @@ export default function CardCustom(props) {
                     alt="green iguana"
                 />
                 <CardContent className="h-[150px]">
-                    <div className="flex h-[20px] rounded-xl ct-label">
+                    {/* <div className="flex h-[20px] rounded-xl ct-label">
                         <img
                             src={percentBlue}
                             className="h-full -translate-x-2"
@@ -31,8 +31,8 @@ export default function CardCustom(props) {
                         <span className={"text-white font-semibold text-sm "}>
                             Lễ lớn sale lớn
                         </span>
-                    </div>
-                    <p className="text-sm mt-2 h-[38px] text-struncate-card-ct">
+                    </div> */}
+                    <p className="text-sm mt-2 h-[38px] text-struncate-card-ct font-bold">
                         🌺{product?.productName}🌺
                     </p>
 
@@ -53,7 +53,7 @@ export default function CardCustom(props) {
                             })}
                             đ
                         </span>
-                        <span className="text-red-400 text-sm">-5%</span>
+                        {/* <span className="text-red-400 text-sm">-5%</span> */}
                     </div>
                 </CardContent>
                 <CardActions>

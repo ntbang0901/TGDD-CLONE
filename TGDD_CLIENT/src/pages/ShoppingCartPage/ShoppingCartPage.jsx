@@ -216,7 +216,7 @@ function ShoppingCartPage(props) {
                                     {index + 1}
                                 </span>
                                 <span className="text-[12px] sm:text-[14px] ml-2">
-                                    {`Mua thêm ${p.tienmuathem.toLocaleString(
+                                    {`Mua thêm ${p.additionalAmount.toLocaleString(
                                         "en-US",
                                         {
                                             currency: "USD",

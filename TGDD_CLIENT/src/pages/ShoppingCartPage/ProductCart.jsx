@@ -95,13 +95,13 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
   return (
     <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-      {itemPromotion[0]?.soLuongMuaThem || listHistory ? (
+      {itemPromotion[0]?.additionalQuantity || listHistory ? (
         <>
           <ProgressBar
             text={
-              notify === "" && itemPromotion[0]?.soLuongMuaThem !== undefined
+              notify === "" && itemPromotion[0]?.additionalQuantity !== undefined
                 ? `Mua thêm ${
-                    itemPromotion[0]?.soLuongMuaThem
+                    itemPromotion[0]?.additionalQuantity
                   } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
                     "en-US",
                     {
@@ -116,7 +116,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
             }
             item={
               itemPromotion[0]?.promotionItems[0]?.quantity -
-              itemPromotion[0]?.soLuongMuaThem
+              itemPromotion[0]?.additionalQuantity
             }
             itemQuantity={itemPromotion[0]?.promotionItems[0]?.quantity}
             onClick={handleClickOpen}
@@ -154,7 +154,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                   >
                     <span className="text-[12px] sm:text-[14px] ml-2">
                       {`Mua thêm ${
-                        p?.soLuongMuaThem
+                        p?.additionalQuantity
                       } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
                         "en-US",
                         {
@@ -223,10 +223,10 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         >
                             {item?.product?.productName}
                         </h1>
-                        <p className="my-2 text-sm text-minLink text-center md:text-left">
+                        {/* <p className="my-2 text-sm text-minLink text-center md:text-left">
                             <span>Khuyến mãi đã áp dụng : </span>{" "}
                             {promotionUsed.length}
-                        </p>
+                        </p> */}
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}
                         </p>
@@ -294,7 +294,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 {`Mua thêm ${
-                                    p.soLuongMuaThem
+                                    p.additionalQuantity
                                 } sản phẩm để được giảm ${p.discountValue.toLocaleString(
                                     "en-US",
                                     {

@@ -88,7 +88,7 @@ function ContentRight(props) {
                     HOT
                   </span>
                   <span className="text-[12px] sm:text-[14px] ml-2">
-                    {`Mua thêm ${p.soLuongMuaThem
+                    {`Mua thêm ${p.additionalQuantity
                       } sản phẩm để được giảm ${p.discountValue.toLocaleString(
                         "en-US",
                         {
