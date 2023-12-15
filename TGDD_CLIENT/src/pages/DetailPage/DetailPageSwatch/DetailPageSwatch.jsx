@@ -2,13 +2,9 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
     GET_ALL_PRODUCT,
-    GET_CART_SAGA,
-    GET_DATA_SWATCH_PAGE_SAGA,
+    GET_CART_SAGA
 } from "../../../redux/sagas/types/main"
 import BannerProducts from "../global/BannerProducts"
-import Slider from "../global/Slider"
-import TitleProduct from "../global/TitleProduct"
-import Brand from "./Brand"
 function DetailPageSwatch(props) {
     const { dataSwatchPage } = useSelector((state) => state.page)
     const { products } = useSelector((state) => state.product)
@@ -43,7 +39,7 @@ function DetailPageSwatch(props) {
             </div> */}
             <div className="px-2 lg:px-16 bg-gray-900 py-4 my-4">
                 <BannerProducts
-                    urlFilter="/swatch"
+                    urlFilter="/"
                     banner={dataSwatchPage[finalIndex]?.bannerSwatch}
                     products={products}
                     colorBtn={"#ffd400"}
