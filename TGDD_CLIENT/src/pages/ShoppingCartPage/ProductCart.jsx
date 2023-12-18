@@ -1,61 +1,61 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react";
 
-import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
-import { styled } from "@mui/material/styles"
-import { useDispatch, useSelector } from "react-redux"
+import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded";
+import { styled } from "@mui/material/styles";
+import { useDispatch, useSelector } from "react-redux";
 import {
-    ADD_TO_CART_SAGA,
-    DELETE_CART_SAGA,
-    EDIT_CART_SAGA,
-    GET_HISTORY_LAST_PROMOTION,
-} from "../../redux/sagas/types/main"
-import ProgressBar from "./../../components/ProgressBar/ProgressBar"
+  ADD_TO_CART_SAGA,
+  DELETE_CART_SAGA,
+  EDIT_CART_SAGA,
+  GET_HISTORY_LAST_PROMOTION,
+} from "../../redux/sagas/types/main";
+import ProgressBar from "./../../components/ProgressBar/ProgressBar";
 
-import CloseIcon from "@mui/icons-material/Close"
-import Dialog from "@mui/material/Dialog"
-import DialogContent from "@mui/material/DialogContent"
-import DialogTitle from "@mui/material/DialogTitle"
-import IconButton from "@mui/material/IconButton"
-import { useNavigate } from "react-router-dom"
-import { useDebounce } from "../../utils/hooks/useDebounce"
+import CloseIcon from "@mui/icons-material/Close";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "../../utils/hooks/useDebounce";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-    "& .MuiDialogContent-root": {
-        padding: theme.spacing(2),
-    },
-    "& .MuiDialogActions-root": {
-        padding: theme.spacing(1),
-    },
-}))
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
 
 const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLoading }) => {
     const { last_promotions } = useSelector((state) => state.product)
     const dispatch = useDispatch()
 
-    console.log("listHistory:: --> ", listHistory)
+  console.log("listHistory:: --> ", listHistory);
 
-    const { user } = useSelector((state) => state.user)
-    const [open, setOpen] = useState(false)
-    const [itemQuantity, setItemQuantity] = useState(item.quantity)
-    let quantityDebounce = useDebounce(itemQuantity, 200)
-    const navigate = useNavigate()
-    const [notify, setNotify] = useState("")
+  const { user } = useSelector((state) => state.user);
+  const [open, setOpen] = useState(false);
+  const [itemQuantity, setItemQuantity] = useState(item.quantity);
+  let quantityDebounce = useDebounce(itemQuantity, 200);
+  const navigate = useNavigate();
+  const [notify, setNotify] = useState("");
 
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
-    const handleClose = () => {
-        setOpen(false)
-    }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    useEffect(() => {
-        if (quantityDebounce !== item.quantity) {
-            let data = {
-                idUser: user.idUser,
-                productId: item.product.productId,
-                idCart: item.cartId,
-                quantity: quantityDebounce,
-            }
+  useEffect(() => {
+    if (quantityDebounce !== item.quantity) {
+      let data = {
+        idUser: user.idUser,
+        productId: item.product.productId,
+        idCart: item.cartId,
+        quantity: quantityDebounce,
+      };
 
             dispatch({
                 type: ADD_TO_CART_SAGA,
@@ -77,23 +77,34 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                 } `
             )
 
-            listHistory.push(itemPromotion[index])
+      setTimeout(()=> {
+        setNotify("")
+      }, 800)
+      // checkPromotion(itemQuantity, 0);
+    }
+  }, [quantityDebounce]);
+  const checkPromotion = (quantity, index) => {
+    if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
+      listHistory.push(itemPromotion[index]);
 
-            dispatch({
-                type: GET_HISTORY_LAST_PROMOTION,
-                promotion: listHistory,
-            })
-        } else {
-            dispatch({
-                type: GET_HISTORY_LAST_PROMOTION,
-                promotion: listHistory,
-            })
-        }
-        if (itemPromotion[index]?.promotionItems[0]?.quantity) {
-            setTimeout(() => {
-                setNotify("")
-            }, 1500)
-        }
+      dispatch({
+        type: GET_HISTORY_LAST_PROMOTION,
+        promotion: listHistory,
+      });
+
+      setNotify(
+        `Yay! Bạn đã tiết kiệm được ${itemPromotion[
+          index
+        ]?.discountValue.toLocaleString("en-US", {
+          currency: "USD",
+        })}${itemPromotion[index]?.discountType === "percentage" ? "%" : " đồng"} `
+      );
+      // console.log(listHistory)
+    } else {
+      dispatch({
+        type: GET_HISTORY_LAST_PROMOTION,
+        promotion: listHistory,
+      });
     }
 
     return (
@@ -179,20 +190,43 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                                                         .quantity
                                                 )
 
-                                                handleClose()
-                                            }}
-                                        >
-                                            Chọn
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </DialogContent>
-                    </BootstrapDialog>
-                </>
-            ) : null}
-            <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
-                {/* Info  */}
+            <DialogContent dividers>
+              {itemPromotion?.length ? <ul>
+                {itemPromotion.map((p, index) => (
+                  <li
+                    className="p-2 hover:cursor-pointer flex justify-between items-center"
+                    key={index}
+                  >
+                    <span className="text-[12px] sm:text-[14px] ml-2">
+                      {`Mua thêm ${
+                        p?.additionalQuantity
+                      } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
+                        "en-US",
+                        {
+                          currency: "USD",
+                        }
+                      )}`}
+                      {p?.discountType === "percentage" ? "%" : " đồng"}
+                    </span>
+                    <button
+                      className="hover:bg-[#ccc] p-2 rounded-md"
+                      onClick={async () => {
+                        setItemQuantity(p?.promotionItems[0].quantity);
+                        checkPromotion(itemPromotion[index]?.promotionItems[0]?.quantity, index)
+                        handleClose();
+                      }}
+                    >
+                      Chọn
+                    </button>
+                  </li>
+                ))}
+              </ul> : 'Hiện chưa có thêm khuyến mãi phù hợp với giỏ hàng của bạn. Hãy thêm sản phẩm xem nào !!!'}
+            </DialogContent>
+          </BootstrapDialog>
+        </>
+      ) : null}
+      <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
+        {/* Info  */}
 
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="flex flex-col items-center justify-center">
@@ -234,16 +268,16 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                         >
                             {item?.product?.productName}
                         </h1>
-                        <p className="my-2 text-sm text-minLink text-center md:text-left">
-                            <span>khuyến mãi đã áp dụng : </span>{" "}
+                        {/* <p className="my-2 text-sm text-minLink text-center md:text-left">
+                            <span>Khuyến mãi đã áp dụng : </span>{" "}
                             {promotionUsed.length}
-                        </p>
+                        </p> */}
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}
                         </p>
-                        <p className="text-sm capitalize text-minLink text-center md:text-left">
+                        {/* <p className="text-sm capitalize text-minLink text-center md:text-left">
                             màu: {item?.product.color}
-                        </p>
+                        </p> */}
                     </div>
                 </div>
                 {/* Action  */}
@@ -287,4 +321,4 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
     )
 }
 
-export default ProductCart
+export default ProductCart;

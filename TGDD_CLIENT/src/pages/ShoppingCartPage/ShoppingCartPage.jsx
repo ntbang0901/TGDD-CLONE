@@ -136,32 +136,29 @@ function ShoppingCartPage(props) {
             },
         })
 
-    const totalDiscount = () => {
-        let total = 0
-        shoppingCarts.forEach((item) => {
-            console.log(item)
-            result.forEach((value) => {
-                console.log(
-                    item.product.productId === value.promotionItems[0].productId
+        const totalDiscount = () => {
+            let total = 0
+            shoppingCarts.forEach((item) => {
+                let newArray = result.filter(
+                    (pro) =>
+                        pro.promotionItems[0].productId === item.product.productId
                 )
-                if (
-                    item.quantity === value.promotionItems[0].quantity &&
-                    item.product.productId === value.promotionItems[0].productId
-                ) {
-                    if (value.discountType === "value") {
-                        total += value.discountValue
+                if (newArray.length > 0) {
+                    let promotion = newArray[newArray.length - 1]
+    
+                    if (promotion.discountType === "value") {
+                        total += promotion.discountValue
                     } else {
                         total +=
-                            (value.discountValue / 100) *
-                            (value.promotionItems[0].quantity *
-                                value.promotionItems[0].price)
+                            (promotion.discountValue / 100) *
+                            (promotion.promotionItems[0].quantity *
+                                promotion.promotionItems[0].price)
                     }
                 }
             })
-        })
-
-        return total
-    }
+    
+            return total
+        }
 
     const totalDiscountValue = totalDiscount()
 
@@ -210,7 +207,7 @@ function ShoppingCartPage(props) {
                         errors={errors}
                     />
                 </div>
-                <div>{total}</div>
+                {/* <div>{total}</div> */}
                 <div>
                     <p>Ưu đãi cho giỏ hàng</p>
                     <ul className="rounded-xl bg-[#ffd500ae] mt-2">
