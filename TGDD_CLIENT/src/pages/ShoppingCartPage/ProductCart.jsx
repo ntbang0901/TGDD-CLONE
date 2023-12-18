@@ -28,9 +28,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
-  const { last_promotions } = useSelector((state) => state.product);
-  const dispatch = useDispatch();
+const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLoading }) => {
+    const { last_promotions } = useSelector((state) => state.product)
+    const dispatch = useDispatch()
 
   console.log("listHistory:: --> ", listHistory);
 
@@ -57,10 +57,25 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
         quantity: quantityDebounce,
       };
 
-      dispatch({
-        type: ADD_TO_CART_SAGA,
-        data,
-      });
+            dispatch({
+                type: ADD_TO_CART_SAGA,
+                data,
+            })
+            checkPromotion(itemQuantity, 0)
+        }
+    }, [quantityDebounce])
+    const checkPromotion = (quantity, index) => {
+        if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
+            setNotify(
+                `Yay! Bạn đã tiết kiệm được ${itemPromotion[
+                    index
+                ]?.discountValue.toLocaleString("en-US", {
+                    currency: "USD",
+                })}${itemPromotion[0]?.discountType === "percentage"
+                    ? "%"
+                    : " đồng"
+                } `
+            )
 
       setTimeout(()=> {
         setNotify("")
@@ -92,62 +107,88 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
       });
     }
 
-  };
-  // setTimeout(()=> {
-  //   setNotify("")
-  // }, 800)
+    return (
+        <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
+            {itemPromotion[0]?.additionalQuantity ||suggestLoading ? (
+                <>
+                    <ProgressBar
+                        text={
+                            notify === ""
+                                ? `Mua thêm ${itemPromotion[0]?.additionalQuantity
+                                } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
+                                    "en-US",
+                                    {
+                                        currency: "USD",
+                                    }
+                                )}${itemPromotion[0]?.discountType ===
+                                    "percentage"
+                                    ? "%"
+                                    : " đồng"
+                                } `
+                                : notify
+                        }
+                        cartItemQuantity={
+                            itemQuantity
+                        }
+                        conditionQuantity={
+                            itemPromotion[0]?.promotionItems[0]?.quantity
+                        }
+                        onClick={handleClickOpen}
+                        notify={notify}
+                        loading={suggestLoading}
+                    />
+                    <BootstrapDialog
+                        onClose={handleClose}
+                        aria-labelledby="customized-dialog-title"
+                        open={open}
+                        maxWidth={"sm"}
+                        fullWidth
+                    >
+                        <DialogTitle
+                            sx={{ m: 0, p: 2 }}
+                            id="customized-dialog-title"
+                        >
+                            Ưu đãi
+                        </DialogTitle>
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            sx={{
+                                position: "absolute",
+                                right: 8,
+                                top: 8,
+                                color: (theme) => theme.palette.grey[500],
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
 
-  return (
-    <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-      {itemPromotion[0]?.additionalQuantity || listHistory ? (
-        <>
-          <ProgressBar
-            text={
-              notify === "" && itemPromotion[0]?.additionalQuantity !== undefined
-                ? `Mua thêm ${
-                    itemPromotion[0]?.additionalQuantity
-                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
-                    "en-US",
-                    {
-                      currency: "USD",
-                    }
-                  )}${
-                    itemPromotion[0]?.discountType === "percentage"
-                      ? "%"
-                      : " đồng"
-                  } `
-                : notify
-            }
-            item={
-              itemPromotion[0]?.promotionItems[0]?.quantity -
-              itemPromotion[0]?.additionalQuantity
-            }
-            itemQuantity={itemPromotion[0]?.promotionItems[0]?.quantity}
-            onClick={handleClickOpen}
-            notify={itemPromotion?.length > 0 ? notify : 'notify'}
-          />
-          <BootstrapDialog
-            onClose={handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={open}
-            maxWidth={"sm"}
-            fullWidth
-          >
-            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-              Ưu đãi
-            </DialogTitle>
-            <IconButton
-              aria-label="close"
-              onClick={handleClose}
-              sx={{
-                position: "absolute",
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
+                        <DialogContent dividers>
+                            <ul>
+                                {itemPromotion.map((p, index) => (
+                                    <li
+                                        className="p-2 hover:cursor-pointer flex justify-between items-center"
+                                        key={index}
+                                    >
+                                        <span className="text-[12px] sm:text-[14px] ml-2">
+                                            {`Mua thêm ${p?.additionalQuantity
+                                                } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
+                                                    "en-US",
+                                                    {
+                                                        currency: "USD",
+                                                    }
+                                                )}`}
+                                            {p?.discountType === "percentage"
+                                                ? "%"
+                                                : " đồng"}
+                                        </span>
+                                        <button
+                                            className="hover:bg-[#ccc] p-2 rounded-md"
+                                            onClick={async () => {
+                                                setItemQuantity(
+                                                    p?.promotionItems[0]
+                                                        .quantity
+                                                )
 
             <DialogContent dividers>
               {itemPromotion?.length ? <ul>
@@ -247,77 +288,37 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         })}
                         đ
                     </p>
-                    {/* <p className="line-through text-sm my-1 text-gray-400">
-                        {(item?.product?.price * 1.8).toLocaleString("en-US", {
-                            currency: "USD",
-                        })}
-                        đ
-                    </p> */}
-          <div className="flex">
-            <button
-              onClick={async () => {
-                if (itemQuantity > 1) {
-                  setItemQuantity((e) => e - 1);
-                  checkPromotion(item.quantity - 1, 0)
-                }
-              }}
-              className={`border-[1px] ${
-                item.quantity === 1 ? "bg-gray-100" : ""
-              }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
-            >
-              -
-            </button>
-            <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
-              {itemQuantity}
-            </button>
 
-            <button
-              onClick={async () => {
-                setItemQuantity((e)=> e + 1 );
-                checkPromotion(item.quantity + 1, 0)
-              }}
-              className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
-            >
-              +
-            </button>
-          </div>
+                    <div className="flex">
+                        <button
+                            onClick={async () => {
+                                if (itemQuantity > 1) {
+                                    setItemQuantity((e) => e - 1)
+                                }
+                            }}
+                            className={`border-[1px] ${item.quantity === 1 ? "bg-gray-100" : ""
+                                }  text-red-500 font-semibold py-1 px-2 rounded-sm`}
+                        >
+                            -
+                        </button>
+                        <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
+                            {itemQuantity}
+                        </button>
+
+                        <button
+                            onClick={async () => {
+                                setItemQuantity((e) => e + 1)
+                            }}
+                            className=" border-[1px] font-semibold text-minLink py-1 px-2 rounded-sm"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+            </div>
+
         </div>
-      </div>
-      {/* <div className={``}>
-                <ul
-                    className={` ${
-                        !open && itemPromotion.length > 3
-                            ? "h-[130px] overflow-hidden"
-                            : ""
-                    } transition duration-150 ease-out p-[5px] `}
-                >
-                    {itemPromotion.map((p, index) => (
-                        <li className="p-2">
-                            <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
-                                HOT
-                            </span>
-                            <span className="text-[12px] sm:text-[14px] ml-2">
-                                {`Mua thêm ${
-                                    p.additionalQuantity
-                                } sản phẩm để được giảm ${p.discountValue.toLocaleString(
-                                    "en-US",
-                                    {
-                                        currency: "USD",
-                                    }
-                                )}`}{" "}
-                                {p.discountType === "percentage" ? "%" : "đ"}
-                            </span>
-                        </li>
-                    ))}
-                </ul> :  null}
-                {itemPromotion.length > 3 && (
-                    <ButtonStyles onClick={() => setOpen(!open)}>
-                        {open ? "Thu gọn" : "Xem thêm"}
-                    </ButtonStyles>
-                )}
-            </div> */}
-    </div>
-  );
-};
+    )
+}
 
 export default ProductCart;
