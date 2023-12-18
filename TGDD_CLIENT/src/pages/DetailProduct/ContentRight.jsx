@@ -37,7 +37,7 @@ function ContentRight(props) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [steps, setStep] = useState({
-    stepsItems: [{}],
+    stepsItems: [],
     currentStep: 0,
   });
   const [progressValue, setProgressValue] = useState();
@@ -105,8 +105,6 @@ function ContentRight(props) {
     }
     setStep({ stepsItems: promotionMap, currentStep: 2 });
   }
-
-  console.log()
 
   function ifValueMaxOut(valueSet) {
     if (valueSet >= 97) {
@@ -241,14 +239,7 @@ function ContentRight(props) {
                   style={{ "--progress-width": `${progressValue}%` }}
                   className="block h-3 rounded-full bg-[repeating-linear-gradient(45deg,_var(--tw-gradient-from)_0,_var(--tw-gradient-from)_20px,_var(--tw-gradient-to)_20px,_var(--tw-gradient-to)_40px)] from-indigo-400 to-indigo-500 w-[var(--progress-width)]"
                 ></span>
-
-                {/* Điểm mốc 
-                <span className="absolute left-30percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>
-                <span className="absolute left-63percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>
-                <span className="absolute left-97percent top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4"></span>*/}
-                {/* ... (Các phần khác của mã) ... */}
                 {promotionMap.map((item, idx) => (
-                  
                   <span
                     key={idx}
                     style={{
@@ -257,10 +248,9 @@ function ContentRight(props) {
                         97
                       )}%)`,
                     }}
-                    className={
-                      idx === (archivedStep())
-                        ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
-                        : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white border-2 border-indigo-500 rounded-full h-4 w-4`
+                    className={(idx === (archivedStep())
+                        ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${progressValue === 97 ? 'bg-blue-500 border-white' : 'bg-white border-indigo-500'}`
+                        : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${idx < archivedStep() ? 'bg-blue-500 border-white' : 'bg-white border-indigo-500'}`) 
                     }
                   >
                     <p
