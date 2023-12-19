@@ -1,65 +1,61 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react"
 
-import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded";
-import { styled } from "@mui/material/styles";
-import { useDispatch, useSelector } from "react-redux";
+import CancelPresentationRoundedIcon from "@mui/icons-material/CancelPresentationRounded"
+import { styled } from "@mui/material/styles"
+import { useDispatch, useSelector } from "react-redux"
 import {
-  ADD_TO_CART_SAGA,
-  DELETE_CART_SAGA,
-  EDIT_CART_SAGA,
-  GET_HISTORY_LAST_PROMOTION,
-} from "../../redux/sagas/types/main";
-import ProgressBar from "./../../components/ProgressBar/ProgressBar";
+    ADD_TO_CART_SAGA,
+    DELETE_CART_SAGA,
+    EDIT_CART_SAGA,
+    GET_HISTORY_LAST_PROMOTION,
+} from "../../redux/sagas/types/main"
+import ProgressBar from "./../../components/ProgressBar/ProgressBar"
 
-import CloseIcon from "@mui/icons-material/Close";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import { useNavigate } from "react-router-dom";
-import { useDebounce } from "../../utils/hooks/useDebounce";
+import CloseIcon from "@mui/icons-material/Close"
+import Dialog from "@mui/material/Dialog"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import IconButton from "@mui/material/IconButton"
+import { useNavigate } from "react-router-dom"
+import { useDebounce } from "../../utils/hooks/useDebounce"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  "& .MuiDialogContent-root": {
-    padding: theme.spacing(2),
-  },
-  "& .MuiDialogActions-root": {
-    padding: theme.spacing(1),
-  },
-}));
+    "& .MuiDialogContent-root": {
+        padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+        padding: theme.spacing(1),
+    },
+}))
 
-const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLoading }) => {
+const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestLoading }) => {
     const { last_promotions } = useSelector((state) => state.product)
     const dispatch = useDispatch()
 
-<<<<<<< HEAD
-    // console.log("listHistory:: --> ", listHistory)
-=======
-  console.log("listHistory:: --> ", listHistory);
->>>>>>> e27289a312c8c8464d73391c79804a106d4e39a0
+    const { user } = useSelector((state) => state.user)
+    const [open, setOpen] = useState(false)
+    const [itemQuantity, setItemQuantity] = useState(item.quantity)
+    let quantityDebounce = useDebounce(itemQuantity, 200)
+    const navigate = useNavigate()
+    const [notify, setNotify] = useState("")
 
-  const { user } = useSelector((state) => state.user);
-  const [open, setOpen] = useState(false);
-  const [itemQuantity, setItemQuantity] = useState(item.quantity);
-  let quantityDebounce = useDebounce(itemQuantity, 200);
-  const navigate = useNavigate();
-  const [notify, setNotify] = useState("");
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+    const handleClose = () => {
+        setOpen(false)
+    }
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+    console.log("promotionItem:: -> ", itemPromotion)
 
-  useEffect(() => {
-    if (quantityDebounce !== item.quantity) {
-      let data = {
-        idUser: user.idUser,
-        productId: item.product.productId,
-        idCart: item.cartId,
-        quantity: quantityDebounce,
-      };
+    useEffect(() => {
+        if (quantityDebounce !== item.quantity) {
+            let data = {
+                idUser: user.idUser,
+                productId: item.product.productId,
+                idCart: item.cartId,
+                quantity: quantityDebounce,
+            }
 
             dispatch({
                 type: ADD_TO_CART_SAGA,
@@ -75,8 +71,6 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                     currency: "USD",
                 })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
             )
-
-<<<<<<< HEAD
             // listHistory.push(itemPromotion[index])
 
             // dispatch({
@@ -94,41 +88,12 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                 setNotify("")
             }, 1500)
         }
-=======
-      setTimeout(()=> {
-        setNotify("")
-      }, 800)
-      // checkPromotion(itemQuantity, 0);
-    }
-  }, [quantityDebounce]);
-  const checkPromotion = (quantity, index) => {
-    if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
-      listHistory.push(itemPromotion[index]);
-
-      dispatch({
-        type: GET_HISTORY_LAST_PROMOTION,
-        promotion: listHistory,
-      });
-
-      setNotify(
-        `Yay! Bạn đã tiết kiệm được ${itemPromotion[
-          index
-        ]?.discountValue.toLocaleString("en-US", {
-          currency: "USD",
-        })}${itemPromotion[index]?.discountType === "percentage" ? "%" : " đồng"} `
-      );
-      // console.log(listHistory)
-    } else {
-      dispatch({
-        type: GET_HISTORY_LAST_PROMOTION,
-        promotion: listHistory,
-      });
->>>>>>> e27289a312c8c8464d73391c79804a106d4e39a0
+        // checkPromotion(itemQuantity, 0);
     }
 
     return (
         <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
-            {itemPromotion[0]?.additionalQuantity ||suggestLoading ? (
+            {itemPromotion[0]?.additionalQuantity || suggestLoading ? (
                 <>
                     <ProgressBar
                         text={
@@ -140,17 +105,8 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                                   })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
                                 : notify
                         }
-<<<<<<< HEAD
-                        item={itemPromotion[0]?.promotionProducts[0]?.quantity - itemPromotion[0]?.additionalQuantity}
-                        itemQuantity={itemPromotion[0]?.promotionProducts[0]?.quantity}
-=======
-                        cartItemQuantity={
-                            itemQuantity
-                        }
-                        conditionQuantity={
-                            itemPromotion[0]?.promotionItems[0]?.quantity
-                        }
->>>>>>> e27289a312c8c8464d73391c79804a106d4e39a0
+                        cartItemQuantity={itemQuantity}
+                        conditionQuantity={itemPromotion[0]?.promotionProducts[0]?.quantity}
                         onClick={handleClickOpen}
                         notify={notify}
                         loading={suggestLoading}
@@ -179,80 +135,46 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
                         </IconButton>
 
                         <DialogContent dividers>
-                            <ul>
-                                {itemPromotion.map((p, index) => (
-                                    <li
-                                        className="p-2 hover:cursor-pointer flex justify-between items-center"
-                                        key={index}
-                                    >
-                                        <span className="text-[12px] sm:text-[14px] ml-2">
-                                            {`Mua thêm ${
-                                                p?.additionalQuantity
-                                            } sản phẩm để được giảm ${p?.discountValue.toLocaleString("en-US", {
-                                                currency: "USD",
-                                            })}`}
-                                            {p?.discountType === "percentage" ? "%" : " đồng"}
-                                        </span>
-                                        <button
-                                            className="hover:bg-[#ccc] p-2 rounded-md"
-                                            onClick={async () => {
-                                                setItemQuantity(p?.promotionProducts[0].quantity)
-
-<<<<<<< HEAD
-                                                handleClose()
-                                            }}
+                            {itemPromotion?.length ? (
+                                <ul>
+                                    {itemPromotion.map((p, index) => (
+                                        <li
+                                            className="p-2 hover:cursor-pointer flex justify-between items-center"
+                                            key={index}
                                         >
-                                            Chọn
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                                            <span className="text-[12px] sm:text-[14px] ml-2">
+                                                {`Mua thêm ${
+                                                    p?.additionalQuantity
+                                                } sản phẩm để được giảm ${p?.discountValue.toLocaleString("en-US", {
+                                                    currency: "USD",
+                                                })}`}
+                                                {p?.discountType === "percentage" ? "%" : " đồng"}
+                                            </span>
+                                            <button
+                                                className="hover:bg-[#ccc] p-2 rounded-md"
+                                                onClick={async () => {
+                                                    setItemQuantity(p?.promotionItems[0].quantity)
+                                                    checkPromotion(
+                                                        itemPromotion[index]?.promotionItems[0]?.quantity,
+                                                        index
+                                                    )
+                                                    handleClose()
+                                                }}
+                                            >
+                                                Chọn
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                "Hiện chưa có thêm khuyến mãi phù hợp với giỏ hàng của bạn. Hãy thêm sản phẩm xem nào !!!"
+                            )}
                         </DialogContent>
                     </BootstrapDialog>
                 </>
             ) : null}
-
             <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
                 {/* Info  */}
-=======
-            <DialogContent dividers>
-              {itemPromotion?.length ? <ul>
-                {itemPromotion.map((p, index) => (
-                  <li
-                    className="p-2 hover:cursor-pointer flex justify-between items-center"
-                    key={index}
-                  >
-                    <span className="text-[12px] sm:text-[14px] ml-2">
-                      {`Mua thêm ${
-                        p?.additionalQuantity
-                      } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
-                        "en-US",
-                        {
-                          currency: "USD",
-                        }
-                      )}`}
-                      {p?.discountType === "percentage" ? "%" : " đồng"}
-                    </span>
-                    <button
-                      className="hover:bg-[#ccc] p-2 rounded-md"
-                      onClick={async () => {
-                        setItemQuantity(p?.promotionItems[0].quantity);
-                        checkPromotion(itemPromotion[index]?.promotionItems[0]?.quantity, index)
-                        handleClose();
-                      }}
-                    >
-                      Chọn
-                    </button>
-                  </li>
-                ))}
-              </ul> : 'Hiện chưa có thêm khuyến mãi phù hợp với giỏ hàng của bạn. Hãy thêm sản phẩm xem nào !!!'}
-            </DialogContent>
-          </BootstrapDialog>
-        </>
-      ) : null}
-      <div className="flex flex-col items-center md:flex-row py-4 px-4 justify-between ">
-        {/* Info  */}
->>>>>>> e27289a312c8c8464d73391c79804a106d4e39a0
 
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="flex flex-col items-center justify-center">
@@ -374,4 +296,4 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
     )
 }
 
-export default ProductCart;
+export default ProductCart

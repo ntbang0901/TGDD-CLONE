@@ -1,9 +1,10 @@
+import React from "react"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import { Button, CircularProgress, Collapse } from "@mui/material"
+import { Button, CircularProgress } from "@mui/material"
 import { styled } from "@mui/material/styles"
-import axios from "axios"
 import { useFormik } from "formik"
-import React, { useEffect, useMemo, useState } from "react"
+import { Collapse } from "@mui/material"
+import { useEffect, useMemo, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
@@ -12,12 +13,20 @@ import { ADD_HISTORY_SAGA, DELETE_CART_SAGA, EDIT_CART_SAGA, GET_CART_SAGA } fro
 import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
 import ProductCart from "./ProductCart"
+import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
-    const { last_promotions } = useSelector((state) => state.product)
 
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
+
+    const [suggestLoading, setSuggestLoading] = useState(true)
+
+    const [total, setTotal] = useState({
+        amount: 0,
+        discountAmount: 0,
+        paymentAmount: 0,
+    })
 
     const [promotionList, setPromotionList] = useState({
         cart: [],
@@ -130,27 +139,23 @@ function ShoppingCartPage(props) {
     })
 
     const totalDiscount = () => {
-        let total = 0
-        shoppingCarts.forEach((item) => {
-            console.log(item)
-            result.forEach((value) => {
-                console.log(item.product.productId === value.promotionItems[0].productId)
-                if (
-                    item.quantity === value.promotionItems[0].quantity &&
-                    item.product.productId === value.promotionItems[0].productId
-                ) {
-                    if (value.discountType === "value") {
-                        total += value.discountValue
-                    } else {
-                        total +=
-                            (value.discountValue / 100) *
-                            (value.promotionItems[0].quantity * value.promotionItems[0].price)
-                    }
-                }
-            })
-        })
+        // let total = 0
+        // shoppingCarts.forEach((item) => {
+        //     let newArray = result?.filter((pro) => pro.promotionProducts[0].productId === item.product.productId)
+        //     if (newArray.length > 0) {
+        //         let promotion = newArray[newArray.length - 1]
 
-        return total
+        //         if (promotion.discountType === "value") {
+        //             total += promotion.discountValue
+        //         } else {
+        //             total +=
+        //                 (promotion.discountValue / 100) *
+        //                 (promotion.promotionProducts[0].quantity * promotion.promotionProducts[0].price)
+        //         }
+        //     }
+        // })
+
+        return 0
     }
 
     const totalDiscountValue = totalDiscount()
@@ -182,7 +187,8 @@ function ShoppingCartPage(props) {
                             itemPromotion={promotionList.item.filter(
                                 (pro) => pro.promotionProducts[0].productId === item.product.productId
                             )}
-                            key={index}
+                            suggestLoading={suggestLoading}
+                            key={JSON.stringify(item)}
                         />
                     ))}
                 </div>
