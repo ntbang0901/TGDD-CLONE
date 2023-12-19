@@ -64,7 +64,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory,suggestLo
 
       setTimeout(()=> {
         setNotify("")
-      }, 800)
+      }, 1500)
       // checkPromotion(itemQuantity, 0);
     }
   }, [quantityDebounce]);
