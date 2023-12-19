@@ -28,8 +28,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }))
 
-const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestLoading }) => {
-    const { last_promotions } = useSelector((state) => state.product)
+const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
     const dispatch = useDispatch()
 
     const { user } = useSelector((state) => state.user)
@@ -56,14 +55,15 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestL
                 idCart: item.cartId,
                 quantity: quantityDebounce,
             }
+            checkPromotion(itemQuantity, 0)
 
             dispatch({
                 type: ADD_TO_CART_SAGA,
                 data,
             })
-            checkPromotion(itemQuantity, 0)
         }
     }, [quantityDebounce])
+
     const checkPromotion = (quantity, index) => {
         if (quantity === itemPromotion[index]?.promotionProducts[0]?.quantity) {
             setNotify(
@@ -71,24 +71,10 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestL
                     currency: "USD",
                 })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
             )
-            // listHistory.push(itemPromotion[index])
-
-            // dispatch({
-            //     type: GET_HISTORY_LAST_PROMOTION,
-            //     promotion: listHistory,
-            // })
-        } else {
-            // dispatch({
-            //     type: GET_HISTORY_LAST_PROMOTION,
-            //     promotion: listHistory,
-            // })
-        }
-        if (itemPromotion[index]?.promotionProducts[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
         }
-        // checkPromotion(itemQuantity, 0);
     }
 
     return (
@@ -153,11 +139,11 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestL
                                             <button
                                                 className="hover:bg-[#ccc] p-2 rounded-md"
                                                 onClick={async () => {
-                                                    setItemQuantity(p?.promotionItems[0].quantity)
                                                     checkPromotion(
-                                                        itemPromotion[index]?.promotionItems[0]?.quantity,
+                                                        itemPromotion[index]?.promotionProducts[0]?.quantity,
                                                         index
                                                     )
+                                                    setItemQuantity(p?.promotionProducts[0].quantity)
                                                     handleClose()
                                                 }}
                                             >
@@ -167,7 +153,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestL
                                     ))}
                                 </ul>
                             ) : (
-                                "Hiện chưa có thêm khuyến mãi phù hợp với giỏ hàng của bạn. Hãy thêm sản phẩm xem nào !!!"
+                                null
                             )}
                         </DialogContent>
                     </BootstrapDialog>
@@ -209,12 +195,8 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory, suggestL
                             {item?.product?.productName}
                         </h1>
                         {/* <p className="my-2 text-sm text-minLink text-center md:text-left">
-<<<<<<< HEAD
-                            <span>khuyến mãi đã áp dụng : </span> {promotionUsed.length}
-=======
                             <span>Khuyến mãi đã áp dụng : </span>{" "}
                             {promotionUsed.length}
->>>>>>> e27289a312c8c8464d73391c79804a106d4e39a0
                         </p> */}
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}

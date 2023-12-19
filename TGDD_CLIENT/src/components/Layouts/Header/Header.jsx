@@ -30,11 +30,11 @@ function Header(props) {
 
     return (
         <div className="header">
-            <img
+            {/* <img
                 src={require("../../../assests/img/header_1.png")}
                 className="w-full"
                 alt=""
-            />
+            /> */}
             <nav className="px-8 py-3 navbar grid grid-cols-6 gap-4 bg-[#ffd400] relative cursor-pointer">
                 <div className="col-span-1 hidden sm:flex justify-center flex-col">
                     <Link to={"/"}>
