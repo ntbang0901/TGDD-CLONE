@@ -30,6 +30,7 @@ function DetailProduct(props) {
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
     const [promotionMap, setPromotionMap] = useState([])
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
 
     useEffect(() => {
         const getKMTN = async () => {
@@ -83,30 +84,28 @@ function DetailProduct(props) {
     }, [itemPromotion])
 
     useEffect(() => {
-        if (user._id) {
+        if (user.idUser) {
             dispatch({
                 type: GET_CART_SAGA,
-                idUser: user._id,
+                idUser: user.idUser,
             })
         }
-    }, [dispatch, user._id])
-
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
+    }, [dispatch, user.idUser])
 
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {
             quantity: cart.quantity,
-            product: {
-                productId: cart.product.productId,
-            },
+            productId: cart.product.productId,
         }
+
         return obj
     })
 
     const selectedProduct = productPayload.find((item) => {
-        return item.product.productId === productDetail.productId
+        return item.productId === productDetail.productId
     })
-
+ 
+    console.log("shoppingCarts: ", shoppingCarts)
     console.log("selectedProduct-->detail", selectedProduct);
     console.log("productPayload-->detail", productPayload);
 

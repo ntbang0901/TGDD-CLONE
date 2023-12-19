@@ -42,6 +42,8 @@ function ShoppingCartPage(props) {
 
         return obj
     })
+
+    console.log("shoppingCarts: ", shoppingCarts)
     console.log("promotionlist:: -> ", promotionList)
     console.log("productPayload:: -> ", productPayload)
 
