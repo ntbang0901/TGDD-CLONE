@@ -53,7 +53,7 @@ export default function CardCustom(props) {
                             })}
                             đ
                         </span>
-                        <span className="text-red-400 text-sm">-5%</span>
+                        {/* <span className="text-red-400 text-sm">-5%</span> */}
                     </div>
                 </CardContent>
                 <CardActions>
