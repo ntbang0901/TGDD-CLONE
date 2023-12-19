@@ -12,3 +12,15 @@ html {
 /* .css-i4bv87-MuiSvgIcon-root {
   width: 0.8em !important;
 } */
+
+.tooltip {
+  @apply invisible absolute;
+}
+
+.hover-tooltip:hover .tooltip {
+  @apply visible z-50;
+}
+
+.has-tooltip .tooltip {
+  @apply visible z-50;
+}
