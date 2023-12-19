@@ -29,6 +29,7 @@ function DetailProduct(props) {
     console.log("productDetail large page", productDetail)
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
+    const [promotionMap, setPromotionMap] = useState([])
 
     useEffect(() => {
         const getKMTN = async () => {
@@ -55,6 +56,33 @@ function DetailProduct(props) {
     }, [dispatch, location.pathname])
 
     useEffect(() => {
+        function filterUniquePromotion() {
+          const promotionMapTemp = [];
+          itemPromotion.forEach((promotion) => {
+            // Tạo một đối tượng để lưu trữ thông tin về số sản phẩm và mức giảm giá tương ứng
+            const { additionalQuantity, discountValue } = promotion;
+            // Kiểm tra xem có thông tin về khuyến mãi với số sản phẩm này chưa
+            if (
+              !promotionMapTemp[additionalQuantity] ||
+              promotionMapTemp[additionalQuantity].discountValue < discountValue
+            ) {
+              // Nếu chưa có hoặc mức giảm giá mới lớn hơn, cập nhật thông tin khuyến mãi
+              promotionMapTemp[additionalQuantity] = promotion;
+            }
+        });
+        const newArray = promotionMapTemp?.filter(Boolean);
+        setPromotionMap(newArray);
+        console.log("promotionMapTemp: ", promotionMapTemp);
+        console.log("newArray: ", newArray);
+        console.log("promotionMap: ", promotionMap);
+      }
+      if(itemPromotion?.length)
+      {
+        filterUniquePromotion()
+      }
+    }, [itemPromotion])
+
+    useEffect(() => {
         if (user._id) {
             dispatch({
                 type: GET_CART_SAGA,
@@ -79,7 +107,8 @@ function DetailProduct(props) {
         return item.product.productId === productDetail.productId
     })
 
-    console.log("selectedProduct-->", selectedProduct)
+    console.log("selectedProduct-->detail", selectedProduct);
+    console.log("productPayload-->detail", productPayload);
 
     return (
         <ThemeProvider theme={theme}>
@@ -109,6 +138,9 @@ function DetailProduct(props) {
                             isLogin={isLogin}
                             productDetail={productDetail}
                             category={location.pathname.split("/")[1]}
+                            selectedProduct={selectedProduct}
+                            productPayload={productPayload}
+                            promotionMap={promotionMap}
                         />
                     </div>
                 </div>
