@@ -23,15 +23,7 @@ import {
 } from "../../utils/Settings/data"
 import Cart from "./Other/Cart"
 function ContentRight(props) {
-    const {
-        productDetail,
-        category,
-        isLogin,
-        user,
-        itemPromotion,
-        productPayload,
-        selectedProduct,
-    } = props
+    const { productDetail, category, isLogin, user, itemPromotion, productPayload, selectedProduct } = props
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
@@ -48,9 +40,7 @@ function ContentRight(props) {
         console.log("itemPromotion: ", itemPromotion.length)
         if (selectedProduct !== undefined && itemPromotion.length !== 0) {
             const { quantity } = selectedProduct
-            const maxValue =
-                itemPromotion[itemPromotion.length - 1].promotionItems[0]
-                    .quantity
+            const maxValue = itemPromotion[itemPromotion.length - 1].promotionProducts[0].quantity
             const valueSet = (quantity / maxValue) * 100
             if (valueSet >= 97) {
                 setProgressValue(97)
@@ -67,77 +57,54 @@ function ContentRight(props) {
             <>
                 <div className="my-2 rounded-sm border-[1px]">
                     <div className="bg-gray-200 px-2 py-2">
-                        <h1 className="font-semibold sm:text-left text-center text-base">
-                            Khuyến mãi sắp đạt được
-                        </h1>
+                        <h1 className="font-semibold sm:text-left text-center text-base">Khuyến mãi sắp đạt được</h1>
                         <p className="text-[12px] sm:text-[14px] sm:text-left text-center">
-                            Giá và khuyến mãi dự kiến áp dụng đến khi hết sản
-                            phẩm
+                            Giá và khuyến mãi dự kiến áp dụng đến khi hết sản phẩm
                         </p>
                     </div>
                     <div>
                         <ul
                             className={` ${
-                                !open && itemPromotion.length > 3
-                                    ? "h-[115px] overflow-hidden"
-                                    : ""
+                                !open && itemPromotion.length > 3 ? "h-[115px] overflow-hidden" : ""
                             } transition duration-150 ease-out `}
                         >
                             {itemPromotion.map((p, index) => (
                                 <li className="p-2" key={index}>
-                                    <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">
-                                        HOT
-                                    </span>
+                                    <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">HOT</span>
                                     <span className="text-[12px] sm:text-[14px] ml-2">
-                                        {`Mua thêm ${
+                                        {`Mua ${
                                             p.additionalQuantity
-                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString(
-                                            "en-US",
-                                            {
-                                                currency: "USD",
-                                            }
-                                        )}${
-                                            itemPromotion[0]?.discountType ===
-                                            "percentage"
-                                                ? "%"
-                                                : " đồng"
-                                        }`}
+                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString("en-US", {
+                                            currency: "USD",
+                                        })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"}`}
                                     </span>
                                 </li>
                             ))}
                         </ul>
                         {itemPromotion.length > 3 && (
-                            <Button onClick={() => setOpen(!open)}>
-                                {open ? "Thu gọn" : "Xem thêm"}
-                            </Button>
+                            <Button onClick={() => setOpen(!open)}>{open ? "Thu gọn" : "Xem thêm"}</Button>
                         )}
                     </div>
 
                     <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
                         <p className="text-[12px] sm:text-[14px]">
-                            <span className="text-red-600">(*)</span> Giá và
-                            khuyến mãi dự kiến áp dụng đến khi hết sản phẩm
+                            <span className="text-red-600">(*)</span> Giá và khuyến mãi dự kiến áp dụng đến khi hết sản
+                            phẩm
                         </p>
                     </div>
                 </div>
 
                 <div className="my-2">
                     <p>
-                        <LocalAirportOutlinedIcon
-                            style={{ color: "#3f51d5" }}
-                        />{" "}
-                        Giao hàng tận nơi
+                        <LocalAirportOutlinedIcon style={{ color: "#3f51d5" }} /> Giao hàng tận nơi
                     </p>
                     <p className="my-2 text-teal-700 font-semibold text-[12px] sm:text-[14px]">
                         Giao hàng Từ 16h - 18h hôm nay (18/06)
                     </p>
-                    <p className="my-2 text-teal-700 font-semibold text-[12px] sm:text-[14px]">
-                        Miễn phí giao hàng
-                    </p>
+                    <p className="my-2 text-teal-700 font-semibold text-[12px] sm:text-[14px]">Miễn phí giao hàng</p>
 
                     <p>
-                        <StorefrontOutlinedIcon style={{ color: "#3f51d5" }} />{" "}
-                        Giao Có hàng tại tất các siêu thị
+                        <StorefrontOutlinedIcon style={{ color: "#3f51d5" }} /> Giao Có hàng tại tất các siêu thị
                     </p>
                 </div>
             </>
@@ -157,10 +124,7 @@ function ContentRight(props) {
                     <ul>
                         <li className="p-2">
                             <span className=" p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon
-                                    className="text-green-500"
-                                    style={{ fontSize: "12px" }}
-                                />
+                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 Tặng cho khách lần đầu mua hàng online tại web
@@ -168,10 +132,7 @@ function ContentRight(props) {
                         </li>
                         <li className="p-2">
                             <span className=" p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon
-                                    className="text-green-500"
-                                    style={{ fontSize: "12px" }}
-                                />
+                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 Mã giảm 100.000đ áp dụng đơn hàng từ 400.000đ
@@ -180,14 +141,10 @@ function ContentRight(props) {
 
                         <li className="p-2">
                             <span className="p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon
-                                    className="text-green-500"
-                                    style={{ fontSize: "12px" }}
-                                />
+                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
-                                FREEship đơn hàng từ 300.000đ hoặc thành viên
-                                VÀNG
+                                FREEship đơn hàng từ 300.000đ hoặc thành viên VÀNG
                             </span>
                         </li>
                     </ul>
@@ -195,8 +152,7 @@ function ContentRight(props) {
 
                 <div className="border-dashed border-t-[1px] py-2 border-gray-300 px-2">
                     <p className="text-[12px] sm:text-[14px]">
-                        <span className="text-red-600">(*)</span> Dự kiến áp
-                        dụng đến khi hết sản phẩm
+                        <span className="text-red-600">(*)</span> Dự kiến áp dụng đến khi hết sản phẩm
                     </p>
                 </div>
             </div>
@@ -216,40 +172,20 @@ function ContentRight(props) {
             data = selectStorageLaptop
         }
         return data?.map((item, index) => (
-            <Button
-                disabled={item.value !== value}
-                key={index}
-                variant="contained"
-                size="small"
-            >
+            <Button disabled={item.value !== value} key={index} variant="contained" size="small">
                 {item.name}
             </Button>
         ))
     }
     const renderColor = (arrColor) => {
         const checkColor = (color) => {
-            let index = arrColor.findIndex(
-                (item, index) => item.colorValue === color
-            )
+            let index = arrColor.findIndex((item, index) => item.colorValue === color)
             return index === -1
         }
-        if (
-            category === "smartphone" ||
-            category === "tablet" ||
-            category === "pc" ||
-            category === "laptop"
-        ) {
+        if (category === "smartphone" || category === "tablet" || category === "pc" || category === "laptop") {
             return selectColor.map((item, index) => (
-                <Button
-                    disabled={checkColor(item.value)}
-                    key={index}
-                    variant="contained"
-                    size="small"
-                >
-                    <span className="text-[12px] text-struncate">
-                        {" "}
-                        {item.name}
-                    </span>
+                <Button disabled={checkColor(item.value)} key={index} variant="contained" size="small">
+                    <span className="text-[12px] text-struncate"> {item.name}</span>
                 </Button>
             ))
         }
@@ -257,12 +193,7 @@ function ContentRight(props) {
 
     const renderImages = () => {
         if (category === "swatch" || category === "accessory")
-            return (
-                <img
-                    src="https://cdn.tgdd.vn/2022/06/banner/Desk-920x230-920x230-15.png"
-                    alt=""
-                />
-            )
+            return <img src="https://cdn.tgdd.vn/2022/06/banner/Desk-920x230-920x230-15.png" alt="" />
     }
 
     const renderConfiguration = () => {
@@ -284,19 +215,10 @@ function ContentRight(props) {
 
         for (let i = 0; i < data.length; i++) {
             jsx.push(
-                <li
-                    key={i}
-                    className={`flex flex-wrap ${
-                        i % 2 !== 0 ? "bg-gray-200" : ""
-                    }  p-2`}
-                >
-                    <span className="w-[150px] text-[12px] sm:text-[14px]">
-                        {data[i].value}:
-                    </span>
+                <li key={i} className={`flex flex-wrap ${i % 2 !== 0 ? "bg-gray-200" : ""}  p-2`}>
+                    <span className="w-[150px] text-[12px] sm:text-[14px]">{data[i].value}:</span>
                     <span className="text-sm sm:text-base">
-                        {productDetail[data[i]?.key]
-                            ? productDetail[data[i]?.key]
-                            : "Đang cập nhật"}
+                        {productDetail[data[i]?.key] ? productDetail[data[i]?.key] : "Đang cập nhật"}
                     </span>
                 </li>
             )
@@ -358,21 +280,14 @@ function ContentRight(props) {
                         dispatch({
                             type: OPEN_MODAL_HOC,
                             title: "Thêm vào giỏ hàng",
-                            ComponentContentModal: (
-                                <Cart
-                                    user={user}
-                                    productDetail={productDetail}
-                                />
-                            ),
+                            ComponentContentModal: <Cart user={user} productDetail={productDetail} />,
                         })
                     }}
                     style={{ width: "100%", marginBottom: "8px" }}
                     variant="contained"
                     color="primary"
                 >
-                    <span className="text-[12px] sm:text-[14px]">
-                        Thêm vào giỏ hàng
-                    </span>
+                    <span className="text-[12px] sm:text-[14px]">Thêm vào giỏ hàng</span>
                 </Button>
                 <Button
                     onClick={() => {
@@ -380,12 +295,7 @@ function ContentRight(props) {
                             dispatch({
                                 type: OPEN_MODAL_HOC,
                                 title: "Thêm vào giỏ hàng",
-                                ComponentContentModal: (
-                                    <Cart
-                                        productDetail={productDetail}
-                                        user={user}
-                                    />
-                                ),
+                                ComponentContentModal: <Cart productDetail={productDetail} user={user} />,
                             })
                         } else {
                             navigate("/login")
@@ -395,10 +305,7 @@ function ContentRight(props) {
                     variant="contained"
                     color="error"
                 >
-                    <span className="text-[12px] sm:text-[14px]">
-                        {" "}
-                        Đặt hàng
-                    </span>
+                    <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
                 </Button>
             </div>
             {renderStaticItem2()}

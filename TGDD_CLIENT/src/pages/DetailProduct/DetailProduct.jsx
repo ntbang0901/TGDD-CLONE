@@ -1,47 +1,47 @@
-import { createTheme, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { GET_DETAIL_PRODUCT_SAGA } from "../../redux/sagas/types/main";
-import { GET_CART_SAGA } from "../../redux/sagas/types/main";
-import ContentLeft from "./ContentLeft";
-import ContentRight from "./ContentRight";
-import Title from "./Title";
-import axios from "axios";
+import { createTheme, ThemeProvider } from "@mui/material"
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useLocation } from "react-router-dom"
+import { GET_DETAIL_PRODUCT_SAGA } from "../../redux/sagas/types/main"
+import { GET_CART_SAGA } from "../../redux/sagas/types/main"
+import ContentLeft from "./ContentLeft"
+import ContentRight from "./ContentRight"
+import Title from "./Title"
+import axios from "axios"
 import { DOMAIN2 } from "../../utils/Settings/global"
 const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#3f51d5",
+    palette: {
+        primary: {
+            main: "#3f51d5",
+        },
+        secondary: {
+            main: "#ffc400",
+        },
     },
-    secondary: {
-      main: "#ffc400",
-    },
-  },
-});
+})
 
 function DetailProduct(props) {
-  const location = useLocation();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
-  const { isLogin } = useSelector((state) => state.global);
-  const { productDetail } = useSelector((state) => state.product);
-  console.log("productDetail large page", productDetail);
-  const [cartPromotion, setCartPromotion] = useState([]);
-  const [itemPromotion, setItemPromotion] = useState([]);
+    const location = useLocation()
+    const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.user)
+    const { isLogin } = useSelector((state) => state.global)
+    const { productDetail } = useSelector((state) => state.product)
+    console.log("productDetail large page", productDetail)
+    const [cartPromotion, setCartPromotion] = useState([])
+    const [itemPromotion, setItemPromotion] = useState([])
 
     useEffect(() => {
         const getKMTN = async () => {
             const response = await axios.get(
-                `${DOMAIN2}/promotion/product-suggest-promotion/${productDetail.productId}`
+                `${DOMAIN2}/promotions/product-suggest-promotion/${productDetail.productId}`
             )
 
-      setItemPromotion(response.data.productPromotion);
-    };
-    if (productDetail.productId) {
-      getKMTN();
-    }
-  }, [productDetail]);
+            setItemPromotion(response.data.productPromotion)
+        }
+        if (productDetail.productId) {
+            getKMTN()
+        }
+    }, [productDetail])
 
     useEffect(() => {
         const arrPathName = location.pathname.split("/")
@@ -55,32 +55,31 @@ function DetailProduct(props) {
     }, [dispatch, location.pathname])
 
     useEffect(() => {
-      if (user._id) {
-        dispatch({
-          type: GET_CART_SAGA,
-          idUser: user._id,
-        });
-      }
-    }, [dispatch, user._id]);
-  
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
-      useSelector((state) => state.global);
-  
-      const productPayload = shoppingCarts.map((cart) => {
-          const obj = {
-              quantity: cart.quantity,
-              product: {
-                  productId: cart.product.productId,
-              },
-          }
-          return obj
-      })
-  
-      const selectedProduct = productPayload.find((item) => {
-          return item.product.productId === productDetail.productId;
-      });
-      
-      console.log("selectedProduct-->", selectedProduct);
+        if (user._id) {
+            dispatch({
+                type: GET_CART_SAGA,
+                idUser: user._id,
+            })
+        }
+    }, [dispatch, user._id])
+
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
+
+    const productPayload = shoppingCarts.map((cart) => {
+        const obj = {
+            quantity: cart.quantity,
+            product: {
+                productId: cart.product.productId,
+            },
+        }
+        return obj
+    })
+
+    const selectedProduct = productPayload.find((item) => {
+        return item.product.productId === productDetail.productId
+    })
+
+    console.log("selectedProduct-->", selectedProduct)
 
     return (
         <ThemeProvider theme={theme}>
@@ -118,4 +117,4 @@ function DetailProduct(props) {
     )
 }
 
-export default DetailProduct;
+export default DetailProduct

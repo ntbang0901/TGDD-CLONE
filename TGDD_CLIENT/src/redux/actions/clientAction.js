@@ -221,7 +221,7 @@ export function* getCart(action) {
         })
         yield put({
             type: SET_SHOPPING_CART,
-            data: data.data.listCartItems,
+            data: data?.data?.listCartItems,
             total: total,
         })
     } catch (error) {

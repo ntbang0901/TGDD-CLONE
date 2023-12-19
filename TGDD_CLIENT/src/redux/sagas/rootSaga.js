@@ -42,12 +42,7 @@ import {
     followActionGetSwatchSaga,
     followActionGetTabletSaga,
 } from "./AdminSaga"
-import {
-    followActionCheckLogin,
-    followActionLogin,
-    followActionLogout,
-    followActionRegister,
-} from "./authSaga"
+import { followActionCheckLogin, followActionLogin, followActionLogout, followActionRegister } from "./authSaga"
 import {
     followActionCreateComment,
     followActionDeleteComment,
@@ -139,7 +134,7 @@ export function* rootSaga() {
         followActionSearchRecommendProductSaga(),
         // PAGE
 
-        //PROMOTION
+        //promotions
 
         followActionGetHistoryLastPromotion(),
 

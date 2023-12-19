@@ -9,12 +9,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
 import * as Yup from "yup"
 import axios from "axios"
-import {
-    ADD_HISTORY_SAGA,
-    DELETE_CART_SAGA,
-    EDIT_CART_SAGA,
-    GET_CART_SAGA,
-} from "../../redux/sagas/types/main"
+import { ADD_HISTORY_SAGA, DELETE_CART_SAGA, EDIT_CART_SAGA, GET_CART_SAGA } from "../../redux/sagas/types/main"
 import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
 import ProductCart from "./ProductCart"
@@ -22,17 +17,20 @@ import { DOMAIN2 } from "../../utils/Settings/global"
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
-    const { last_promotions } = useSelector((state) => state.product)
 
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
-        useSelector((state) => state.global)
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
+
+    const [total, setTotal] = useState({
+        amount: 0,
+        discountAmount: 0,
+        paymentAmount: 0,
+    })
 
     const [promotionList, setPromotionList] = useState({
         cart: [],
         item: [],
+        useable: [],
     })
-
-    const [total, setTotal] = useState(0)
 
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {
@@ -56,16 +54,23 @@ function ShoppingCartPage(props) {
                 totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
                     return res + curentPro.product.price * curentPro.quantity
                 }, 0),
-                listCartItems: productPayload,
+                products: productPayload,
+                people_id: user.idUser,
             }
-            const response = await axios.post(
-                `${DOMAIN2}/promotion/suggest-promotion`,
-                body
-            )
+            const response = await axios.post(`${DOMAIN2}/promotions`, body)
             const data = {
-                cart: response.data.cartPromotion,
-                item: response.data.itemPromotion,
+                cart: response.data.suggestPromotion.cartPromotion,
+                item: response.data.suggestPromotion.itemPromotion,
+                useable: response.data.useablePromotion.promotions,
             }
+
+            const dataTotal = {
+                amount: response.data.useablePromotion.amount,
+                discountAmount: response.data.useablePromotion.discountAmount,
+                paymentAmount: response.data.useablePromotion.paymentAmount,
+            }
+
+            setTotal(dataTotal)
 
             setPromotionList(data)
         }
@@ -97,65 +102,56 @@ function ShoppingCartPage(props) {
         return newArray
     }
 
-    console.log("After result:: --> ", last_promotions)
+    // const result = filterElementsNotInArray(last_promotions, promotionList.item)
 
-    const result = filterElementsNotInArray(last_promotions, promotionList.item)
-
-    console.log("result:: --> ", result)
-
-    const { handleSubmit, errors, touched, handleChange, setFieldValue } =
-        useFormik({
-            enableReinitialize: true,
-            initialValues: {
-                idUser: user._id,
-                gender: "",
-                name: "",
-                phone: "",
-                address: "",
-                carts: shoppingCarts,
-                totalPrice: getTotalPrice,
-            },
-            validationSchema: Yup.object({
-                gender: Yup.string().required("Bạn không được bỏ trống"),
-                name: Yup.string().required("Bạn không được bỏ trống"),
-                phone: Yup.string().required("Bạn không được bỏ trống"),
-                address: Yup.string().required("Bạn không được bỏ trống"),
-            }),
-            onSubmit: (values) => {
-                console.log("values: ", values)
-                if (values.carts.length > 0) {
-                    dispatch({
-                        type: ADD_HISTORY_SAGA,
-                        data: values,
-                    })
-                } else {
-                    alert("Giỏ hàng trống")
-                }
-            },
-        })
+    const { handleSubmit, errors, touched, handleChange, setFieldValue } = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            idUser: user._id,
+            gender: "",
+            name: "",
+            phone: "",
+            address: "",
+            carts: shoppingCarts,
+            totalPrice: getTotalPrice,
+        },
+        validationSchema: Yup.object({
+            gender: Yup.string().required("Bạn không được bỏ trống"),
+            name: Yup.string().required("Bạn không được bỏ trống"),
+            phone: Yup.string().required("Bạn không được bỏ trống"),
+            address: Yup.string().required("Bạn không được bỏ trống"),
+        }),
+        onSubmit: (values) => {
+            console.log("values: ", values)
+            if (values.carts.length > 0) {
+                dispatch({
+                    type: ADD_HISTORY_SAGA,
+                    data: values,
+                })
+            } else {
+                alert("Giỏ hàng trống")
+            }
+        },
+    })
 
     const totalDiscount = () => {
-        let total = 0
-        shoppingCarts.forEach((item) => {
-            let newArray = result.filter(
-                (pro) =>
-                    pro.promotionItems[0].productId === item.product.productId
-            )
-            if (newArray.length > 0) {
-                let promotion = newArray[newArray.length - 1]
+        // let total = 0
+        // shoppingCarts.forEach((item) => {
+        //     let newArray = result?.filter((pro) => pro.promotionProducts[0].productId === item.product.productId)
+        //     if (newArray.length > 0) {
+        //         let promotion = newArray[newArray.length - 1]
 
-                if (promotion.discountType === "value") {
-                    total += promotion.discountValue
-                } else {
-                    total +=
-                        (promotion.discountValue / 100) *
-                        (promotion.promotionItems[0].quantity *
-                            promotion.promotionItems[0].price)
-                }
-            }
-        })
+        //         if (promotion.discountType === "value") {
+        //             total += promotion.discountValue
+        //         } else {
+        //             total +=
+        //                 (promotion.discountValue / 100) *
+        //                 (promotion.promotionProducts[0].quantity * promotion.promotionProducts[0].price)
+        //         }
+        //     }
+        // })
 
-        return total
+        return 0
     }
 
     const totalDiscountValue = totalDiscount()
@@ -179,56 +175,38 @@ function ShoppingCartPage(props) {
                     {shoppingCarts?.map((item, index) => (
                         <ProductCart
                             item={item}
-                            listHistory={result}
-                            promotionUsed={result.filter(
-                                (pro) =>
-                                    pro.promotionItems[0].productId ===
-                                    item.product.productId
-                            )}
+                            promotionUsed={[
+                                promotionList.useable.filter(
+                                    (pro) => pro.promotionProducts[0].productId === item.product.productId
+                                ),
+                            ]}
                             itemPromotion={promotionList.item.filter(
-                                (pro) =>
-                                    pro.promotionItems[0].productId ===
-                                    item.product.productId
+                                (pro) => pro.promotionProducts[0].productId === item.product.productId
                             )}
-                            key={index}
+                            key={JSON.stringify(item)}
                         />
                     ))}
                 </div>
 
                 {/* Info */}
                 <div className="">
-                    <Info
-                        touched={touched}
-                        handleChange={handleChange}
-                        setFieldValue={setFieldValue}
-                        errors={errors}
-                    />
+                    <Info touched={touched} handleChange={handleChange} setFieldValue={setFieldValue} errors={errors} />
                 </div>
-                <div>{total}</div>
+                {/* <div>{total}</div> */}
                 <div>
                     <p>Ưu đãi cho giỏ hàng</p>
                     <ul className="rounded-xl bg-[#ffd500ae] mt-2">
                         {/* <PotentialCartPromotion /> */}
                         {promotionList.cart.slice(0, 3).map((p, index) => (
                             <li key={JSON.stringify(p)} className="p-2">
-                                <span className="p-1 rounded-sm text-[12px] text-black">
-                                    {index + 1}
-                                </span>
+                                <span className="p-1 rounded-sm text-[12px] text-black">{index + 1}</span>
                                 <span className="text-[12px] sm:text-[14px] ml-2">
-                                    {`Mua thêm ${p.additionalAmount.toLocaleString(
-                                        "en-US",
-                                        {
-                                            currency: "USD",
-                                        }
-                                    )}đ để được giảm ${p.discountValue.toLocaleString(
-                                        "en-US",
-                                        {
-                                            currency: "USD",
-                                        }
-                                    )}`}
-                                    {p.discountType === "percentage"
-                                        ? "%"
-                                        : " đồng"}
+                                    {`Mua thêm ${p.additionalAmount.toLocaleString("en-US", {
+                                        currency: "USD",
+                                    })}đ để được giảm ${p.discountValue.toLocaleString("en-US", {
+                                        currency: "USD",
+                                    })}`}
+                                    {p.discountType === "percentage" ? "%" : " đồng"}
                                 </span>
                             </li>
                         ))}
@@ -240,7 +218,7 @@ function ShoppingCartPage(props) {
                     <h1 className="font-semibold">Tạm tính: </h1>
 
                     <span className="text-base text-red-600 font-semibold">
-                        {getTotalPrice.toLocaleString("en-US", {
+                        {total.amount.toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
@@ -251,36 +229,26 @@ function ShoppingCartPage(props) {
                     <h1 className="font-semibold">Tiền giảm: </h1>
 
                     <span className="text-base text-red-600 font-semibold">
-                        {totalDiscountValue.toLocaleString("en-US", {
+                        {total.discountAmount.toLocaleString("en-US", {
                             currency: "USD",
                         })}
                         đ
                     </span>
                 </div>
                 <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">
-                    <h1 className="font-semibold">
-                        Tổng tiền ({quantityShoppingCart} sản phẩm):{" "}
-                    </h1>
+                    <h1 className="font-semibold">Tổng tiền ({quantityShoppingCart} sản phẩm): </h1>
 
                     <span className="text-base text-red-600 font-semibold">
-                        {(getTotalPrice - totalDiscountValue).toLocaleString(
-                            "en-US",
-                            {
-                                currency: "USD",
-                            }
-                        )}
+                        {total.paymentAmount.toLocaleString("en-US", {
+                            currency: "USD",
+                        })}
                         đ
                     </span>
                 </div>
 
                 {/* Buy action */}
                 <div className="mt-4">
-                    <ButtonStyles
-                        onClick={handleSubmit}
-                        style={{ width: "100%" }}
-                        variant="contained"
-                        color="error"
-                    >
+                    <ButtonStyles onClick={handleSubmit} style={{ width: "100%" }} variant="contained" color="error">
                         Đặt hàng
                     </ButtonStyles>
                 </div>

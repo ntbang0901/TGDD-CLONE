@@ -7,8 +7,7 @@ const PotentialCartPromotion = () => {
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
 
-    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } =
-        useSelector((state) => state.global)
+    const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
     const productPayload = shoppingCarts.map((cart) => {
         const obj = {}
         obj.id = cart.idProduct
@@ -18,25 +17,16 @@ const PotentialCartPromotion = () => {
 
     useEffect(() => {
         const getKMTN = async () => {
-            const response = await axios.post(
-                `${DOMAIN2}/promotion/suggest-promotion`,
-                {
-                    product: {},
-                    cart: {
-                        totalQuantity: quantityShoppingCart,
-                        totalPrice: shoppingCarts.reduce(
-                            (res, curentPro, index) => {
-                                return (
-                                    res +
-                                    curentPro.product.price * curentPro.quantity
-                                )
-                            },
-                            0
-                        ),
-                        products: productPayload,
-                    },
-                }
-            )
+            const response = await axios.post(`${DOMAIN2}/promotions/suggest-promotion`, {
+                product: {},
+                cart: {
+                    totalQuantity: quantityShoppingCart,
+                    totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
+                        return res + curentPro.product.price * curentPro.quantity
+                    }, 0),
+                    products: productPayload,
+                },
+            })
 
             setCartPromotion(response.data.cartPromotion)
             setItemPromotion(response.data.itemPromotion)
@@ -47,9 +37,7 @@ const PotentialCartPromotion = () => {
     return (
         <div>
             {cartPromotion.slice(0, 3).map((p) => (
-                <div key={JSON.stringify(p)}>
-                    {`Mua thêm ${p.additionalAmount} để được giản ${p.value}`}
-                </div>
+                <div key={JSON.stringify(p)}>{`Mua thêm ${p.additionalAmount} để được giản ${p.value}`}</div>
             ))}
         </div>
     )

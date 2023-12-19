@@ -32,7 +32,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
     const { last_promotions } = useSelector((state) => state.product)
     const dispatch = useDispatch()
 
-    console.log("listHistory:: --> ", listHistory)
+    // console.log("listHistory:: --> ", listHistory)
 
     const { user } = useSelector((state) => state.user)
     const [open, setOpen] = useState(false)
@@ -65,32 +65,26 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
         }
     }, [quantityDebounce])
     const checkPromotion = (quantity, index) => {
-        if (quantity === itemPromotion[index]?.promotionItems[0]?.quantity) {
+        if (quantity === itemPromotion[index]?.promotionProducts[0]?.quantity) {
             setNotify(
-                `Yay! Bạn đã tiết kiệm được ${itemPromotion[
-                    index
-                ]?.discountValue.toLocaleString("en-US", {
+                `Yay! Bạn đã tiết kiệm được ${itemPromotion[index]?.discountValue.toLocaleString("en-US", {
                     currency: "USD",
-                })}${
-                    itemPromotion[0]?.discountType === "percentage"
-                        ? "%"
-                        : " đồng"
-                } `
+                })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
             )
 
-            listHistory.push(itemPromotion[index])
+            // listHistory.push(itemPromotion[index])
 
-            dispatch({
-                type: GET_HISTORY_LAST_PROMOTION,
-                promotion: listHistory,
-            })
+            // dispatch({
+            //     type: GET_HISTORY_LAST_PROMOTION,
+            //     promotion: listHistory,
+            // })
         } else {
-            dispatch({
-                type: GET_HISTORY_LAST_PROMOTION,
-                promotion: listHistory,
-            })
+            // dispatch({
+            //     type: GET_HISTORY_LAST_PROMOTION,
+            //     promotion: listHistory,
+            // })
         }
-        if (itemPromotion[index]?.promotionItems[0]?.quantity) {
+        if (itemPromotion[index]?.promotionProducts[0]?.quantity) {
             setTimeout(() => {
                 setNotify("")
             }, 1500)
@@ -105,27 +99,14 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         text={
                             notify === ""
                                 ? `Mua thêm ${
-                                      itemPromotion[0]?.soLuongMuaThem
-                                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
-                                      "en-US",
-                                      {
-                                          currency: "USD",
-                                      }
-                                  )}${
-                                      itemPromotion[0]?.discountType ===
-                                      "percentage"
-                                          ? "%"
-                                          : " đồng"
-                                  } `
+                                      itemPromotion[0]?.additionalQuantity
+                                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString("en-US", {
+                                      currency: "USD",
+                                  })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
                                 : notify
                         }
-                        item={
-                            itemPromotion[0]?.promotionItems[0]?.quantity -
-                            itemPromotion[0]?.additionalQuantity
-                        }
-                        itemQuantity={
-                            itemPromotion[0]?.promotionItems[0]?.quantity
-                        }
+                        item={itemPromotion[0]?.promotionProducts[0]?.quantity - itemPromotion[0]?.additionalQuantity}
+                        itemQuantity={itemPromotion[0]?.promotionProducts[0]?.quantity}
                         onClick={handleClickOpen}
                         notify={notify}
                     />
@@ -136,10 +117,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         maxWidth={"sm"}
                         fullWidth
                     >
-                        <DialogTitle
-                            sx={{ m: 0, p: 2 }}
-                            id="customized-dialog-title"
-                        >
+                        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
                             Ưu đãi
                         </DialogTitle>
                         <IconButton
@@ -164,24 +142,16 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                                     >
                                         <span className="text-[12px] sm:text-[14px] ml-2">
                                             {`Mua thêm ${
-                                                p?.soLuongMuaThem
-                                            } sản phẩm để được giảm ${p?.discountValue.toLocaleString(
-                                                "en-US",
-                                                {
-                                                    currency: "USD",
-                                                }
-                                            )}`}
-                                            {p?.discountType === "percentage"
-                                                ? "%"
-                                                : " đồng"}
+                                                p?.additionalQuantity
+                                            } sản phẩm để được giảm ${p?.discountValue.toLocaleString("en-US", {
+                                                currency: "USD",
+                                            })}`}
+                                            {p?.discountType === "percentage" ? "%" : " đồng"}
                                         </span>
                                         <button
                                             className="hover:bg-[#ccc] p-2 rounded-md"
                                             onClick={async () => {
-                                                setItemQuantity(
-                                                    p?.promotionItems[0]
-                                                        .quantity
-                                                )
+                                                setItemQuantity(p?.promotionProducts[0].quantity)
 
                                                 handleClose()
                                             }}
@@ -201,23 +171,17 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
 
                 <div className="flex flex-col md:flex-row gap-2">
                     <div className="flex flex-col items-center justify-center">
-                        <img
-                            className="w-[80px] h-[80px] object-contain"
-                            src={item?.product?.photo}
-                            alt=""
-                        />
+                        <img className="w-[80px] h-[80px] object-contain" src={item?.product?.photo} alt="" />
                         <CancelPresentationRoundedIcon
                             onClick={() => {
-                                let newResult = last_promotions.filter((pro) =>
-                                    listHistory.some(
-                                        (pro1) => pro1.id === pro.id
-                                    )
-                                )
+                                // let newResult = last_promotions.filter((pro) =>
+                                //     listHistory.some((pro1) => pro1.id === pro.id)
+                                // )
 
-                                dispatch({
-                                    type: GET_HISTORY_LAST_PROMOTION,
-                                    promotion: newResult,
-                                })
+                                // dispatch({
+                                //     type: GET_HISTORY_LAST_PROMOTION,
+                                //     promotion: newResult,
+                                // })
                                 dispatch({
                                     type: DELETE_CART_SAGA,
                                     data: {
@@ -233,16 +197,13 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                     <div className="">
                         <h1
                             className="font-semibold text-struncate text-center md:text-left cursor-pointer"
-                            onClick={() =>
-                                navigate(`/${item?.product.productId}`)
-                            }
+                            onClick={() => navigate(`/${item?.product.productId}`)}
                         >
                             {item?.product?.productName}
                         </h1>
-                        <p className="my-2 text-sm text-minLink text-center md:text-left">
-                            <span>khuyến mãi đã áp dụng : </span>{" "}
-                            {promotionUsed.length}
-                        </p>
+                        {/* <p className="my-2 text-sm text-minLink text-center md:text-left">
+                            <span>khuyến mãi đã áp dụng : </span> {promotionUsed.length}
+                        </p> */}
                         <p className="my-2 text-sm text-minLink text-center md:text-left">
                             {/* {itemPromotion?.item.length} */}
                         </p>
@@ -273,9 +234,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                         >
                             -
                         </button>
-                        <button className=" border-[1px] text-black py-1 px-2 rounded-sm">
-                            {itemQuantity}
-                        </button>
+                        <button className=" border-[1px] text-black py-1 px-2 rounded-sm">{itemQuantity}</button>
 
                         <button
                             onClick={async () => {
@@ -303,7 +262,7 @@ const ProductCart = ({ item, itemPromotion, promotionUsed, listHistory }) => {
                             </span>
                             <span className="text-[12px] sm:text-[14px] ml-2">
                                 {`Mua thêm ${
-                                    p.soLuongMuaThem
+                                    p.additionalQuantity
                                 } sản phẩm để được giảm ${p.discountValue.toLocaleString(
                                     "en-US",
                                     {
