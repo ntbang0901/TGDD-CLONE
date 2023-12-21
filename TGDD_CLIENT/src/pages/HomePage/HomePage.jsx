@@ -7,7 +7,9 @@ function HomePage(props) {
     const { dataHomePage } = useSelector((state) => state.page)
     let finalIndexDataHomePage = dataHomePage.length - 1
 
-    useEffect(() => {}, [dispatch])
+    useEffect(() => {
+        document.title = "Thegioididong.com"
+    }, [dispatch])
     return (
         // <div className="bg-[#f3f3f3]">
         //     <Banner

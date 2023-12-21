@@ -33,6 +33,8 @@ function DetailProduct(props) {
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
 
     useEffect(() => {
+        document.title = productDetail?.productName
+
         const getKMTN = async () => {
             const response = await axios.get(
                 `${DOMAIN2}/promotions/product-suggest-promotion/${productDetail.productId}`
@@ -58,29 +60,28 @@ function DetailProduct(props) {
 
     useEffect(() => {
         function filterUniquePromotion() {
-          const promotionMapTemp = [];
-          itemPromotion.forEach((promotion) => {
-            // Tạo một đối tượng để lưu trữ thông tin về số sản phẩm và mức giảm giá tương ứng
-            const { additionalQuantity, discountValue } = promotion;
-            // Kiểm tra xem có thông tin về khuyến mãi với số sản phẩm này chưa
-            if (
-              !promotionMapTemp[additionalQuantity] ||
-              promotionMapTemp[additionalQuantity].discountValue < discountValue
-            ) {
-              // Nếu chưa có hoặc mức giảm giá mới lớn hơn, cập nhật thông tin khuyến mãi
-              promotionMapTemp[additionalQuantity] = promotion;
-            }
-        });
-        const newArray = promotionMapTemp?.filter(Boolean);
-        setPromotionMap(newArray);
-        console.log("promotionMapTemp: ", promotionMapTemp);
-        console.log("newArray: ", newArray);
-        console.log("promotionMap: ", promotionMap);
-      }
-      if(itemPromotion?.length)
-      {
-        filterUniquePromotion()
-      }
+            const promotionMapTemp = []
+            itemPromotion.forEach((promotion) => {
+                // Tạo một đối tượng để lưu trữ thông tin về số sản phẩm và mức giảm giá tương ứng
+                const { additionalQuantity, discountValue } = promotion
+                // Kiểm tra xem có thông tin về khuyến mãi với số sản phẩm này chưa
+                if (
+                    !promotionMapTemp[additionalQuantity] ||
+                    promotionMapTemp[additionalQuantity].discountValue < discountValue
+                ) {
+                    // Nếu chưa có hoặc mức giảm giá mới lớn hơn, cập nhật thông tin khuyến mãi
+                    promotionMapTemp[additionalQuantity] = promotion
+                }
+            })
+            const newArray = promotionMapTemp?.filter(Boolean)
+            setPromotionMap(newArray)
+            console.log("promotionMapTemp: ", promotionMapTemp)
+            console.log("newArray: ", newArray)
+            console.log("promotionMap: ", promotionMap)
+        }
+        if (itemPromotion?.length) {
+            filterUniquePromotion()
+        }
     }, [itemPromotion])
 
     useEffect(() => {
@@ -104,10 +105,10 @@ function DetailProduct(props) {
     const selectedProduct = productPayload.find((item) => {
         return item.productId === productDetail.productId
     })
- 
+
     console.log("shoppingCarts: ", shoppingCarts)
-    console.log("selectedProduct-->detail", selectedProduct);
-    console.log("productPayload-->detail", productPayload);
+    console.log("selectedProduct-->detail", selectedProduct)
+    console.log("productPayload-->detail", productPayload)
 
     return (
         <ThemeProvider theme={theme}>

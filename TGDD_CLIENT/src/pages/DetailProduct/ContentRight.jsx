@@ -23,7 +23,8 @@ import {
 } from "../../utils/Settings/data"
 import Cart from "./Other/Cart"
 function ContentRight(props) {
-    const { productDetail, category, isLogin, user, itemPromotion, productPayload, selectedProduct, promotionMap } = props
+    const { productDetail, category, isLogin, user, itemPromotion, productPayload, selectedProduct, promotionMap } =
+        props
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
@@ -33,39 +34,34 @@ function ContentRight(props) {
     })
     const [progressValue, setProgressValue] = useState()
 
-    useEffect(() => {
-        calculateProductInCart()
-    }, [selectedProduct, promotionMap]);
+    // useEffect(() => {
+    //     calculateProductInCart()
+    // }, [selectedProduct, promotionMap])
+
+    console.log(promotionMap)
 
     function calculateProductInCart() {
         if (selectedProduct !== undefined && promotionMap.length !== 0) {
             const { quantity } = selectedProduct
-            console.log("quantity: ", quantity);
-            console.log("step: ", calculateWhichStep(quantity));
+            console.log("quantity: ", quantity)
+            console.log("step: ", calculateWhichStep(quantity))
 
-            if (
-                quantity >=
-                promotionMap[promotionMap.length - 1].promotionProducts[0].quantity
-            ) {
+            if (quantity >= promotionMap[promotionMap.length - 1].promotionProducts[0].quantity) {
             }
 
             if (calculateWhichStep(quantity) > 1) {
-                const borderRight =
-                    promotionMap[calculateWhichStep(quantity) - 1].promotionProducts[0]
-                        .quantity;
-                const borderLeft =
-                    promotionMap[calculateWhichStep(quantity) - 2].promotionProducts[0]
-                        .quantity;
-                const distance = borderRight - borderLeft;
+                const borderRight = promotionMap[calculateWhichStep(quantity) - 1].promotionProducts[0].quantity
+                const borderLeft = promotionMap[calculateWhichStep(quantity) - 2].promotionProducts[0].quantity
+                const distance = borderRight - borderLeft
 
-                console.log("distance: ", distance);
-                console.log("borderRight: ", borderRight);
-                console.log("borderLeft: ", borderLeft);
+                console.log("distance: ", distance)
+                console.log("borderRight: ", borderRight)
+                console.log("borderLeft: ", borderLeft)
 
                 const valueSet =
                     ((calculateWhichStep(quantity) - 1) * calculatePagePerStep() +
                         (1 / distance) * (quantity - borderLeft) * calculatePagePerStep()) *
-                    100;
+                    100
                 console.log(
                     "value set: ",
                     (calculateWhichStep(quantity) - 1) * calculatePagePerStep(),
@@ -73,73 +69,67 @@ function ContentRight(props) {
                     (1 / distance) * (quantity - borderLeft) * calculatePagePerStep(),
                     "* 100 = ",
                     valueSet
-                );
-                ifValueMaxOut(valueSet);
+                )
+                ifValueMaxOut(valueSet)
             } else {
-                const maxValue =
-                    promotionMap[calculateWhichStep(quantity) - 1].promotionProducts[0]
-                        .quantity;
+                const maxValue = promotionMap[calculateWhichStep(quantity) - 1].promotionProducts[0].quantity
 
-                console.log("maxValue: ", maxValue);
-                const valueSet =
-                    (quantity / maxValue) *
-                    100 *
-                    (calculatePagePerStep() * calculateWhichStep(quantity));
-                console.log("value set: ", valueSet);
-                ifValueMaxOut(valueSet);
+                console.log("maxValue: ", maxValue)
+                const valueSet = (quantity / maxValue) * 100 * (calculatePagePerStep() * calculateWhichStep(quantity))
+                console.log("value set: ", valueSet)
+                ifValueMaxOut(valueSet)
             }
         } else {
-            setProgressValue(0);
+            setProgressValue(0)
         }
     }
 
     function ifValueMaxOut(valueSet) {
         if (valueSet >= 97) {
-            setProgressValue(97);
-            setStep({ stepsItems: promotionMap, currentStep: 4 });
-            return;
+            setProgressValue(97)
+            setStep({ stepsItems: promotionMap, currentStep: 4 })
+            return
         } else {
-            setProgressValue(valueSet);
-            return;
+            setProgressValue(valueSet)
+            return
         }
     }
-    
+
     function calculateLength() {
-        return promotionMap.length;
+        return promotionMap.length
     }
 
     function calculatePagePerStep() {
         switch (calculateLength()) {
             case 1:
-                return 1;
+                return 1
             case 2:
-                return 1 / 2;
+                return 1 / 2
             case 3:
-                return 1 / 3;
+                return 1 / 3
             default:
-                return 1;
+                return 1
         }
     }
 
     function calculateWhichStep(quantity) {
         for (let index = 0; index < promotionMap.length; index++) {
-            const element = promotionMap[index];
+            const element = promotionMap[index]
             if (element.promotionProducts[0].quantity > quantity) {
-                return index + 1;
+                return index + 1
             }
         }
-        return promotionMap.length + 1;
+        return promotionMap.length + 1
     }
 
     function archivedStep() {
         if (progressValue >= 97) {
-            return calculateLength() - 1;
+            return calculateLength() - 1
         }
         const realStep = Math.floor(progressValue / (calculatePagePerStep() * 100))
         console.log("calcu: ", progressValue, "/", calculatePagePerStep(), "*", 100, "=", realStep)
-        return realStep;
+        return realStep
     }
-
 
     const renderStaticItem1 = () => {
         return !_.isEmpty(productDetail) ? (
@@ -153,17 +143,19 @@ function ContentRight(props) {
                     </div>
                     <div>
                         <ul
-                            className={` ${!open && itemPromotion.length > 3 ? "h-[115px] overflow-hidden" : ""
-                                } transition duration-150 ease-out `}
+                            className={` ${
+                                !open && itemPromotion.length > 3 ? "h-[115px] overflow-hidden" : ""
+                            } transition duration-150 ease-out `}
                         >
                             {itemPromotion.map((p, index) => (
                                 <li className="p-2" key={index}>
                                     <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">HOT</span>
                                     <span className="text-[12px] sm:text-[14px] ml-2">
-                                        {`Mua ${p.additionalQuantity
-                                            } sản phẩm để được giảm ${p.discountValue.toLocaleString("en-US", {
-                                                currency: "USD",
-                                            })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"}`}
+                                        {`Mua ${
+                                            p.additionalQuantity
+                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString("en-US", {
+                                            currency: "USD",
+                                        })}${itemPromotion[index]?.discountType === "percentage" ? "%" : " đồng"}`}
                                     </span>
                                 </li>
                             ))}
@@ -187,10 +179,7 @@ function ContentRight(props) {
                 {console.log("promotionMap:-->right ", promotionMap)}
                 {console.log("productPayload:-->right ", productPayload)}
 
-                {console.log(
-                    "Math: ",
-                    Math.floor(progressValue / (calculatePagePerStep() * 100))
-                )}
+                {console.log("Math: ", Math.floor(progressValue / (calculatePagePerStep() * 100)))}
 
                 {promotionMap.length !== 0 ? (
                     <div className="max-w-screen-xl mx-auto px-4 md:px-8 my-auto rounded-sm border-[1px] min-w-fit">
@@ -218,9 +207,18 @@ function ContentRight(props) {
                                                 97
                                             )}%)`,
                                         }}
-                                        className={(idx === (archivedStep())
-                                            ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${progressValue === 97 ? 'bg-blue-500 border-white' : 'bg-white border-indigo-500'}`
-                                            : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${idx < archivedStep() ? 'bg-blue-500 border-white' : 'bg-white border-indigo-500'}`)
+                                        className={
+                                            idx === archivedStep()
+                                                ? `has-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${
+                                                      progressValue === 97
+                                                          ? "bg-blue-500 border-white"
+                                                          : "bg-white border-indigo-500"
+                                                  }`
+                                                : `hover-tooltip absolute left-[var(--leftForStep)] top-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 rounded-full h-4 w-4 ${
+                                                      idx < archivedStep()
+                                                          ? "bg-blue-500 border-white"
+                                                          : "bg-white border-indigo-500"
+                                                  }`
                                         }
                                     >
                                         <p
@@ -232,16 +230,11 @@ function ContentRight(props) {
                                             }}
                                             className="tooltip absolute left-[var(--leftForStep)] top-[80%] transform -translate-x-1/2 -translate-y-1/2 rounded shadow-lg p-1 bg-gray-100 text-red-500 mt-8 min-w-max"
                                         >
-                                            {`Mua từ ${item.additionalQuantity
-                                                } sản phẩm được giảm ${item.discountValue.toLocaleString(
-                                                    "en-US",
-                                                    {
-                                                        currency: "USD",
-                                                    }
-                                                )}${promotionMap[0]?.discountType === "percentage"
-                                                    ? "%"
-                                                    : " đồng"
-                                                }`}
+                                            {`Mua từ ${
+                                                item.additionalQuantity
+                                            } sản phẩm được giảm ${item.discountValue.toLocaleString("en-US", {
+                                                currency: "USD",
+                                            })}${promotionMap[0]?.discountType === "percentage" ? "%" : " đồng"}`}
                                         </p>
                                     </span>
                                 ))}
@@ -256,8 +249,9 @@ function ContentRight(props) {
                                 >
                                     <div className="md:mt-2 flex justify-end">
                                         <p
-                                            className={`text-sm ${steps.currentStep > idx + 1 ? "text-indigo-600" : ""
-                                                }`}
+                                            className={`text-sm ${
+                                                steps.currentStep > idx + 1 ? "text-indigo-600" : ""
+                                            }`}
                                         >
                                             KM {idx + 1}
                                         </p>

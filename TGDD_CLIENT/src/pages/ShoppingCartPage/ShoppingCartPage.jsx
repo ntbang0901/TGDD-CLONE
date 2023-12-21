@@ -52,6 +52,7 @@ function ShoppingCartPage(props) {
     })
 
     useEffect(() => {
+        document.title = "Giỏ hàng - Thegioididong.com"
         const getKMTN = async () => {
             setSuggestLoading(true)
             let body = {
@@ -181,12 +182,13 @@ function ShoppingCartPage(props) {
                     {shoppingCarts?.map((item, index) => (
                         <ProductCart
                             item={item}
-                            promotionUsed={[
-                                promotionList.useable.filter(
-                                    (pro) => pro.promotionProducts[0].productId === item.product.productId
-                                ),
-                            ]}
-                            itemPromotion={promotionList.item.filter(
+                            promotionUsed={promotionList.useable?.filter(
+                                (pro) =>
+                                    pro.promotionType === "product" &&
+                                    pro.promotionProducts.length > 0 &&
+                                    pro.promotionProducts[0].productId === item.product.productId
+                            )}
+                            itemPromotion={promotionList.item?.filter(
                                 (pro) => pro.promotionProducts[0].productId === item.product.productId
                             )}
                             suggestLoading={suggestLoading}

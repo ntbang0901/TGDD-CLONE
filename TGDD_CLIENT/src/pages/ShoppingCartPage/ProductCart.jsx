@@ -92,7 +92,10 @@ const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
                                 : notify
                         }
                         cartItemQuantity={itemQuantity}
-                        conditionQuantity={itemPromotion[0]?.promotionProducts[0]?.quantity}
+                        conditionQuantity={
+                            itemPromotion[0]?.promotionProducts[0]?.quantity ||
+                            itemPromotion[0]?.promotionProducts[0]?.minProduct
+                        }
                         onClick={handleClickOpen}
                         notify={notify}
                         loading={suggestLoading}
@@ -143,7 +146,10 @@ const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
                                                         itemPromotion[index]?.promotionProducts[0]?.quantity,
                                                         index
                                                     )
-                                                    setItemQuantity(p?.promotionProducts[0].quantity)
+                                                    setItemQuantity(
+                                                        p?.promotionProducts[0].quantity ||
+                                                            p?.promotionProducts[0].minProduct
+                                                    )
                                                     handleClose()
                                                 }}
                                             >
@@ -152,9 +158,7 @@ const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
                                         </li>
                                     ))}
                                 </ul>
-                            ) : (
-                                null
-                            )}
+                            ) : null}
                         </DialogContent>
                     </BootstrapDialog>
                 </>
