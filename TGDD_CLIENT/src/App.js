@@ -71,6 +71,7 @@ import HistoryPage from "./pages/HistoryPage/HistoryPage"
 import ContentManagerReceipt from "./pages/AdminPage/ManagerReceipt/ContentManagerReceipt"
 import SignReceipt from "./pages/AdminPage/ManagerReceipt/SignReceipt"
 import NoSignReceipt from "./pages/AdminPage/ManagerReceipt/NoSignReceipt"
+import ScrollToTop from "./utils/hooks/ScrollToTop"
 
 function App() {
     const dispatch = useDispatch()
@@ -121,10 +122,7 @@ function App() {
                     <Route path="/:id" element={<DetailProduct />} />
 
                     {/* AccessoryPage */}
-                    <Route
-                        path="/accessory-adv"
-                        element={<DetailPageAccessory />}
-                    />
+                    <Route path="/accessory-adv" element={<DetailPageAccessory />} />
                     <Route path="/accessory">
                         <Route path=":id" element={<DetailProduct />} />
                         <Route path="" element={<MainPageAccessory />} />
@@ -157,124 +155,49 @@ function App() {
 
                     <Route element={<ProtectedRouteAdmin />}>
                         <Route element={<Admin />}>
-                            <Route
-                                path="/admin/user"
-                                element={<ManagerUser />}
-                            />
+                            <Route path="/admin/user" element={<ManagerUser />} />
 
-                            <Route
-                                path="/admin/product"
-                                element={<ManagerProduct />}
-                            >
+                            <Route path="/admin/product" element={<ManagerProduct />}>
                                 <Route path="" element={<AllProduct />} />
-                                <Route
-                                    path="smartphone"
-                                    element={<SmartPhone />}
-                                />
+                                <Route path="smartphone" element={<SmartPhone />} />
                                 <Route path="laptop" element={<Laptop />} />
                                 <Route path="tablet" element={<Tablet />} />
-                                <Route
-                                    path="accessory"
-                                    element={<Accessory />}
-                                />
+                                <Route path="accessory" element={<Accessory />} />
                                 <Route path="swatch" element={<Swatch />} />
                                 <Route path="pc" element={<PC />} />
                             </Route>
 
-                            <Route
-                                path="/admin/homepage"
-                                element={<ManagerHomePage />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerHomePage />}
-                                />
-                                <Route
-                                    path="add"
-                                    element={<AddNewHomePage />}
-                                />
+                            <Route path="/admin/homepage" element={<ManagerHomePage />}>
+                                <Route path="" element={<ContentManagerHomePage />} />
+                                <Route path="add" element={<AddNewHomePage />} />
                                 <Route path="edit" element={<EditHomePage />} />
                             </Route>
 
-                            <Route
-                                path="/admin/smartphone"
-                                element={<ManagerSmartPhone />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerSmartphone />}
-                                />
-                                <Route
-                                    path="add"
-                                    element={<AddNewSmartphonePage />}
-                                />
-                                <Route
-                                    path="edit"
-                                    element={<EditSmartphonePage />}
-                                />
+                            <Route path="/admin/smartphone" element={<ManagerSmartPhone />}>
+                                <Route path="" element={<ContentManagerSmartphone />} />
+                                <Route path="add" element={<AddNewSmartphonePage />} />
+                                <Route path="edit" element={<EditSmartphonePage />} />
                             </Route>
-                            <Route
-                                path="/admin/laptop"
-                                element={<ManagerLaptop />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerLaptop />}
-                                />
+                            <Route path="/admin/laptop" element={<ManagerLaptop />}>
+                                <Route path="" element={<ContentManagerLaptop />} />
                                 <Route path="add" element={<AddLaptopPage />} />
-                                <Route
-                                    path="edit"
-                                    element={<EditLaptopPage />}
-                                />
+                                <Route path="edit" element={<EditLaptopPage />} />
                             </Route>
-                            <Route
-                                path="/admin/tablet"
-                                element={<ManagerTablet />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerTablet />}
-                                />
-                                <Route
-                                    path="add"
-                                    element={<AddNewTabletPage />}
-                                />
-                                <Route
-                                    path="edit"
-                                    element={<EditTabletPage />}
-                                />
+                            <Route path="/admin/tablet" element={<ManagerTablet />}>
+                                <Route path="" element={<ContentManagerTablet />} />
+                                <Route path="add" element={<AddNewTabletPage />} />
+                                <Route path="edit" element={<EditTabletPage />} />
                             </Route>
-                            <Route
-                                path="/admin/accessory"
-                                element={<ManagerAccessory />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerAccessory />}
-                                />
-                                <Route
-                                    path="add"
-                                    element={<AddAccessoryPage />}
-                                />
-                                <Route
-                                    path="edit"
-                                    element={<EditAccessoryPage />}
-                                />
+                            <Route path="/admin/accessory" element={<ManagerAccessory />}>
+                                <Route path="" element={<ContentManagerAccessory />} />
+                                <Route path="add" element={<AddAccessoryPage />} />
+                                <Route path="edit" element={<EditAccessoryPage />} />
                             </Route>
 
-                            <Route
-                                path="/admin/swatch"
-                                element={<ManagerSwatch />}
-                            >
-                                <Route
-                                    path=""
-                                    element={<ContentManagerSwatchPage />}
-                                />
+                            <Route path="/admin/swatch" element={<ManagerSwatch />}>
+                                <Route path="" element={<ContentManagerSwatchPage />} />
                                 <Route path="add" element={<AddSwatchPage />} />
-                                <Route
-                                    path="edit"
-                                    element={<EditSwatchPage />}
-                                />
+                                <Route path="edit" element={<EditSwatchPage />} />
                             </Route>
 
                             <Route path="/admin/pc" element={<ManagerPC />}>
@@ -282,19 +205,10 @@ function App() {
                                 <Route path="add" element={<AddPCPage />} />
                                 <Route path="edit" element={<EditPCPage />} />
                             </Route>
-                            <Route
-                                path="/admin/receipt"
-                                element={<ManagerReceipt />}
-                            >
+                            <Route path="/admin/receipt" element={<ManagerReceipt />}>
                                 <Route path="sign" element={<SignReceipt />} />
-                                <Route
-                                    path="nosign"
-                                    element={<NoSignReceipt />}
-                                />
-                                <Route
-                                    path=""
-                                    element={<ContentManagerReceipt />}
-                                />
+                                <Route path="nosign" element={<NoSignReceipt />} />
+                                <Route path="" element={<ContentManagerReceipt />} />
                             </Route>
                         </Route>
                     </Route>

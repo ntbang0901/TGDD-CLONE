@@ -14,6 +14,8 @@ import Info from "./Info"
 import PotentialCartPromotion from "./PotentialCartPromotion"
 import ProductCart from "./ProductCart"
 import { DOMAIN2 } from "../../utils/Settings/global"
+import CheckIcon from "@mui/icons-material/Check"
+
 function ShoppingCartPage(props) {
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.user)
@@ -43,6 +45,35 @@ function ShoppingCartPage(props) {
         return obj
     })
 
+    const getKMTN = async () => {
+        setSuggestLoading(true)
+        let body = {
+            totalQuantity: quantityShoppingCart,
+            totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
+                return res + curentPro.product.price * curentPro.quantity
+            }, 0),
+            products: productPayload,
+            people_id: user.idUser,
+        }
+        const response = await axios.post(`${DOMAIN2}/promotions`, body)
+        const data = {
+            cart: response.data.suggestPromotion.cartPromotion,
+            item: response.data.suggestPromotion.itemPromotion,
+            useable: response.data.useablePromotion.promotions,
+        }
+
+        const dataTotal = {
+            amount: response.data.useablePromotion.amount,
+            discountAmount: response.data.useablePromotion.discountAmount,
+            paymentAmount: response.data.useablePromotion.paymentAmount,
+        }
+
+        setTotal(dataTotal)
+
+        setPromotionList(data)
+        setSuggestLoading(false)
+    }
+
     console.log("shoppingCarts: ", shoppingCarts)
     console.log("promotionlist:: -> ", promotionList)
     console.log("productPayload:: -> ", productPayload)
@@ -53,35 +84,7 @@ function ShoppingCartPage(props) {
 
     useEffect(() => {
         document.title = "Giỏ hàng - Thegioididong.com"
-        const getKMTN = async () => {
-            setSuggestLoading(true)
-            let body = {
-                totalQuantity: quantityShoppingCart,
-                totalPrice: shoppingCarts.reduce((res, curentPro, index) => {
-                    return res + curentPro.product.price * curentPro.quantity
-                }, 0),
-                products: productPayload,
-                people_id: user.idUser,
-            }
-            const response = await axios.post(`${DOMAIN2}/promotions`, body)
-            const data = {
-                cart: response.data.suggestPromotion.cartPromotion,
-                item: response.data.suggestPromotion.itemPromotion,
-                useable: response.data.useablePromotion.promotions,
-            }
-
-            const dataTotal = {
-                amount: response.data.useablePromotion.amount,
-                discountAmount: response.data.useablePromotion.discountAmount,
-                paymentAmount: response.data.useablePromotion.paymentAmount,
-            }
-
-            setTotal(dataTotal)
-
-            setPromotionList(data)
-            setSuggestLoading(false)
-        }
-        if (shoppingCarts.length > 0) {
+        if (shoppingCarts.length >= 0) {
             getKMTN()
         }
     }, [shoppingCarts])
@@ -181,6 +184,7 @@ function ShoppingCartPage(props) {
                 <div className="rounded-xl shadow-xl">
                     {shoppingCarts?.map((item, index) => (
                         <ProductCart
+                            getKMTN={getKMTN}
                             item={item}
                             promotionUsed={promotionList.useable?.filter(
                                 (pro) =>
@@ -201,26 +205,48 @@ function ShoppingCartPage(props) {
                 <div className="">
                     <Info touched={touched} handleChange={handleChange} setFieldValue={setFieldValue} errors={errors} />
                 </div>
+                {promotionList.cart?.length > 0 && (
+                    <div>
+                        <p>Ưu đãi cho giỏ hàng</p>
+                        <ul className="rounded-xl bg-[#ffd500ae] mt-2">
+                            {/* <PotentialCartPromotion /> */}
+                            {promotionList.cart.slice(0, 3).map((p, index) => (
+                                <li key={JSON.stringify(p)} className="p-2">
+                                    <span className="p-1 rounded-sm text-[12px] text-black">{index + 1}</span>
+                                    <span className="text-[12px] sm:text-[14px] ml-2">
+                                        {`Mua thêm ${p.additionalAmount.toLocaleString("en-US", {
+                                            currency: "USD",
+                                        })}đ để được giảm ${p.discountValue.toLocaleString("en-US", {
+                                            currency: "USD",
+                                        })}`}
+                                        {p.discountType === "percentage" ? "%" : " đồng"}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                {promotionList.useable?.length > 0 && (
+                    <div>
+                        <p>Khuyến mãi đã áp dụng</p>
+                        <ul className="rounded-xl  mt-2">
+                            {/* <PotentialCartPromotion /> */}
+                            {promotionList.useable?.map((p, index) => (
+                                <li key={JSON.stringify(p)} className="p-2">
+                                    <span className=" p-1 rounded-sm text-[15px] text-white">
+                                        <CheckIcon className="text-green-500" style={{ fontSize: "15px" }} />
+                                    </span>
+                                    <span className="text-[12px] sm:text-[14px] ml-2">
+                                        {`Đã giảm ${p.discountValue.toLocaleString("en-US", {
+                                            currency: "USD",
+                                        })} khuyến mãi ${p.promotionName}`}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
                 {/* <div>{total}</div> */}
-                <div>
-                    <p>Ưu đãi cho giỏ hàng</p>
-                    <ul className="rounded-xl bg-[#ffd500ae] mt-2">
-                        {/* <PotentialCartPromotion /> */}
-                        {promotionList.cart.slice(0, 3).map((p, index) => (
-                            <li key={JSON.stringify(p)} className="p-2">
-                                <span className="p-1 rounded-sm text-[12px] text-black">{index + 1}</span>
-                                <span className="text-[12px] sm:text-[14px] ml-2">
-                                    {`Mua thêm ${p.additionalAmount.toLocaleString("en-US", {
-                                        currency: "USD",
-                                    })}đ để được giảm ${p.discountValue.toLocaleString("en-US", {
-                                        currency: "USD",
-                                    })}`}
-                                    {p.discountType === "percentage" ? "%" : " đồng"}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
 
                 {/* Total money */}
                 <div className="flex flex-col md:flex-row my-2 justify-between items-center gap-2 md:gap-4">

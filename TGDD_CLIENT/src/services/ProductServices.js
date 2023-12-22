@@ -57,7 +57,7 @@ export class ProductServices extends BaseService {
     deleteCartApi = (data) => {
         console.log(data)
         return axios.post(`${DOMAIN2}/cart/delete`, {
-            userId: data.idUser,
+            peopleId: data.idUser,
             productId: data.productId,
         })
     }

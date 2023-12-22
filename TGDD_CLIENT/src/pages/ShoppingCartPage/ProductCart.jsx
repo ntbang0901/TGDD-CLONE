@@ -28,7 +28,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     },
 }))
 
-const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
+const ProductCart = ({ item, itemPromotion, suggestLoading, getKMTN }) => {
     const dispatch = useDispatch()
 
     const { user } = useSelector((state) => state.user)
@@ -81,25 +81,30 @@ const ProductCart = ({ item, itemPromotion, suggestLoading }) => {
         <div className="border-[1px] border-gray-300 mt-5 rounded-xl shadow-xl">
             {itemPromotion[0]?.additionalQuantity || suggestLoading ? (
                 <>
-                    <ProgressBar
-                        text={
-                            notify === ""
-                                ? `Mua thêm ${
-                                      itemPromotion[0]?.additionalQuantity
-                                  } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString("en-US", {
-                                      currency: "USD",
-                                  })}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
-                                : notify
-                        }
-                        cartItemQuantity={itemQuantity}
-                        conditionQuantity={
-                            itemPromotion[0]?.promotionProducts[0]?.quantity ||
-                            itemPromotion[0]?.promotionProducts[0]?.minProduct
-                        }
-                        onClick={handleClickOpen}
-                        notify={notify}
-                        loading={suggestLoading}
-                    />
+                    {itemPromotion.length > 0 && (
+                        <ProgressBar
+                            text={
+                                notify === ""
+                                    ? `Mua thêm ${
+                                          itemPromotion[0]?.additionalQuantity
+                                      } sản phẩm để được giảm ${itemPromotion[0]?.discountValue.toLocaleString(
+                                          "en-US",
+                                          {
+                                              currency: "USD",
+                                          }
+                                      )}${itemPromotion[0]?.discountType === "percentage" ? "%" : " đồng"} `
+                                    : notify
+                            }
+                            cartItemQuantity={itemQuantity}
+                            conditionQuantity={
+                                itemPromotion[0]?.promotionProducts[0]?.quantity ||
+                                itemPromotion[0]?.promotionProducts[0]?.minProduct
+                            }
+                            onClick={handleClickOpen}
+                            notify={notify}
+                            loading={suggestLoading}
+                        />
+                    )}
                     <BootstrapDialog
                         onClose={handleClose}
                         aria-labelledby="customized-dialog-title"

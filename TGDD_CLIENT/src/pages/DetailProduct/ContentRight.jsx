@@ -23,8 +23,17 @@ import {
 } from "../../utils/Settings/data"
 import Cart from "./Other/Cart"
 function ContentRight(props) {
-    const { productDetail, category, isLogin, user, itemPromotion, productPayload, selectedProduct, promotionMap } =
-        props
+    const {
+        productDetail,
+        category,
+        isLogin,
+        user,
+        itemPromotion,
+        productPayload,
+        selectedProduct,
+        promotionMap,
+        useablePromotion,
+    } = props
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [open, setOpen] = useState(false)
@@ -38,7 +47,7 @@ function ContentRight(props) {
     //     calculateProductInCart()
     // }, [selectedProduct, promotionMap])
 
-    console.log(promotionMap)
+    console.log("useablePromotion::: -> ", useablePromotion)
 
     function calculateProductInCart() {
         if (selectedProduct !== undefined && promotionMap.length !== 0) {
@@ -84,6 +93,25 @@ function ContentRight(props) {
         }
     }
 
+    const nameUseablePromotion = (pro) => {
+        return `Chương trình khuyến mãi "${pro.promotionName}" giảm giá ${pro.discountValue.toLocaleString("en-US", {
+            currency: "USD",
+        })} ${pro.discountType === "value" ? "đồng" : "%"} ${
+            pro.promotionType === "cart"
+                ? "khi đơn hàng từ " +
+                  pro.minTotalAmount.toLocaleString("en-US", {
+                      currency: "USD",
+                  }) +
+                  " đồng"
+                : "khi mua " + productDetail.productName
+        }`
+    }
+
+    const nameSuggestionPromotion = (pro) =>
+        `Chương trình khuyến mãi "${pro.promotionName}" giảm giá ${pro.discountValue} ${
+            pro?.discountType === "percentage" ? "%" : " đồng"
+        } khi mua ${pro?.promotionProducts[0]?.quantity ? "thêm" : "từ"} ${pro.additionalQuantity} sản phẩm`
+
     function ifValueMaxOut(valueSet) {
         if (valueSet >= 97) {
             setProgressValue(97)
@@ -115,7 +143,7 @@ function ContentRight(props) {
     function calculateWhichStep(quantity) {
         for (let index = 0; index < promotionMap.length; index++) {
             const element = promotionMap[index]
-            if (element.promotionProducts[0].quantity > quantity) {
+            if (element?.promotionProducts[0]?.quantity > quantity) {
                 return index + 1
             }
         }
@@ -151,11 +179,7 @@ function ContentRight(props) {
                                 <li className="p-2" key={index}>
                                     <span className="bg-red-600 p-1 rounded-sm text-[12px] text-white">HOT</span>
                                     <span className="text-[12px] sm:text-[14px] ml-2">
-                                        {`Mua ${
-                                            p.additionalQuantity
-                                        } sản phẩm để được giảm ${p.discountValue.toLocaleString("en-US", {
-                                            currency: "USD",
-                                        })}${itemPromotion[index]?.discountType === "percentage" ? "%" : " đồng"}`}
+                                        {nameSuggestionPromotion(p)}
                                     </span>
                                 </li>
                             ))}
@@ -230,7 +254,7 @@ function ContentRight(props) {
                                             }}
                                             className="tooltip absolute left-[var(--leftForStep)] top-[80%] transform -translate-x-1/2 -translate-y-1/2 rounded shadow-lg p-1 bg-gray-100 text-red-500 mt-8 min-w-max"
                                         >
-                                            {`Mua từ ${
+                                            {`Mua ${item?.promotionProducts[0]?.quantity ? "thêm" : "từ"} ${
                                                 item.additionalQuantity
                                             } sản phẩm được giảm ${item.discountValue.toLocaleString("en-US", {
                                                 currency: "USD",
@@ -268,7 +292,7 @@ function ContentRight(props) {
                         <LocalAirportOutlinedIcon style={{ color: "#3f51d5" }} /> Giao hàng tận nơi
                     </p>
                     <p className="my-2 text-teal-700 font-semibold text-[12px] sm:text-[14px]">
-                        Giao hàng Từ 16h - 18h hôm nay (18/06)
+                        Giao hàng Từ 16h - 18h hôm nay
                     </p>
                     <p className="my-2 text-teal-700 font-semibold text-[12px] sm:text-[14px]">Miễn phí giao hàng</p>
 
@@ -286,36 +310,19 @@ function ContentRight(props) {
             <div className="my-2 rounded-sm border-[1px]">
                 <div className="bg-gray-200 px-2 py-2">
                     <h1 className="font-semibold text-sm sm:text-base">
-                        3 ưu đãi thêm Dự kiến áp dụng đến 23:00 30/06
+                        {useablePromotion.length} ưu đãi khi mua sản phẩm
                     </h1>
                 </div>
                 <div className="">
                     <ul>
-                        <li className="p-2">
-                            <span className=" p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
-                            </span>
-                            <span className="text-[12px] sm:text-[14px] ml-2">
-                                Tặng cho khách lần đầu mua hàng online tại web
-                            </span>
-                        </li>
-                        <li className="p-2">
-                            <span className=" p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
-                            </span>
-                            <span className="text-[12px] sm:text-[14px] ml-2">
-                                Mã giảm 100.000đ áp dụng đơn hàng từ 400.000đ
-                            </span>
-                        </li>
-
-                        <li className="p-2">
-                            <span className="p-1 rounded-sm text-[12px] text-white">
-                                <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
-                            </span>
-                            <span className="text-[12px] sm:text-[14px] ml-2">
-                                FREEship đơn hàng từ 300.000đ hoặc thành viên VÀNG
-                            </span>
-                        </li>
+                        {useablePromotion.map((pro) => (
+                            <li className="p-2">
+                                <span className=" p-1 rounded-sm text-[12px] text-white">
+                                    <CheckIcon className="text-green-500" style={{ fontSize: "12px" }} />
+                                </span>
+                                <span className="text-[12px] sm:text-[14px] ml-2">{nameUseablePromotion(pro)}</span>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
@@ -441,7 +448,10 @@ function ContentRight(props) {
                     <SimpleSkeleton height={20} />
                 )}
             </div>
+            {useablePromotion && useablePromotion.length > 0 && renderStaticItem2()}
+
             {renderStaticItem1()}
+
             {/* Add to cart + Order product */}
             <div className="my-2">
                 <Button
@@ -477,7 +487,6 @@ function ContentRight(props) {
                     <span className="text-[12px] sm:text-[14px]"> Đặt hàng</span>
                 </Button>
             </div>
-            {renderStaticItem2()}
             {/* Configuration */}
             <div className="my-2">
                 {productDetail?.productName ? (

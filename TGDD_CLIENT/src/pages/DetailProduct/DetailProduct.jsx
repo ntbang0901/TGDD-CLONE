@@ -29,23 +29,9 @@ function DetailProduct(props) {
     console.log("productDetail large page", productDetail)
     const [cartPromotion, setCartPromotion] = useState([])
     const [itemPromotion, setItemPromotion] = useState([])
+    const [useablePromotion, setUseablePromotion] = useState([])
     const [promotionMap, setPromotionMap] = useState([])
     const { shoppingCarts, loadingShoppingCart, quantityShoppingCart } = useSelector((state) => state.global)
-
-    useEffect(() => {
-        document.title = productDetail?.productName
-
-        const getKMTN = async () => {
-            const response = await axios.get(
-                `${DOMAIN2}/promotions/product-suggest-promotion/${productDetail.productId}`
-            )
-
-            setItemPromotion(response.data.productPromotion)
-        }
-        if (productDetail.productId) {
-            getKMTN()
-        }
-    }, [productDetail])
 
     useEffect(() => {
         const arrPathName = location.pathname.split("/")
@@ -57,6 +43,22 @@ function DetailProduct(props) {
             })
         }
     }, [dispatch, location.pathname])
+
+    useEffect(() => {
+        document.title = productDetail?.productName
+
+        const getKMTN = async () => {
+            const response = await axios.get(
+                `${DOMAIN2}/promotions/product-suggest-promotion/${productDetail.productId}`
+            )
+
+            setItemPromotion(response.data.productPromotion)
+            setUseablePromotion(response.data.useablePromotion)
+        }
+        if (productDetail.productId) {
+            getKMTN()
+        }
+    }, [productDetail])
 
     useEffect(() => {
         function filterUniquePromotion() {
@@ -140,6 +142,7 @@ function DetailProduct(props) {
                             category={location.pathname.split("/")[1]}
                             selectedProduct={selectedProduct}
                             productPayload={productPayload}
+                            useablePromotion={useablePromotion}
                             promotionMap={promotionMap}
                         />
                     </div>
